@@ -1,5 +1,5 @@
 {
-  "name": "mono-repo-template",
+  "name": "Melocode monorepo",
   "private": true,
   "version": "1.0.0",
   "main": "index.js",
@@ -8,8 +8,8 @@
   "license": "ISC",
   "description": "",
   "workspaces": [
-    "frontend",
-    "backend",
+    "frontend/melocode",
+    "backend/*",
     "shared-types"
   ]
 }

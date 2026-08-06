@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .progressMap > a:nth-of-type(2n) {
+    @apply translate-x-12;
+  }
+  .progressMap > a:nth-of-type(2n + 1) {
+    @apply -translate-x-12;
+  }
+}
