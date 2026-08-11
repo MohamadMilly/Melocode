@@ -10,11 +10,18 @@ import { Theme, ThemePanel } from "@radix-ui/themes";
 const router = createBrowserRouter(routes);
 
 const client = new QueryClient();
-
+ 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={client}>
-      <Theme accentColor="lime" grayColor="sand" radius="full" scaling="95%">
+      <Theme
+        accentColor="lime"
+        grayColor="sand"
+        radius="full"
+        appearance="dark"
+        scaling="95%"
+        
+      >
         <RouterProvider router={router} />
         <ThemePanel />
       </Theme>

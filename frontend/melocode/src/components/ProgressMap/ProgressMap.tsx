@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { MapNode, type Node } from "./MapNode";
 import { SvgPath } from "./SvgPath";
 
@@ -8,8 +8,9 @@ type ProgressMapProps = {
 
 export function ProgressMap({ nodes }: ProgressMapProps) {
   const items: ReactNode[] = [];
-  let direction: "right" | "left" = "right";
+  const mapContainerRef = useRef<HTMLDivElement>(null);
 
+  let direction: "right" | "left" = "right";
   nodes.forEach((node, index) => {
     items.push(<MapNode key={node.id} index={index + 1} node={node} />);
     if (nodes[index + 1]) {
@@ -26,8 +27,10 @@ export function ProgressMap({ nodes }: ProgressMapProps) {
       direction = direction === "right" ? "left" : "right";
     }
   });
+
   return (
     <div
+      ref={mapContainerRef}
       className={`relative progressMap max-w-2xl w-full mx-auto flex flex-col items-center gap-8`}
     >
       {items}

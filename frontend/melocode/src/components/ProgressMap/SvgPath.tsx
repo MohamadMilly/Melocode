@@ -1,8 +1,8 @@
 type svgPathProps = {
-  x1: string;
-  x2: string;
-  y1: string;
-  y2: string;
+  x1: string | number;
+  x2: string | number;
+  y1: string | number;
+  y2: string | number;
   active: boolean;
 };
 

@@ -1,5 +1,49 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
+h2[id] {
+  scroll-margin-top: 100px;
+}
+
+::-webkit-scrollbar {
+  background-color: var(--gray-12);
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-lime-600);
+}
+
+pre {
+  direction: ltr;
+  padding: 5px;
+  border-radius: 5px;
+  counter-reset: line;
+  margin: 12px;
+  overflow-x: auto;
+}
+pre * {
+  background: none !important;
+}
+
+pre [data-line] {
+  padding: 0 1rem;
+}
+
+pre [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+
+  display: inline-block;
+  width: 1rem;
+  margin-right: 1.5rem;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.3);
+}
+
 @layer utilities {
   .progressMap > a:nth-of-type(2n) {
     @apply translate-x-12;
