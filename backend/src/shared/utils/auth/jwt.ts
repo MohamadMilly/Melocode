@@ -8,7 +8,7 @@ if (!SECRET_KEY) {
     "WARNING: SECRET_KEY env variable missing. Using unsafe fallback.",
   );
 }
-const SAFE_SECRET = SECRET_KEY ?? "fallback-custom-key";
+const SAFE_SECRET = SECRET_KEY ?? "melocode_2026";
 
 export function sign(
   payload: string | object | Buffer,

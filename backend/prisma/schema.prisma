@@ -1,6 +1,5 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
@@ -11,3 +10,94 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id               Int                  @id @default(autoincrement())
+  fullname         String
+  username         String               @unique
+  password         String
+  createdAt        DateTime             @default(now())
+  lessonProgresses UserLessonProgress[]
+  submissions QuizSubmission[]
+  giveUps QuizGiveUp[]
+}
+
+model Lesson {
+  id               Int                  @id @default(autoincrement())
+  title            String
+  slug             String               @unique
+  createdAt        DateTime             @default(now())
+  lessonProgresses UserLessonProgress[]
+  quizzesAnswers   QuizAnswer[]
+}
+
+model UserLessonProgress {
+  id          Int      @id @default(autoincrement())
+  lessonId    Int
+  userId      Int
+  completedAt DateTime @default(now())
+  lesson Lesson @relation(fields: [lessonId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+  
+  @@unique([lessonId, userId])
+}
+
+model QuizAnswer {
+  id         Int             @id @default(autoincrement())
+  lessonId   Int              
+  lesson     Lesson           @relation(fields: [lessonId], references: [id])
+  items      QuizAnswerItem[]
+  submissions QuizSubmission[]
+  testCases  TestCase[]
+  giveUps QuizGiveUp[]
+}
+
+model QuizSubmission {
+id         Int              @id @default(autoincrement())
+content String
+language String?
+userId Int
+isCorrect Boolean
+quizAnswerId Int 
+user User @relation(fields: [userId],references: [id])
+quizAnswer QuizAnswer @relation(fields: [quizAnswerId],references: [id])
+submittedAt DateTime @default(now())
+
+@@unique([userId,quizAnswerId,isCorrect])
+
+}
+model QuizGiveUp {
+  id              Int        @id @default(autoincrement())
+  userId          Int
+  quizAnswerId    Int
+  givenUpAt       DateTime   @default(now())
+  user            User       @relation(fields: [userId], references: [id])
+  quizAnswer      QuizAnswer @relation(fields: [quizAnswerId], references: [id])
+
+  @@unique([userId, quizAnswerId]) 
+} 
+
+model QuizAnswerItem {
+  id           Int                @id @default(autoincrement())
+  type         QuizAnswerItemType
+  content      String
+  language     String?
+  quizAnswerId Int
+  quizAnswer   QuizAnswer         @relation(fields: [quizAnswerId], references: [id])
+}
+
+model TestCase {
+  id           Int        @id @default(autoincrement())
+  input        String
+  output       String
+  quizAnswerId Int
+  quizAnswer   QuizAnswer @relation(fields: [quizAnswerId], references: [id])
+}
+
+enum QuizAnswerItemType {
+  CODE
+  TEXT
+  NOTE
+}
+
+

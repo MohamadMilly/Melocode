@@ -1,8 +1,50 @@
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma/client.js";
+import { PrismaClient, User } from "../generated/prisma/client.js";
+import { getStreak } from "../shared/utils/getStreak.js";
+import {
+  UserFindFirstArgs,
+  UserFindManyArgs,
+  UserFindUniqueArgs,
+} from "../generated/prisma/models.js";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 
-export const prisma = new PrismaClient({ adapter });
+export const basePrisma = new PrismaClient({ adapter });
+
+export const prisma = basePrisma.$extends({
+  query: {
+    user: {
+      async $allOperations({ operation, args, query }) {
+        const userArgs = (args || {}) as
+          | UserFindManyArgs
+          | UserFindFirstArgs
+          | UserFindUniqueArgs;
+
+        if (["findMany", "findUnique", "findFirst"].includes(operation)) {
+          userArgs.include = { ...userArgs.include, lessonProgresses: true };
+        }
+
+        let result = (await query(args)) as any;
+        
+        if (Array.isArray(result)) {
+          result = result.map(({ lessonProgresses, ...user }) => {
+            return {
+              ...user,
+              streak: getStreak(lessonProgresses || []),
+            };
+          });
+        } else if (result) {
+          const { lessonProgresses, ...resultWithoutProgresses } = result;
+          result = {
+            ...resultWithoutProgresses,
+            streak: getStreak(lessonProgresses || []),
+          };
+        }
+
+        return result;
+      },
+    },
+  },
+});

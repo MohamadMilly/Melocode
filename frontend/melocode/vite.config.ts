@@ -27,4 +27,14 @@ export default defineConfig({
       providerImportSource: "@mdx-js/react",
     }),
   ],
+  server: {
+    proxy: {
+      "/compiler-api": {
+        target: "https://api.onlinecompiler.io",
+        changeOrigin: true,
+
+        rewrite: (path) => path.replace(/^\/compiler-api/, ""),
+      },
+    },
+  },
 });

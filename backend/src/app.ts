@@ -4,16 +4,30 @@ import "dotenv/config";
 import cors from "cors";
 import { HttpError } from "./shared/errors/HttpError.js";
 
+// routers imports
+import { authRouter } from "./routes/authRouter.js";
+import { lessonRouter } from "./routes/lessonRouter.js";
+import { meRouter } from "./routes/meRouter.js";
+import { quizRouter } from "./routes/quizRouter.js";
+
 const app: Express = express();
 
 app.use(cors());
 
 app.use(express.json());
 
+// routers
+app.use("/auth", authRouter);
+app.use("/lessons", lessonRouter);
+app.use("/quizzes", quizRouter);
+
+app.use("/me", meRouter);
+
 app.use((req: Request, res: Response, next: NextFunction) => {
   const routeError = new HttpError(404, "Route is not found.");
   next(routeError);
 });
+
 app.use(
   (
     err: any,

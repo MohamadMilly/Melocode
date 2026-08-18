@@ -1,26 +1,36 @@
 ---
 title: "حقيقة البرمجة"
 slug: "truth-about-programming"
+lessonId: 1
 exercises:
   - badge: "Write"
+    level: "easy"
+    answerId: 1
+   
     question:
-      - type: "text"
-        content: "اكتب function يقوم بجمع عددين a و b"
-      - type: "code"
-        language: "javascript"
-        content: |
-          function sum(a,b) {
-           /* اكتب الكود هنا */
-          }
-    solution:
-      - type: "code"
-        language: "javascript"
-        content: |
-          function sum(a, b) {
-            return a + b;
-          }
-      - type: "note"
-        content: "نستخدم return لإرجاع نتيجة الجمع، ويمكننا استدعاء الدالة sum(2, 3) للحصول على النتيجة 5."
+      items:
+        - type: "text"
+          content: "اكتب function يقوم بجمع عددين a و b"
+        - type: "code"
+          language: "javascript"
+          content: |
+            function sum(a, b) {
+                /* اكتب الكود هنا */
+            }
+
+  - badge: "Write"
+    answerId: 2
+    level: "medium"
+    question:
+      items:
+        - type: "text"
+          content: "اكتب دالة (Function) تقوم بعكس النصوص (Strings) وإرجاع القيمة المعكوسة."
+
+        - type: "code"
+          content: |
+            function reverseString(str) {
+                /* اكتب الكود هنا */
+            }
 ---
 
 export const toc = [
@@ -62,6 +72,10 @@ const obj = {
   name: "Melocode",
   isAwesome: true,
   age: 1,
+
+  console.log("Mohammed");
+
+  alert("Hello !");
 };
 ```
 

@@ -7,7 +7,7 @@ declare module "*.md" {
   export const frontmatter: {
     title: string;
     slug: string;
-    
+    lessonId: number;
     exercises: import("./components/Quiz/Quiz").QuizData[];
   };
 
@@ -26,6 +26,7 @@ declare module "*.mdx" {
   export const frontmatter: {
     title: string;
     slug: string;
+    lessonId: number;
     exercises: import("./components/Quiz/Quiz").QuizData[];
   };
   export const toc: Array<{ text: string; slug: string }>;

@@ -8,12 +8,12 @@ h2[id] {
   scroll-margin-top: 100px;
 }
 
-::-webkit-scrollbar {
+html::-webkit-scrollbar {
   background-color: var(--gray-12);
   width: 10px;
 }
 
-::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb {
   background-color: var(--color-lime-600);
 }
 
@@ -42,6 +42,23 @@ pre [data-line]::before {
   margin-right: 1.5rem;
   text-align: right;
   color: rgba(255, 255, 255, 0.3);
+}
+
+/* Change the line number panel background to #1a1b26 */
+.code-editor .ace_gutter {
+  background-color: #1a1b26 !important;
+}
+
+.code-editor .ace_scroller {
+  background-color: #1a1b26 !important;
+}
+
+.code-editor .ace_gutter-active-line {
+  background-color: #24283b !important;
+}
+
+.code-editor .ace_gutter-cell {
+  color: rgba(255, 255, 255, 0.3) !important;
 }
 
 @layer utilities {

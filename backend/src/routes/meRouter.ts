@@ -1,0 +1,24 @@
+import express, { type Router } from "express";
+import * as meController from "../controllers/meController.js";
+import { extractToken } from "../middlewares/auth/extractToken.js";
+import { mandatoryVerifyToken } from "../middlewares/auth/verifyToken.js";
+
+export const meRouter: Router = express.Router();
+
+meRouter.use(extractToken);
+meRouter.use(mandatoryVerifyToken);
+
+meRouter.get("/", meController.getCurrentUser);
+meRouter.post("/lessons/:lessonId/progress", meController.createLessonProgress);
+
+meRouter.get("/lessons/:lessonId/progress", meController.getLessonProgress);
+
+meRouter.get(
+  "/lessons/:lessonId/submissions",
+  meController.getLessonQuizzesSubmissions,
+);
+
+meRouter.get(
+  "/quizzes/:quizAnswerId/submissions",
+  meController.getQuizSubmissions,
+);

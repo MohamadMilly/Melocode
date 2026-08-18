@@ -1,7 +1,17 @@
 import { Box, Tabs } from "@radix-ui/themes";
 import { Quiz, type QuizData } from "./Quiz";
+import { useMyLessonSubmissions } from "../../hooks/api/me/useLessonQuizzesSubmissions";
 
-export function QuizesTabs({ quizzes }: { quizzes: QuizData[] }) {
+export function QuizesTabs({
+  quizzes,
+  lessonId,
+}: {
+  quizzes: QuizData[];
+  lessonId: number;
+}) {
+  const { submissionsData, isLoading, error } =
+    useMyLessonSubmissions(lessonId);
+ 
   const quizzesCount = quizzes.length;
   const quizzesNames: string[] = [];
   for (let i = 1; i <= quizzesCount; i++) {
@@ -24,7 +34,27 @@ export function QuizesTabs({ quizzes }: { quizzes: QuizData[] }) {
 
       <Box pt="3">
         {quizzes.map((quiz, index) => {
-          return <Quiz name={quizzesNames[index]} quiz={quiz} />;
+          let submission = null;
+          const thisQuizSubmissionsData = submissionsData.find(
+            (submissionData) => submissionData.id === quiz.answerId,
+          );
+          if (thisQuizSubmissionsData) {
+            const correctSubmission = thisQuizSubmissionsData?.submissions.find(
+              (s) => s.isCorrect,
+            );
+            const wrongSubmission = thisQuizSubmissionsData?.submissions.find(
+              (s) => !s.isCorrect,
+            );
+            submission = correctSubmission ?? wrongSubmission;
+          }
+          return (
+            <Quiz
+              name={quizzesNames[index]}
+              quiz={quiz}
+              submission={submission}
+              lessonId={lessonId}
+            />
+          );
         })}
       </Box>
     </Tabs.Root>

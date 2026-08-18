@@ -1,5 +1,6 @@
 import { Text, Tooltip } from "@radix-ui/themes";
-import { Check } from "lucide-react";
+import { Check, Lock } from "lucide-react";
+import type { ReactNode } from "react";
 import { Link } from "react-router";
 
 export type Node = {
@@ -14,6 +15,12 @@ type MapNodeProps = {
   index: number;
 };
 
+const nodeIcons: Record<"completed" | "locked" | "current", ReactNode> = {
+  completed: <Check size={32} />,
+  locked: <Lock size={32} />,
+  current: null,
+};
+
 export function MapNode({ node, index }: MapNodeProps) {
   const statusClasses: Record<Node["status"], string> = {
     locked: "bg-[var(--gray-3)] text-[var(--gray-11)] border-[var(gray-8)]",
@@ -22,6 +29,7 @@ export function MapNode({ node, index }: MapNodeProps) {
     completed:
       "bg-[var(--accent-9)] text-[var(--accent-12)] border-[var(--accent-8)] hover:border-b-4 hover:mb-1 active:border-b-1 active:mb-[1px]",
   };
+  const icon = nodeIcons[node.status];
   return (
     <Tooltip content={node.title}>
       <Link
@@ -29,7 +37,7 @@ export function MapNode({ node, index }: MapNodeProps) {
         to={node.status === "locked" ? "#" : `lessons/${node.slug}`}
       >
         <Text size={"6"} weight={"bold"}>
-          {node.status === "completed" ? <Check size={32} /> : index}
+          {icon ?? index}
         </Text>
       </Link>
     </Tooltip>

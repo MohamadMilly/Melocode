@@ -1,12 +1,16 @@
 import { useRef, type ReactNode } from "react";
 import { MapNode, type Node } from "./MapNode";
 import { SvgPath } from "./SvgPath";
+import { Spinner, Text } from "@radix-ui/themes";
+import type { AxiosError } from "axios";
 
 type ProgressMapProps = {
   nodes: Node[];
+  isLoading: boolean;
+  error: AxiosError<{ message: string }> | null;
 };
 
-export function ProgressMap({ nodes }: ProgressMapProps) {
+export function ProgressMap({ nodes, isLoading, error }: ProgressMapProps) {
   const items: ReactNode[] = [];
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
@@ -27,7 +31,16 @@ export function ProgressMap({ nodes }: ProgressMapProps) {
       direction = direction === "right" ? "left" : "right";
     }
   });
-
+  if (isLoading) return <Spinner size={"3"} />;
+  if (error)
+    return (
+      <Text>
+        Error:{" "}
+        {error.response?.data?.message ||
+          error.message ||
+          error.response?.statusText}
+      </Text>
+    );
   return (
     <div
       ref={mapContainerRef}
