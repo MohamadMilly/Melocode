@@ -15,8 +15,11 @@ export function useCheckAnswer(quizAnswerId: number, lessonId: number) {
     error: runCodeError,
   } = useRunCode();
 
-  const { mutateAsync: submitAnswer, isPending: isAnswerBeingSubmitted } =
-    useSubmitQuizAnswer();
+  const {
+    mutateAsync: submitAnswer,
+    isPending: isAnswerBeingSubmitted,
+    error: submissionError,
+  } = useSubmitQuizAnswer();
   const checkAnswer = async ({ code }: { code: string }) => {
     if (!quizAnswerId) return;
     const response = await fetchTestCases();
@@ -42,8 +45,8 @@ export function useCheckAnswer(quizAnswerId: number, lessonId: number) {
     const results = [];
     for(const testCase of testCases) {
     const args = testCase.input.split("_").map(arg => Number.isNaN(Number(arg)) ? arg : Number(arg));
-    
-    const output = ${functionToBeTestedName}(...args);
+       
+    const output = ${functionToBeTestedName ? `${functionToBeTestedName}(...args)` : undefined};
     
     results.push({
     testCaseId:testCase.id,
@@ -83,6 +86,7 @@ export function useCheckAnswer(quizAnswerId: number, lessonId: number) {
     checkAnswer: triggerCheckAnswer,
     isPending,
     error,
+    submissionError,
     areTestCasesLoading,
     testCasesFetchError,
     isRunningPending,

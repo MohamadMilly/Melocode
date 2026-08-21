@@ -1,6 +1,8 @@
 import { Box, Tabs } from "@radix-ui/themes";
 import { Quiz, type QuizData } from "./Quiz";
 import { useMyLessonSubmissions } from "../../hooks/api/me/useLessonQuizzesSubmissions";
+import { QuizSkeleton } from "./skeleton/QuizSkeleton";
+import { useLessonQuizzesGiveUps } from "../../hooks/api/me/useLessonQuizzesGiveUps";
 
 export function QuizesTabs({
   quizzes,
@@ -9,9 +11,17 @@ export function QuizesTabs({
   quizzes: QuizData[];
   lessonId: number;
 }) {
-  const { submissionsData, isLoading, error } =
-    useMyLessonSubmissions(lessonId);
- 
+  const {
+    submissionsData,
+    isLoading: isLoadingSubmissions,
+    error: submissionFetchError,
+  } = useMyLessonSubmissions(lessonId);
+  const {
+    giveUpsData,
+    isLoading: isLoadingGiveUps,
+    error: giveUpFetchError,
+  } = useLessonQuizzesGiveUps(lessonId);
+
   const quizzesCount = quizzes.length;
   const quizzesNames: string[] = [];
   for (let i = 1; i <= quizzesCount; i++) {
@@ -25,7 +35,11 @@ export function QuizesTabs({
       <Tabs.List>
         {quizzesNames.map((name) => {
           return (
-            <Tabs.Trigger className="capitalize" value={name}>
+            <Tabs.Trigger
+              disabled={isLoadingSubmissions}
+              className="capitalize"
+              value={name}
+            >
               {name.replace("-", " ")}
             </Tabs.Trigger>
           );
@@ -33,29 +47,38 @@ export function QuizesTabs({
       </Tabs.List>
 
       <Box pt="3">
-        {quizzes.map((quiz, index) => {
-          let submission = null;
-          const thisQuizSubmissionsData = submissionsData.find(
-            (submissionData) => submissionData.id === quiz.answerId,
-          );
-          if (thisQuizSubmissionsData) {
-            const correctSubmission = thisQuizSubmissionsData?.submissions.find(
-              (s) => s.isCorrect,
+        {isLoadingSubmissions ? (
+          <QuizSkeleton name="التمرين-1" />
+        ) : (
+          quizzes.map((quiz, index) => {
+            let submission = null;
+
+            const thisQuizSubmissionsData = submissionsData.find(
+              (submissionData) => submissionData.id === quiz.answerId,
             );
-            const wrongSubmission = thisQuizSubmissionsData?.submissions.find(
-              (s) => !s.isCorrect,
+            const thisQuizGiveUpData = giveUpsData.find(
+              (gData) => gData.id === quiz.answerId,
             );
-            submission = correctSubmission ?? wrongSubmission;
-          }
-          return (
-            <Quiz
-              name={quizzesNames[index]}
-              quiz={quiz}
-              submission={submission}
-              lessonId={lessonId}
-            />
-          );
-        })}
+            const giveUp = thisQuizGiveUpData?.giveUps[0];
+            if (thisQuizSubmissionsData) {
+              const correctSubmission =
+                thisQuizSubmissionsData?.submissions.find((s) => s.isCorrect);
+              const wrongSubmission = thisQuizSubmissionsData?.submissions.find(
+                (s) => !s.isCorrect,
+              );
+              submission = correctSubmission ?? wrongSubmission;
+            }
+            return (
+              <Quiz
+                name={quizzesNames[index]}
+                quiz={quiz}
+                submission={submission}
+                giveUpData={giveUp}
+                lessonId={lessonId}
+              />
+            );
+          })
+        )}
       </Box>
     </Tabs.Root>
   );

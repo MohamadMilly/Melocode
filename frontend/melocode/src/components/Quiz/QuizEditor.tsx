@@ -16,9 +16,10 @@ import "ace-builds/src-noconflict/ext-language_tools";
 type QuizEditorProps = {
   code: string;
   setCode: Dispatch<SetStateAction<string>>;
+  disabled: boolean;
 };
 
-export function QuizEditor({ code, setCode }: QuizEditorProps) {
+export function QuizEditor({ code, setCode, disabled }: QuizEditorProps) {
   const [logs, setLogs] = useState<
     { type: "ERROR" | "LOG"; message: string }[]
   >([]);
@@ -94,6 +95,7 @@ export function QuizEditor({ code, setCode }: QuizEditorProps) {
   return (
     <div className="w-full my-2">
       <AceEditor
+        readOnly={disabled}
         className="code-editor"
         placeholder="write your code here..."
         theme="cloud9_night"

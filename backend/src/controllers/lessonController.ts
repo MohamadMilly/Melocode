@@ -6,11 +6,12 @@ export const getAllLessons = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
-  const currentUserId = req.currentUser?.id as number;
+  const currentUserId = req.currentUser?.id;
   const lessons = await lessonService.getLessons({ userId: currentUserId });
-  
+
   res.json({
     lessons: lessons,
+    authStatus: req.authStatus,
   });
+ 
 };
-

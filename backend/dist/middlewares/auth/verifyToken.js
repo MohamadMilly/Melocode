@@ -11,7 +11,11 @@ export function getVerifyTokenMiddleware({ isOptional, }) {
                 const authData = verify(token);
                 if (authData) {
                     req.currentUser = authData;
+                    req.authStatus = "Authorized";
                 }
+            }
+            else {
+                req.authStatus = "UnAuthorized";
             }
             next();
         }
@@ -20,6 +24,7 @@ export function getVerifyTokenMiddleware({ isOptional, }) {
                 err.status = 401;
             }
             if (isOptional) {
+                req.authStatus = "UnAuthorized";
                 next();
             }
             else

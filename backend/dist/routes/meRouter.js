@@ -10,3 +10,6 @@ meRouter.post("/lessons/:lessonId/progress", meController.createLessonProgress);
 meRouter.get("/lessons/:lessonId/progress", meController.getLessonProgress);
 meRouter.get("/lessons/:lessonId/submissions", meController.getLessonQuizzesSubmissions);
 meRouter.get("/quizzes/:quizAnswerId/submissions", meController.getQuizSubmissions);
+meRouter.post("/quizzes/:quizAnswerId/giveups", meController.giveUpToQuiz);
+meRouter.get("/quizzes/:quizAnswerId/giveups", meController.getUserQuizGiveUp);
+meRouter.get("/lessons/:lessonId/giveups", meController.getUserQuizzesGiveUpsForLesson);

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../api/api";
 import type { GetLessonQuizzesSubmissionsResponse } from "@app/types";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const getLessonQuizzesSubmissions = async (
   lessonId: number,
@@ -17,11 +18,12 @@ const getLessonQuizzesSubmissions = async (
 };
 
 export function useMyLessonSubmissions(lessonId: number, isCorrect?: boolean) {
+  const { user } = useAuth();
   const { data, isLoading, error } = useQuery({
-    queryKey: ["lessons", lessonId, "submissions"],
+    queryKey: ["me", "lessons", lessonId, "submissions"],
     queryFn: () => getLessonQuizzesSubmissions(lessonId, isCorrect),
 
-    enabled: typeof lessonId === "number" && !isNaN(lessonId),
+    enabled: typeof lessonId === "number" && !isNaN(lessonId) && !!user,
   });
 
   const submissionsData = data?.submissionsData ?? [];

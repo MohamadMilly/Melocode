@@ -8,10 +8,12 @@ export function QuizQuestion({
   questionItems,
   code,
   setCode,
+  editorDisabled,
 }: {
   questionItems: QuizQuestionItem[];
   code: string;
   setCode: Dispatch<SetStateAction<string>>;
+  editorDisabled: boolean;
 }) {
   return (
     <>
@@ -25,7 +27,13 @@ export function QuizQuestion({
                 </Text>
               );
             case "code":
-              return <QuizEditor code={code} setCode={setCode} />;
+              return (
+                <QuizEditor
+                  disabled={editorDisabled}
+                  code={code}
+                  setCode={setCode}
+                />
+              );
 
             case "note":
               return <LessonNote>{quiz.content}</LessonNote>;

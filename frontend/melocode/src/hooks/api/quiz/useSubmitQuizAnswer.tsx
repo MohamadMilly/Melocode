@@ -34,7 +34,7 @@ export function useSubmitQuizAnswer() {
     mutationFn: ({ lessonId, ...args }: MutationArgs) => saveSubmission(args),
 
     onSuccess: (data, { lessonId, quizAnswerId }) => {
-      const progressKey = ["lessons", lessonId, "submissions"];
+      const progressKey = ["me", "lessons", lessonId, "submissions"];
       const newSubmission = data.submission;
 
       queryClient.setQueryData<GetLessonQuizzesSubmissionsResponse>(

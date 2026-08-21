@@ -136,3 +136,17 @@ export type GetLessonQuizzesSubmissionsResponse = {
     submissions: QuizSubmission[];
   }[];
 };
+
+export type QuizGiveUp = {
+  id: number;
+  userId: number;
+  givenUpAt: Date;
+  quizAnswerId: number;
+};
+
+export type GetLessonQuizzesGiveUpsResponse = {
+  giveUpsData: {
+    id: number;
+    giveUps: QuizGiveUp[];
+  }[];
+};

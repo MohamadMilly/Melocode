@@ -25,7 +25,10 @@ export function getVerifyTokenMiddleware({
         const authData = verify<UserJwtPayload>(token);
         if (authData) {
           req.currentUser = authData;
+          req.authStatus = "Authorized";
         }
+      } else {
+        req.authStatus = "UnAuthorized";
       }
       next();
     } catch (err: any) {
@@ -33,6 +36,7 @@ export function getVerifyTokenMiddleware({
         err.status = 401;
       }
       if (isOptional) {
+        req.authStatus = "UnAuthorized";
         next();
       } else next(err);
     }

@@ -4,5 +4,6 @@ export const getAllLessons = async (req, res) => {
     const lessons = await lessonService.getLessons({ userId: currentUserId });
     res.json({
         lessons: lessons,
+        authStatus: req.authStatus,
     });
 };

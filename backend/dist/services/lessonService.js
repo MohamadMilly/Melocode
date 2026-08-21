@@ -1,6 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
-export const getLessons = async ({ userId }) => {
+export const getLessons = async ({ userId, }) => {
     const lessons = await prisma.lesson.findMany({
         include: {
             ...(userId

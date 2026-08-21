@@ -33,7 +33,7 @@ export const getQuizAnswer = async ({
   }
   const hasGivenUpOrAnsweredCorrectly =
     quizAnswer.giveUps.length >= 1 || quizAnswer.submissions.length >= 1;
-
+  
   if (!hasGivenUpOrAnsweredCorrectly) {
     throw new HttpError(
       400,

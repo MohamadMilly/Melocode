@@ -13,13 +13,15 @@ datasource db {
 
 model User {
   id               Int                  @id @default(autoincrement())
-  fullname         String
-  username         String               @unique
+  fullname         String               
+  username         String               @unique 
   password         String
   createdAt        DateTime             @default(now())
   lessonProgresses UserLessonProgress[]
   submissions QuizSubmission[]
   giveUps QuizGiveUp[]
+  
+ 
 }
 
 model Lesson {
@@ -33,19 +35,21 @@ model Lesson {
 
 model UserLessonProgress {
   id          Int      @id @default(autoincrement())
-  lessonId    Int
+  lessonId    Int          
   userId      Int
   completedAt DateTime @default(now())
-  lesson Lesson @relation(fields: [lessonId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
+  lesson Lesson @relation(fields: [lessonId], references: [id],onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id],onDelete: Cascade)
   
   @@unique([lessonId, userId])
+
+  @@index([lessonId])
 }
 
 model QuizAnswer {
   id         Int             @id @default(autoincrement())
   lessonId   Int              
-  lesson     Lesson           @relation(fields: [lessonId], references: [id])
+  lesson     Lesson           @relation(fields: [lessonId], references: [id],onDelete: Cascade)
   items      QuizAnswerItem[]
   submissions QuizSubmission[]
   testCases  TestCase[]
@@ -60,10 +64,12 @@ userId Int
 isCorrect Boolean
 quizAnswerId Int 
 user User @relation(fields: [userId],references: [id])
-quizAnswer QuizAnswer @relation(fields: [quizAnswerId],references: [id])
+quizAnswer QuizAnswer @relation(fields: [quizAnswerId],references: [id],onDelete: Cascade)
 submittedAt DateTime @default(now())
 
 @@unique([userId,quizAnswerId,isCorrect])
+
+@@index([userId])
 
 }
 model QuizGiveUp {
@@ -71,10 +77,11 @@ model QuizGiveUp {
   userId          Int
   quizAnswerId    Int
   givenUpAt       DateTime   @default(now())
-  user            User       @relation(fields: [userId], references: [id])
-  quizAnswer      QuizAnswer @relation(fields: [quizAnswerId], references: [id])
-
+  user            User       @relation(fields: [userId], references: [id],onDelete: Cascade)
+  quizAnswer      QuizAnswer @relation(fields: [quizAnswerId], references: [id],onDelete: Cascade)
+   
   @@unique([userId, quizAnswerId]) 
+  
 } 
 
 model QuizAnswerItem {
@@ -83,7 +90,7 @@ model QuizAnswerItem {
   content      String
   language     String?
   quizAnswerId Int
-  quizAnswer   QuizAnswer         @relation(fields: [quizAnswerId], references: [id])
+  quizAnswer   QuizAnswer         @relation(fields: [quizAnswerId], references: [id],onDelete: Cascade)
 }
 
 model TestCase {
@@ -91,7 +98,7 @@ model TestCase {
   input        String
   output       String
   quizAnswerId Int
-  quizAnswer   QuizAnswer @relation(fields: [quizAnswerId], references: [id])
+  quizAnswer   QuizAnswer @relation(fields: [quizAnswerId], references: [id],onDelete: Cascade)
 }
 
 enum QuizAnswerItemType {

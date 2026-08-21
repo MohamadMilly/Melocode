@@ -22,3 +22,12 @@ meRouter.get(
   "/quizzes/:quizAnswerId/submissions",
   meController.getQuizSubmissions,
 );
+
+meRouter.post("/quizzes/:quizAnswerId/giveups", meController.giveUpToQuiz);
+
+meRouter.get("/quizzes/:quizAnswerId/giveups", meController.getUserQuizGiveUp);
+
+meRouter.get(
+  "/lessons/:lessonId/giveups",
+  meController.getUserQuizzesGiveUpsForLesson,
+);

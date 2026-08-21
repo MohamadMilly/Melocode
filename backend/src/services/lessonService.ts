@@ -2,7 +2,11 @@ import { LessonStatus } from "@app/types";
 import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
 
-export const getLessons = async ({ userId }: { userId: number }) => {
+export const getLessons = async ({
+  userId,
+}: {
+  userId: number | undefined;
+}) => {
   const lessons = await prisma.lesson.findMany({
     include: {
       ...(userId

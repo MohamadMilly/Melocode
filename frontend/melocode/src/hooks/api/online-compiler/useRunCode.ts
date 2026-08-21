@@ -22,7 +22,9 @@ const runCode = async (code: string): Promise<RunCodeOutput> => {
       },
     },
   );
-
+  if (response.data.status === "error") {
+    throw new Error("حدث خطأ اثناء تنفيذ الكود");
+  }
   return response.data;
 };
 

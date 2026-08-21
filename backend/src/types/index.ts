@@ -9,4 +9,5 @@ export interface AuthenticatedRequest<
 > extends Request<Params, ResBody, ReqBody, ReqQuery> {
   token?: string;
   currentUser?: UserJwtPayload;
+  authStatus?: "Authorized" | "UnAuthorized";
 }

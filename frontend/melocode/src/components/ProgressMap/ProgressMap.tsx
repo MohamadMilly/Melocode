@@ -3,6 +3,7 @@ import { MapNode, type Node } from "./MapNode";
 import { SvgPath } from "./SvgPath";
 import { Spinner, Text } from "@radix-ui/themes";
 import type { AxiosError } from "axios";
+import { ErrorElement } from "../shared/ui/ErrorElement";
 
 type ProgressMapProps = {
   nodes: Node[];
@@ -31,16 +32,13 @@ export function ProgressMap({ nodes, isLoading, error }: ProgressMapProps) {
       direction = direction === "right" ? "left" : "right";
     }
   });
-  if (isLoading) return <Spinner size={"3"} />;
-  if (error)
+  if (isLoading)
     return (
-      <Text>
-        Error:{" "}
-        {error.response?.data?.message ||
-          error.message ||
-          error.response?.statusText}
-      </Text>
+      <div className="flex justify-center">
+        <Spinner size={"3"} />
+      </div>
     );
+  if (error) return <ErrorElement axiosError={error} />;
   return (
     <div
       ref={mapContainerRef}
