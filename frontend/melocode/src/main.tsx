@@ -24,7 +24,7 @@ createRoot(document.getElementById("root")!).render(
           radius="large"
           appearance="dark"
           scaling="95%"
-        >
+        > 
           <RouterProvider router={router} />
         </Theme>
       </AuthProvider>

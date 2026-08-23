@@ -1,13 +1,13 @@
 import { Box, Flex, Heading, Section, Text } from "@radix-ui/themes";
-import { ProgressMap } from "../components/ProgressMap/ProgressMap";
-import { useLessons } from "../hooks/api/lesson/useLessons";
-import { useAuth } from "../contexts/AuthContext";
-import { RouteLink } from "../components/shared/RouteLink";
+import { ProgressMap } from "../../components/ProgressMap/ProgressMap";
+import { useLessons } from "../../hooks/api/lesson/useLessons";
+import { useAuth } from "../../contexts/AuthContext";
+import { RouteLink } from "../../components/shared/ui/RouteLink";
 
 export function MainPage() {
   const { lessons: nodes, isLoading, error } = useLessons();
   const { user } = useAuth();
-
+  
   return (
     <main
       dir="rtl"

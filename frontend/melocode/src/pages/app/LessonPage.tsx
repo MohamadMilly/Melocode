@@ -2,14 +2,14 @@ import { useParams } from "react-router";
 import { Button, Flex, Heading, Text } from "@radix-ui/themes";
 
 import { MDXProvider } from "@mdx-js/react";
-import { markDownComponents } from "../components/Lesson/MarkDownComponents";
-import { lessons } from "../lessons/lessons";
-import { QuizesTabs } from "../components/Quiz/QuizzesTabs";
+import { markDownComponents } from "../../components/Lesson/MarkDownComponents";
+import { lessons } from "../../lessons/lessons";
+import { QuizesTabs } from "../../components/Quiz/QuizzesTabs";
 import { Brain } from "lucide-react";
-import { LessonContents } from "../components/Lesson/LessonContents";
-import { useMyLessonProgress } from "../hooks/api/me/useMyLessonProgress";
-import { useCompleteLesson } from "../hooks/api/me/useCompleteLesson";
-import { useAuth } from "../contexts/AuthContext";
+import { LessonContents } from "../../components/Lesson/LessonContents";
+import { useMyLessonProgress } from "../../hooks/api/me/useMyLessonProgress";
+import { useCompleteLesson } from "../../hooks/api/me/useCompleteLesson";
+import { useAuth } from "../../contexts/AuthContext";
 
 export function LessonPage() {
   const { slug } = useParams();
@@ -42,7 +42,7 @@ export function LessonPage() {
     if (!user) return;
     completeLesson(lessonId);
   };
-
+  
   return (
     <div className="relative h-full grid grid-cols-1 md:grid-cols-[300px_1fr] gap-4 p-2 md:p-4">
       <LessonContents toc={toc} />

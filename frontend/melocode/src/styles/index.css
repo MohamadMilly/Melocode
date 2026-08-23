@@ -1,4 +1,42 @@
-@import "tailwindcss";
+/* src/index.css */
+@import "tailwindcss"; /* Standard Tailwind v4 entry point */
+
+/* 1. Tell Tailwind v4 to explicitly look inside the Tremor folder */
+@source "../../node_modules/@tremor/react";
+
+/* 2. (Optional) Provide Tremor fallback colors if its custom color names disappear */
+@theme {
+  --color-tremor-brand: var(--color-blue-500);
+  --color-tremor-brand-hover: var(--color-blue-600);
+}
+
+.streak-chart .recharts-cartesian-axis-tick text {
+  fill: var(--gray-11);
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.streak-chart .recharts-cartesian-grid line {
+  stroke: var(--gray-6);
+  stroke-dasharray: 4 4;
+}
+
+.streak-chart .recharts-tooltip-wrapper {
+  direction: rtl;
+}
+
+.streak-chart .recharts-default-tooltip {
+  border: 1px solid var(--gray-6) !important;
+  border-radius: 8px;
+  background: var(--color-panel-solid) !important;
+  box-shadow: var(--shadow-2);
+  color: var(--gray-12);
+}
+
+.streak-chart .recharts-tooltip-label,
+.streak-chart .recharts-tooltip-item {
+  color: var(--gray-12) !important;
+}
 
 html {
   scroll-behavior: smooth;

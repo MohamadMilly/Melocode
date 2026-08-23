@@ -10,6 +10,9 @@ export const register = async (req, res) => {
             password: await bcrypt.hash(password, 10),
             username,
             fullname,
+            profile: {
+                create: {},
+            },
         },
     });
     const jwtPayload = {

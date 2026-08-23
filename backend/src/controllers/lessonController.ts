@@ -8,7 +8,7 @@ export const getAllLessons = async (
 ) => {
   const currentUserId = req.currentUser?.id;
   const lessons = await lessonService.getLessons({ userId: currentUserId });
-
+  
   res.json({
     lessons: lessons,
     authStatus: req.authStatus,

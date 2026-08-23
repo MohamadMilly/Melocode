@@ -1,8 +1,9 @@
 import App from "./App";
 import { LoginPage } from "./pages/auth/Login";
 import { SignUpPage } from "./pages/auth/SignUp";
-import { LessonPage } from "./pages/LessonPage";
-import { MainPage } from "./pages/MainPage";
+import { LessonPage } from "./pages/app/LessonPage";
+import { MainPage } from "./pages/app/MainPage";
+import { ProfilePage } from "./pages/app/ProfilePage";
 
 export const routes = [
   {
@@ -16,6 +17,10 @@ export const routes = [
       {
         path: "lessons/:slug",
         element: <LessonPage />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
       },
     ],
   },

@@ -18,12 +18,12 @@ export default defineConfig({
         [
           rehypePrettyCode,
           {
-            theme: "tokyo-night", // Changes the code block theme to a VS Code theme
-            keepBackground: true, // Keeps the editor background color
+            theme: "tokyo-night",
+            keepBackground: true, 
             defaultLang: "plaintext",
           },
         ],
-      ], // Adds IDs to <h1>, <h2> for linking
+      ],
       providerImportSource: "@mdx-js/react",
     }),
   ],

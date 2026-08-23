@@ -1,4 +1,4 @@
-import { NavBar } from "./components/shared/NavBar";
+import { NavBar } from "./components/shared/ui/NavBar";
 
 import { Outlet } from "react-router";
 

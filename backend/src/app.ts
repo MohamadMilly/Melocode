@@ -9,6 +9,7 @@ import { authRouter } from "./routes/authRouter.js";
 import { lessonRouter } from "./routes/lessonRouter.js";
 import { meRouter } from "./routes/meRouter.js";
 import { quizRouter } from "./routes/quizRouter.js";
+import { userRouter } from "./routes/userRouter.js";
 
 const app: Express = express();
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/lessons", lessonRouter);
 app.use("/quizzes", quizRouter);
+app.use("/users", userRouter);
 
 app.use("/me", meRouter);
 

@@ -11,10 +11,13 @@ export const getCurrentUser = async (
   res: Response,
 ) => {
   const currentUserId = req.currentUser?.id as number;
-  
+
   const user = await prisma.user.findUnique({
     where: {
       id: currentUserId,
+    },
+    include: {
+      profile: true,
     },
   });
   res.json({ user });

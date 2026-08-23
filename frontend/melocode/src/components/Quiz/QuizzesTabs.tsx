@@ -24,6 +24,7 @@ export function QuizesTabs({
 
   const quizzesCount = quizzes.length;
   const quizzesNames: string[] = [];
+
   for (let i = 1; i <= quizzesCount; i++) {
     quizzesNames.push(`التمرين-${i}`);
   }

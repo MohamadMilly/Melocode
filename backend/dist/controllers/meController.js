@@ -2,6 +2,18 @@ import * as lessonService from "../services/lessonService.js";
 import * as quizService from "../services/quizService.js";
 import * as giveUpService from "../services/giveUpService.js";
 import { prisma } from "../lib/prisma.js";
+export const getCurrentUser = async (req, res) => {
+    const currentUserId = req.currentUser?.id;
+    const user = await prisma.user.findUnique({
+        where: {
+            id: currentUserId,
+        },
+        include: {
+            profile: true,
+        },
+    });
+    res.json({ user });
+};
 export const createLessonProgress = async (req, res) => {
     const currentUserId = req.currentUser?.id;
     const { lessonId } = req.params;
@@ -56,13 +68,4 @@ export const getLessonProgress = async (req, res) => {
         hasCompletedAllQuizzes: progressData.hasCompletedAllQuizzes,
         progress: progressData.progress,
     });
-};
-export const getCurrentUser = async (req, res) => {
-    const currentUserId = req.currentUser?.id;
-    const user = await prisma.user.findUnique({
-        where: {
-            id: currentUserId,
-        },
-    });
-    res.json({ user });
 };

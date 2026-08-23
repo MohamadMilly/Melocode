@@ -2,7 +2,7 @@ export type UserLessonProgress = {
   id: number;
   lessonId: number;
   userId: number;
-  completedAt: Date | string | null;
+  completedAt: Date;
   [key: string]: any;
 };
 
@@ -11,12 +11,19 @@ export type LessonProgressResponse = {
   progress: UserLessonProgress | null;
 };
 
+export type Profile = {
+  id: number;
+  avtarUrl?: string;
+  userId: number;
+};
+
 export type User = {
   id: number;
-  fullname: number;
+  fullname: string;
   username: string;
   createdAt: Date;
   lessonProgresses?: UserLessonProgress[];
+  profile?: Profile;
   [key: string]: any;
 };
 
@@ -149,4 +156,9 @@ export type GetLessonQuizzesGiveUpsResponse = {
     id: number;
     giveUps: QuizGiveUp[];
   }[];
+};
+
+export type GetUserProgressResponse = {
+  progresses: UserLessonProgress[];
+  progressFraction: number;
 };

@@ -9,6 +9,7 @@ export function useCheckAnswer(quizAnswerId: number, lessonId: number) {
     isLoading: areTestCasesLoading,
     error: testCasesFetchError,
   } = useQuizTestCase(quizAnswerId);
+  
   const {
     mutateAsync: run,
     isPending: isRunningPending,
@@ -25,7 +26,7 @@ export function useCheckAnswer(quizAnswerId: number, lessonId: number) {
     const response = await fetchTestCases();
     const testCases = response.data?.testCases;
     const regex =
-      /(?:function\s+([a-zA-Z_$][\w$]*)|([a-zA-Z_$][\w$]*)\s*=\s*(?:\([^)]*\)\s*=>|function\s*\xlb))/g;
+      /(?:function\s*\*?\s+([a-zA-Z_$][\w$]*)|(?:const|let|var)?\s*([a-zA-Z_$][\w$]*)\s*[:=]\s*(?:async\s*)?(?:function|\([^)]*\)\s*=>|[\w$]+\s*=>))/g;
 
     const functionNamesMatches = [...code.matchAll(regex)].map(
       (match) => match[1] || match[2],

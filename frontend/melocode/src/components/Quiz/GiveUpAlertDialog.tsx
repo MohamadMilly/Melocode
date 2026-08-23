@@ -30,7 +30,7 @@ export function GiveUpAlertDialog({
           </AlertDialog.Cancel>
           <AlertDialog.Action>
             <Button
-              disabled={isGivingUp}
+              loading={isGivingUp}
               onClick={onGiveUp}
               variant="solid"
               color="red"

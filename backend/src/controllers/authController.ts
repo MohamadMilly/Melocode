@@ -23,6 +23,9 @@ export const register = async (
       password: await bcrypt.hash(password, 10),
       username,
       fullname,
+      profile: {
+        create: {},
+      },
     },
   });
   const jwtPayload: UserJwtPayload = {

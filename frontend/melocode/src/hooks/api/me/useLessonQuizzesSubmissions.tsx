@@ -22,7 +22,7 @@ export function useMyLessonSubmissions(lessonId: number, isCorrect?: boolean) {
   const { data, isLoading, error } = useQuery({
     queryKey: ["me", "lessons", lessonId, "submissions"],
     queryFn: () => getLessonQuizzesSubmissions(lessonId, isCorrect),
-
+    
     enabled: typeof lessonId === "number" && !isNaN(lessonId) && !!user,
   });
 

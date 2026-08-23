@@ -20,8 +20,14 @@ model User {
   lessonProgresses UserLessonProgress[]
   submissions QuizSubmission[]
   giveUps QuizGiveUp[]
-  
- 
+  profile Profile?
+}
+
+model Profile {
+id    Int @id @default(autoincrement())
+avatarUrl String?
+user User @relation(fields: [userId],references: [id])
+userId Int @unique
 }
 
 model Lesson {
