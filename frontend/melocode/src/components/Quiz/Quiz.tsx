@@ -34,6 +34,7 @@ type QuizProps = {
   submission: QuizSubmission | undefined | null;
   lessonId: number;
   giveUpData: QuizGiveUp | undefined;
+  expanded?: boolean;
 };
 
 export function Quiz({
@@ -42,9 +43,11 @@ export function Quiz({
   submission,
   lessonId,
   giveUpData,
+  expanded = false,
 }: QuizProps) {
   const { user } = useAuth();
   const [solutionVisible, setSolutionVisible] = useState<boolean>(false);
+
   const quizAnswerId = quiz.answerId;
   const questionItems = quiz.question.items;
   const codeItem = questionItems.find((item) => item.type === "code");
@@ -71,6 +74,22 @@ export function Quiz({
   const [lastResult, setLastResult] = useState<{ isCorrect: boolean } | null>(
     null,
   );
+
+  useEffect(() => {
+    if (expanded) {
+      document.documentElement.style.overflow = "hidden";
+      document.documentElement.style.height = "100vh";
+      document.body.style.overflow = "hidden";
+      document.body.style.height = "100vh";
+    }
+
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.documentElement.style.height = "";
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+    };
+  }, [expanded]);
 
   useEffect(() => {
     if (submission) {
@@ -101,10 +120,22 @@ export function Quiz({
   const handleGiveUp = () => {
     giveUp({ quizAnswerId: quizAnswerId, lessonId: lessonId });
   };
+
   return (
-    <Tabs.Content value={name}>
-      <Flex direction={"column"} align={"end"} mb={"4"} p={"2"}>
-        {submission && <SubmissionStatusBanner isCompleted={isCompleted} />}
+    <Tabs.Content
+      value={name}
+      className={`${expanded ? "grid grid-cols-[400px_1fr] grid-rows-1 overflow-y-auto no-scrollbar" : ""}`}
+    >
+      <Flex
+        direction={"column"}
+        align={"end"}
+        mb={"4"}
+        p={"2"}
+        className="col-start-2 col-end-3 row-start-1 row-end-2"
+      >
+        {submission && !expanded && (
+          <SubmissionStatusBanner isCompleted={isCompleted} />
+        )}
         <Flex gap={"2"}>
           <QuizTypeBadge badge={quiz.badge} />
           <QuizLevelBadge level={quiz.level} />
@@ -117,7 +148,17 @@ export function Quiz({
         />
       </Flex>
 
-      <Flex direction={"column"} gap={"2"} align={"end"} my={"2"}>
+      <Flex
+        className={`col-start-1 col-end-2 row-start-1 row-end-2`}
+        direction={"column"}
+        gap={"2"}
+        align={"end"}
+        my={"2"}
+      >
+        {" "}
+        {submission && expanded && (
+          <SubmissionStatusBanner isCompleted={isCompleted} />
+        )}
         <SubmissionFeedback
           runCodeError={runCodeError}
           lastResult={lastResult}
@@ -131,7 +172,11 @@ export function Quiz({
           </Text>
         )}
         {user && (
-          <Flex className="w-full" gap={"2"}>
+          <Flex
+            className="w-full"
+            gap={"2"}
+            direction={expanded ? "column" : "row"}
+          >
             <Button
               className="grow!"
               disabled={quizAnswerLoading || (!isCompleted && !isGivenUp)}

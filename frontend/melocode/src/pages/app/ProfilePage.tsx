@@ -15,7 +15,6 @@ import { useUserProgresses } from "../../hooks/api/progress/useUserProgress";
 import { StreakBarChart } from "../../components/Profile/StreakBarChart";
 import { ProgressCircleChart } from "../../components/Profile/ProgressCircleChart";
 
-
 export function ProfilePage() {
   const { user: userInStorage } = useAuth();
   const { user, isLoading, error } = useMe();

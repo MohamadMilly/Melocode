@@ -1,6 +1,5 @@
 import type { JSX } from "react/jsx-runtime";
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
-import { useEffect } from "react";
 
 export function ProgressCircleChart({
   fraction,

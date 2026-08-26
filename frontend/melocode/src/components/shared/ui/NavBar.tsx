@@ -1,38 +1,54 @@
-import { Avatar, Flex, HoverCard, Skeleton, Text } from "@radix-ui/themes";
+import {
+  Avatar,
+  Flex,
+  HoverCard,
+  Skeleton,
+  Text,
+  Tooltip,
+} from "@radix-ui/themes";
 import { RouteLink } from "./RouteLink";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useMe } from "../../../hooks/api/me/useMe";
 import { getAvatarFullBack } from "../../../utils/getAvatarFullback";
-import { Flame } from "lucide-react";
+import { Flame, Moon, Sun, Trophy } from "lucide-react";
 import { Link } from "react-router";
+import { useTheme } from "next-themes";
+import { useCallback } from "react";
 
 export function NavBar() {
   const { user } = useAuth();
   const { user: currentUser, isLoading } = useMe();
+  const { theme, setTheme } = useTheme();
   const avatarFullback = getAvatarFullBack(
     currentUser?.fullname ?? user?.fullname ?? "?",
   );
- 
+
   const streak = currentUser?.streak ?? 0;
-  
+
+  const handleToggleTheme = useCallback(() => {
+    setTheme(theme === "light" ? "dark" : "light");
+  }, [setTheme, theme]);
   return (
     <nav className="flex justify-between items-baseline sticky top-0 z-100 backdrop-blur-md px-6 py-3 border-b border-[var(--gray-6)]/15">
       <Text className="text-[var(--accent-11)]" size={"6"} weight={"medium"}>
         ميلوكود
       </Text>
 
-      {!user && <RouteLink>ابدأ ←</RouteLink>}
+      {!user && (
+        <RouteLink tipContent="انشئ حساب" route="/register">
+          ابدأ ←
+        </RouteLink>
+      )}
 
       <Flex gap={"3"} align={"center"}>
-        <Flex gap={"1"} align={"center"}>
-          <Skeleton loading={isLoading}>
-            <Text>{streak}</Text>
-          </Skeleton>
-          <Flame className="text-orange-700" size={24} />
-        </Flex>
-
         {user && (
-          <Skeleton loading={isLoading}>
+          <>
+            <Flex gap={"1"} align={"center"}>
+              <Skeleton loading={isLoading}>
+                <Text>{streak}</Text>
+              </Skeleton>
+              <Flame className="text-orange-700" size={24} />
+            </Flex>
             <HoverCard.Root openDelay={150}>
               <HoverCard.Trigger>
                 <Link to="/profile" aria-label="الملف الشخصي">
@@ -61,8 +77,24 @@ export function NavBar() {
                 </Flex>
               </HoverCard.Content>
             </HoverCard.Root>
-          </Skeleton>
+          </>
         )}
+        <Flex align={"center"} gap={"2"}>
+          <Tooltip
+            content={`تبديل الوضع (${theme === "light" ? "مشرق" : "مظلم"})`}
+          >
+            <button
+              onClick={handleToggleTheme}
+              className="text-[var(--accent-11)]"
+            >
+              {theme === "light" ? <Sun size={24} /> : <Moon size={24} />}
+            </button>
+          </Tooltip>
+
+          <RouteLink tipContent="لوحة المتصدرين" route="/leaderboard">
+            <Trophy size={18} />
+          </RouteLink>
+        </Flex>
       </Flex>
     </nav>
   );

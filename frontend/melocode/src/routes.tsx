@@ -4,11 +4,14 @@ import { SignUpPage } from "./pages/auth/SignUp";
 import { LessonPage } from "./pages/app/LessonPage";
 import { MainPage } from "./pages/app/MainPage";
 import { ProfilePage } from "./pages/app/ProfilePage";
+import { ErrorPage } from "./components/shared/ui/NotFoundPage";
+import { UsersLeaderBoardPage } from "./pages/app/UsersLeaderBoardPage";
 
 export const routes = [
   {
     element: <App />,
     path: "/",
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -21,6 +24,10 @@ export const routes = [
       {
         path: "profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "leaderboard",
+        element: <UsersLeaderBoardPage />,
       },
     ],
   },

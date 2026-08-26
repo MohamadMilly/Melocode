@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { routes } from "./routes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Theme } from "@radix-ui/themes";
+import { ThemeProvider } from "next-themes";
 
 // providers
 import { AuthProvider } from "./providers/AuthProvider";
@@ -18,15 +19,16 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={client}>
       <AuthProvider>
-        <Theme
-          accentColor="lime"
-          grayColor="slate"
-          radius="large"
-          appearance="dark"
-          scaling="95%"
-        > 
-          <RouterProvider router={router} />
-        </Theme>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Theme
+            accentColor="lime"
+            grayColor="slate"
+            radius="large"
+            scaling="95%"
+          >
+            <RouterProvider router={router} />
+          </Theme>
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>,

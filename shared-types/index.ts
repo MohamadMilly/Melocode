@@ -162,3 +162,19 @@ export type GetUserProgressResponse = {
   progresses: UserLessonProgress[];
   progressFraction: number;
 };
+
+export type SortDirection = "+" | "-";
+export type SortMetric = "submissions" | "progress" | "streak";
+
+export type LeaderboardSortOrder = `${SortDirection}${SortMetric}`;
+
+export type GetUsersReponse = {
+  users: LeaderBoardUser[];
+};
+
+export type LeaderBoardUser = ExtendedUser & {
+  lessonProgressesCount?: number | null;
+  submissionsCount?: number | null;
+  _count?: { lessonProgresses?: number; submissions?: number };
+  streak?: number;
+};

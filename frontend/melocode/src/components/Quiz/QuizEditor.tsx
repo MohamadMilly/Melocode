@@ -100,7 +100,7 @@ export function QuizEditor({ code, setCode, disabled }: QuizEditorProps) {
         placeholder="write your code here..."
         theme="cloud9_night"
         minLines={5}
-        maxLines={30}
+        maxLines={25}
         style={{
           backgroundColor: "#1a1b26",
         }}

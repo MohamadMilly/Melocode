@@ -6,30 +6,51 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 export const basePrisma = new PrismaClient({ adapter });
 export const prisma = basePrisma.$extends({
+    result: {
+        user: {
+            streak: {
+                needs: {},
+                compute(user) {
+                    return (user.streak ?? 0);
+                },
+            },
+        },
+    },
     query: {
         user: {
             async $allOperations({ operation, args, query }) {
+                if (!["findMany", "findUnique", "findFirst"].includes(operation)) {
+                    return query(args);
+                }
                 const userArgs = (args || {});
-                if (["findMany", "findUnique", "findFirst"].includes(operation)) {
-                    userArgs.include = { ...userArgs.include, lessonProgresses: true };
-                }
-                let result = (await query(args));
-                if (Array.isArray(result)) {
-                    result = result.map(({ lessonProgresses, ...user }) => {
-                        return {
-                            ...user,
-                            streak: getStreak(lessonProgresses || []),
-                        };
-                    });
-                }
-                else if (result) {
-                    const { lessonProgresses, ...resultWithoutProgresses } = result;
-                    result = {
-                        ...resultWithoutProgresses,
+                userArgs.include = {
+                    ...userArgs.include,
+                    lessonProgresses: true,
+                };
+                let result = await query(userArgs);
+                const mapUserWithStreak = (record) => {
+                    if (!record)
+                        return record;
+                    const { lessonProgresses, _count, ...user } = record;
+                    return {
+                        ...user,
+                        lessonProgresses: lessonProgresses,
                         streak: getStreak(lessonProgresses || []),
+                        ...(_count
+                            ? {
+                                [`${Object.keys(_count)}Count`]: Object.values(_count)[0],
+                            }
+                            : {}),
                     };
+                };
+                if (Array.isArray(result)) {
+                    return result.map(mapUserWithStreak);
                 }
-                return result;
+                return mapUserWithStreak(result);
+            },
+            async findMany({ model, operation, args, query }) {
+                args = { ...args, take: 100 };
+                return query(args);
             },
         },
     },
