@@ -14,6 +14,12 @@ export const prisma = basePrisma.$extends({
                     return (user.streak ?? 0);
                 },
             },
+            submissionsCount: {
+                needs: {},
+                compute(user) {
+                    return (user.submissionsCount ?? 0);
+                },
+            },
         },
     },
     query: {

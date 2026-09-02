@@ -14,6 +14,7 @@ export function useUserProgresses(userId: number) {
   const { data, isLoading, error } = useQuery({
     queryKey: ["progresses", userId],
     queryFn: () => getUserProgress(userId),
+    staleTime: 5 * 1000 * 60,
   });
 
   const progresses = data?.progresses ?? [];

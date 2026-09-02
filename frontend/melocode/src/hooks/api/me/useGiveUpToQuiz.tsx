@@ -6,6 +6,8 @@ import type {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../api/api";
 import type { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 
 type GiveUpResponse = {
   giveUp: QuizGiveUp;
@@ -59,7 +61,8 @@ export function useGiveUpToQuiz() {
     },
 
     onError: (error) => {
-      console.error("Failed submitting answer:", error);
+      const message = getErrorMessage(error);
+      toast.error(`فشل في تسجيل الاستسلام: ${message}`);
     },
   });
 }

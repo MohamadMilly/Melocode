@@ -1,6 +1,5 @@
 import { Badge, type BadgeProps } from "@radix-ui/themes";
-
-export type QuizLevelType = "easy" | "hard" | "medium";
+import type { QuizLevelType } from "../../shared/types/Quiz.types";
 
 const LEVELS_VARIANT: Record<QuizLevelType, BadgeProps["color"]> = {
   easy: "green",

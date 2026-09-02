@@ -7,7 +7,7 @@ import { RouteLink } from "../../components/shared/ui/RouteLink";
 export function MainPage() {
   const { lessons: nodes, isLoading, error } = useLessons();
   const { user } = useAuth();
-  
+
   return (
     <main
       dir="rtl"
@@ -60,13 +60,15 @@ export function MainPage() {
                   </Flex>
                 </Flex>
                 <Box className="shrink-0">
-                  <RouteLink>ابدأ ←</RouteLink>
+                  <RouteLink route="/login" tipContent="ابدأ">
+                    ابدأ ←
+                  </RouteLink>
                 </Box>
               </Flex>
             )}
           </Flex>
         </Flex>
-
+         
         <Box px={{ initial: "1", sm: "2" }}>
           <ProgressMap nodes={nodes} isLoading={isLoading} error={error} />
         </Box>

@@ -6,7 +6,9 @@ const validateFullname = body("fullname")
   .notEmpty()
   .withMessage("الاسم الكامل مطلوب.")
   .matches(/^[\p{L}\s]+$/u)
-  .withMessage("يُسمح فقط بالحروف والمسافات في الاسم الكامل.");
+  .withMessage("يُسمح فقط بالحروف والمسافات في الاسم الكامل.")
+  .isLength({ min: 3, max: 25 })
+  .withMessage("يجب أن يكون الاسم الكامل بين 3 و 25 حرفًا.");
 
 const validateUserName = body("username")
   .trim()

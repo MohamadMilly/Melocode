@@ -19,6 +19,12 @@ export const prisma = basePrisma.$extends({
           return (user.streak ?? 0) as number;
         },
       },
+      submissionsCount: {
+        needs: {},
+        compute(user: any) {
+          return (user.submissionsCount ?? 0) as number;
+        },
+      },
     },
   },
   query: {

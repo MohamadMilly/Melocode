@@ -1,11 +1,11 @@
 import { Button, Flex, Tabs, Text } from "@radix-ui/themes";
-import { QuizTypeBadge, type QuizBadgeType } from "./QuizTypeBadge";
+import { QuizTypeBadge } from "./QuizTypeBadge";
 import { useEffect, useState } from "react";
 import { useQuizAnswer } from "../../hooks/api/quiz/useQuizAnswer";
 import { QuizSolution } from "./QuizSolution";
 import { useAuth } from "../../contexts/AuthContext";
 import { useCheckAnswer } from "../../hooks/utils/useCheckAnswer";
-import { QuizLevelBadge, type QuizLevelType } from "./QuizLevelBadge";
+import { QuizLevelBadge } from "./QuizLevelBadge";
 import { QuizQuestion } from "./QuizQuestion";
 import type { QuizGiveUp, QuizSubmission } from "@app/types";
 import { SubmissionStatusBanner } from "./SubmissionStatusBanner";
@@ -13,21 +13,8 @@ import { SubmissionFeedback } from "./QuizSubmissionFeedback";
 import { useGiveUpToQuiz } from "../../hooks/api/me/useGiveUpToQuiz";
 import { ErrorElement } from "../shared/ui/ErrorElement";
 import { GiveUpAlertDialog } from "./GiveUpAlertDialog";
+import type { QuizData } from "../../shared/types/Quiz.types";
 
-export type QuizQuestionItem = {
-  type: "text" | "note" | "code" | "hint";
-  content: string;
-  language?: string;
-};
-export type QuizQuestion = {
-  items: QuizQuestionItem[];
-};
-export type QuizData = {
-  badge: QuizBadgeType;
-  answerId: number;
-  question: QuizQuestion;
-  level: QuizLevelType;
-};
 type QuizProps = {
   name: string;
   quiz: QuizData;
@@ -92,9 +79,12 @@ export function Quiz({
   }, [expanded]);
 
   useEffect(() => {
-    if (submission) {
-      setCode(submission.content);
+    function setSubmissionCode() {
+      if (submission) {
+        setCode(submission.content);
+      }
     }
+    setSubmissionCode();
   }, [submission]);
 
   const {

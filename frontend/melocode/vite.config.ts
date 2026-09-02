@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "@mdx-js/rollup";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
+import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
 // https://vite.dev/config/
@@ -12,14 +13,14 @@ export default defineConfig({
     react(),
     tailwindcss(),
     mdx({
-      remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+      remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm],
       rehypePlugins: [
         rehypeSlug,
         [
           rehypePrettyCode,
           {
             theme: "tokyo-night",
-            keepBackground: true, 
+            keepBackground: true,
             defaultLang: "plaintext",
           },
         ],

@@ -12,3 +12,14 @@ export const QuizAnswerItemType = {
     TEXT: 'TEXT',
     NOTE: 'NOTE'
 };
+export const AchievementScope = {
+    PROGRESS: 'PROGRESS',
+    SUBMISSION: 'SUBMISSION',
+    STREAK: 'STREAK'
+};
+export const AchievementFrequency = {
+    ONE: 'ONE',
+    TEN: 'TEN',
+    HUNDRED: 'HUNDRED',
+    THOUSAND: 'THOUSAND'
+};

@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     queryClient.clear();
-  }, []);
+  }, [queryClient]);
 
   const contextValue = useMemo(
     () => ({

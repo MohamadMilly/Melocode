@@ -9,6 +9,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+ 
 }
 
 model User {
@@ -20,7 +21,19 @@ model User {
   lessonProgresses UserLessonProgress[]
   submissions QuizSubmission[]
   giveUps QuizGiveUp[]
+  achievements Achievement[]
   profile Profile?
+}
+
+model Achievement {
+ id               Int                  @id @default(autoincrement())
+ scope AchievementScope
+ frequency AchievementFrequency
+ userId Int
+ user User @relation(fields: [userId],references: [id])
+ gainedAt DateTime @default(now())
+ 
+ @@unique([scope,frequency,userId])
 }
 
 model Profile {
@@ -113,4 +126,16 @@ enum QuizAnswerItemType {
   NOTE
 }
 
+enum AchievementScope {
+ PROGRESS
+ SUBMISSION
+ STREAK
+}
+
+enum AchievementFrequency {
+  ONE @map("1")
+  TEN @map("10")
+  HUNDRED @map("100")
+  THOUSAND @map("1000")
+}
 

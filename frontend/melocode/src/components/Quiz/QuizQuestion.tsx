@@ -1,9 +1,12 @@
 import { Text } from "@radix-ui/themes";
-import type { QuizQuestionItem } from "./Quiz";
-import { QuizEditor } from "./QuizEditor";
-import { LessonNote } from "../Lesson/LessonNote";
-import type { Dispatch, SetStateAction } from "react";
 
+import { LessonNote } from "../Lesson/LessonNote";
+import { lazy, type Dispatch, type SetStateAction } from "react";
+import type { QuizQuestionItem } from "../../shared/types/Quiz.types";
+
+const QuizEditor = lazy(() =>
+  import("./QuizEditor").then((module) => ({ default: module.QuizEditor })),
+);
 export function QuizQuestion({
   questionItems,
   code,

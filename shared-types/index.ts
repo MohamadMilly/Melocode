@@ -178,3 +178,15 @@ export type LeaderBoardUser = ExtendedUser & {
   _count?: { lessonProgresses?: number; submissions?: number };
   streak?: number;
 };
+
+export type AchievementScope = "SUBMISSION" | "PROGRESS" | "STREAK";
+
+export type AchievementFrequency = "ONE" | "TEN" | "HUNDRED" | "THOUSAND";
+
+export type Achievement = {
+  id: number;
+  gainedAt: Date;
+  frequency: AchievementFrequency;
+  userId: number;
+  scope: AchievementScope;
+};

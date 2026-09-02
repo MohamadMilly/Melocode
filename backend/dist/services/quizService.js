@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
+import { eventEmitter } from "../lib/eventEmitter.js";
 export const getQuizAnswer = async ({ answerId, userId, }) => {
     const quizAnswer = await prisma.quizAnswer.findUnique({
         where: {
@@ -21,11 +22,11 @@ export const getQuizAnswer = async ({ answerId, userId, }) => {
         },
     });
     if (!quizAnswer) {
-        throw new HttpError(404, "This Quiz answer is not found.");
+        throw new HttpError(404, "لم يتم العثور على إجابة هذا الاختبار.");
     }
     const hasGivenUpOrAnsweredCorrectly = quizAnswer.giveUps.length >= 1 || quizAnswer.submissions.length >= 1;
     if (!hasGivenUpOrAnsweredCorrectly) {
-        throw new HttpError(400, "You can only get the answer when give up or answer correctly for more explaination.");
+        throw new HttpError(400, "يمكنك فقط عرض الإجابة بعد الاستسلام أو الإجابة بشكل صحيح لمزيد من الشرح.");
     }
     return quizAnswer;
 };
@@ -39,13 +40,16 @@ export const saveSubmission = async ({ content, language, quizAnswerId, userOutp
         },
     });
     if (giveUpForThisQuiz) {
-        throw new HttpError(400, "You gave up this quiz. you cannot send submissions.");
+        throw new HttpError(400, "لقد استسلمت لهذا الاختبار. لا يمكنك إرسال حلول جديدة.");
     }
     const testCases = await prisma.testCase.findMany({
         where: {
             quizAnswerId: quizAnswerId,
         },
     });
+    if (testCases.length === 0) {
+        throw new HttpError(400, "هذا الاختبار لا يحتوي على حالات اختبار. يرجى التواصل مع المسؤول.");
+    }
     const isCorrect = testCases.every((testCase) => {
         const userOutput = userOutputs.find((userOutput) => userOutput.testCaseId === testCase.id);
         if (!userOutput || !userOutput.output) {
@@ -73,6 +77,9 @@ export const saveSubmission = async ({ content, language, quizAnswerId, userOutp
             isCorrect,
         },
     });
+    if (submission.isCorrect) {
+        eventEmitter.emit("submission-created", { userId: userId });
+    }
     return submission;
 };
 export const getQuizTestCasesInputs = async (quizAnswerId) => {
@@ -89,7 +96,7 @@ export const getQuizTestCasesInputs = async (quizAnswerId) => {
 };
 export const getUserLessonSubmissions = async (userId, lessonId, isCorrect) => {
     if (!userId || !lessonId) {
-        throw new HttpError(400, "Missing Required Identifiers (lessonId & userId)");
+        throw new HttpError(400, "معلومات مطلوبة مفقودة (lessonId و userId)");
     }
     const submissionsData = await prisma.quizAnswer.findMany({
         where: {

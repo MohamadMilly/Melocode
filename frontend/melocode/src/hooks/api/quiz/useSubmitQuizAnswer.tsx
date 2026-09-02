@@ -4,7 +4,11 @@ import type {
   CreateQuizSubmissionResponse,
   CreateSubmissionRequestBody,
   GetLessonQuizzesSubmissionsResponse,
+  ResponseError,
 } from "@app/types";
+import type { AxiosError } from "axios";
+import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
+import { toast } from "react-hot-toast";
 
 interface SubmitArgs extends CreateSubmissionRequestBody {
   quizAnswerId: number;
@@ -28,7 +32,11 @@ const saveSubmission = async ({
 export function useSubmitQuizAnswer() {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<
+    CreateQuizSubmissionResponse,
+    AxiosError<ResponseError>,
+    MutationArgs
+  >({
     mutationKey: ["submit-quiz-answer"],
 
     mutationFn: ({ lessonId, ...args }: MutationArgs) => saveSubmission(args),
@@ -82,10 +90,14 @@ export function useSubmitQuizAnswer() {
         queryKey: ["me", "lessons", lessonId, "progress"],
         exact: true,
       });
+      queryClient.invalidateQueries({
+        queryKey: ["me", "achievements"],
+        exact: true,
+      });
     },
-
     onError: (error) => {
       console.error("Failed submitting answer:", error);
+      toast.error(`فشل في ارسال الاجابة ${getErrorMessage(error)}`);
     },
   });
 }

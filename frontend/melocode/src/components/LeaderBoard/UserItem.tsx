@@ -1,7 +1,7 @@
 import type { LeaderBoardUser, SortMetric } from "@app/types";
 import { Avatar, Card, Flex, Text } from "@radix-ui/themes";
 import { BookOpenCheck, CheckCircle2, Flame } from "lucide-react";
-import { getAvatarFullBack } from "../../utils/getAvatarFullback";
+import { getAvatarFullBack } from "../../shared/utils/getAvatarFullback";
 import { useAuth } from "../../contexts/AuthContext";
 
 const metricDetails: Record<SortMetric, { label: string; icon: typeof Flame }> =

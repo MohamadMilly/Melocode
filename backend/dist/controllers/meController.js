@@ -2,6 +2,7 @@ import * as lessonService from "../services/lessonService.js";
 import * as quizService from "../services/quizService.js";
 import * as giveUpService from "../services/giveUpService.js";
 import { prisma } from "../lib/prisma.js";
+import * as achievementService from "../services/achievementService.js";
 export const getCurrentUser = async (req, res) => {
     const currentUserId = req.currentUser?.id;
     const user = await prisma.user.findUnique({
@@ -67,5 +68,12 @@ export const getLessonProgress = async (req, res) => {
     res.json({
         hasCompletedAllQuizzes: progressData.hasCompletedAllQuizzes,
         progress: progressData.progress,
+    });
+};
+export const getUserAchievements = async (req, res) => {
+    const currentUserId = req.currentUser?.id;
+    const achievements = await achievementService.getUserAchievements(currentUserId);
+    res.json({
+        achievements,
     });
 };

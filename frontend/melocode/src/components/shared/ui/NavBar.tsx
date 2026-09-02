@@ -9,13 +9,19 @@ import {
 import { RouteLink } from "./RouteLink";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useMe } from "../../../hooks/api/me/useMe";
-import { getAvatarFullBack } from "../../../utils/getAvatarFullback";
-import { Flame, Moon, Sun, Trophy } from "lucide-react";
+import { getAvatarFullBack } from "../../../shared/utils/getAvatarFullback";
+import { Flame, Menu, Moon, Star, Sun, Trophy } from "lucide-react";
 import { Link } from "react-router";
 import { useTheme } from "next-themes";
 import { useCallback } from "react";
+import { Ping } from "./Ping";
+import { Drawer } from "./Drawer";
 
-export function NavBar() {
+type NavBarProps = {
+  connectedUsersCount: number;
+};
+
+export function NavBar({ connectedUsersCount }: NavBarProps) {
   const { user } = useAuth();
   const { user: currentUser, isLoading } = useMe();
   const { theme, setTheme } = useTheme();
@@ -28,8 +34,11 @@ export function NavBar() {
   const handleToggleTheme = useCallback(() => {
     setTheme(theme === "light" ? "dark" : "light");
   }, [setTheme, theme]);
+
+  const isDarkMode = theme === "dark";
+
   return (
-    <nav className="flex justify-between items-baseline sticky top-0 z-100 backdrop-blur-md px-6 py-3 border-b border-[var(--gray-6)]/15">
+    <nav className="flex justify-between items-center sticky top-0 z-100 backdrop-blur-md md:px-6 px-3 py-2 border-b border-[var(--gray-6)]/15">
       <Text className="text-[var(--accent-11)]" size={"6"} weight={"medium"}>
         ميلوكود
       </Text>
@@ -43,7 +52,21 @@ export function NavBar() {
       <Flex gap={"3"} align={"center"}>
         {user && (
           <>
-            <Flex gap={"1"} align={"center"}>
+            <Flex gap={"1"} align={"center"} className="hidden md:flex">
+              <Flex align={"center"} gap={"1"}>
+                <Ping />
+                <Text as="span" size={"2"}>
+                  {connectedUsersCount} متصلون
+                </Text>
+              </Flex>
+              <div className="mx-1">
+                <Text
+                  size={"3"}
+                  className="text-[var(--gray-11)] pointer-events-none select-none"
+                >
+                  •
+                </Text>
+              </div>
               <Skeleton loading={isLoading}>
                 <Text>{streak}</Text>
               </Skeleton>
@@ -79,7 +102,40 @@ export function NavBar() {
             </HoverCard.Root>
           </>
         )}
-        <Flex align={"center"} gap={"2"}>
+
+        <div className="md:hidden">
+          <Drawer
+            title="القائمة"
+            trigger={
+              <button
+                type="button"
+                aria-label="فتح القائمة"
+                className="flex items-center justify-center rounded-md border border-[var(--gray-6)]/20 bg-[var(--gray-2)] p-2 text-[var(--accent-11)]"
+              >
+                <Menu size={20} />
+              </button>
+            }
+          >
+            <RouteLink route="/leaderboard" tipContent="لوحة المتصدرين">
+              <span>لوحة المتصدرين</span>
+              <Trophy size={18} />
+            </RouteLink>
+            <RouteLink route="/achievements" tipContent="الإنجازات">
+              <span>الإنجازات</span>
+              <Star size={18} />
+            </RouteLink>
+            <button
+              type="button"
+              onClick={handleToggleTheme}
+              className="flex items-center justify-between gap-2 rounded-md border border-[var(--gray-6)]/20 bg-[var(--gray-2)] px-3 py-2 text-sm font-medium text-[var(--accent-11)]"
+            >
+              <span>{isDarkMode ? "الوضع الفاتح" : "الوضع الداكن"}</span>
+              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+          </Drawer>
+        </div>
+
+        <Flex align={"center"} gap={"2"} className="hidden! md:flex!">
           <Tooltip
             content={`تبديل الوضع (${theme === "light" ? "مشرق" : "مظلم"})`}
           >
@@ -93,6 +149,9 @@ export function NavBar() {
 
           <RouteLink tipContent="لوحة المتصدرين" route="/leaderboard">
             <Trophy size={18} />
+          </RouteLink>
+          <RouteLink route="/achievements" tipContent="الإنجازات">
+            <Star size={18} />
           </RouteLink>
         </Flex>
       </Flex>

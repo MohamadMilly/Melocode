@@ -40,6 +40,7 @@ export const JsonNull = runtime.JsonNull;
 export const AnyNull = runtime.AnyNull;
 export const ModelName = {
     User: 'User',
+    Achievement: 'Achievement',
     Profile: 'Profile',
     Lesson: 'Lesson',
     UserLessonProgress: 'UserLessonProgress',
@@ -64,6 +65,13 @@ export const UserScalarFieldEnum = {
     username: 'username',
     password: 'password',
     createdAt: 'createdAt'
+};
+export const AchievementScalarFieldEnum = {
+    id: 'id',
+    scope: 'scope',
+    frequency: 'frequency',
+    userId: 'userId',
+    gainedAt: 'gainedAt'
 };
 export const ProfileScalarFieldEnum = {
     id: 'id',

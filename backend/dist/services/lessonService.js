@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
+import { eventEmitter } from "../lib/eventEmitter.js";
 export const getLessons = async ({ userId, }) => {
     const lessons = await prisma.lesson.findMany({
         include: {
@@ -79,6 +80,7 @@ export const completeLesson = async ({ userId, lessonId, }) => {
             update: {},
             create: { userId, lessonId },
         });
+        eventEmitter.emit("lesson-completed", { userId: userId });
         return true;
     }
     catch (err) {

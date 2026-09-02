@@ -1,5 +1,5 @@
 import type { SortDirection, SortMetric } from "@app/types";
-import { ArrowDownAZ, ArrowUpAZ, SlidersHorizontal } from "lucide-react";
+import { Select } from "@radix-ui/themes";
 
 type LeaderBoardControlsProps = {
   metric: SortMetric;
@@ -20,57 +20,29 @@ export function LeaderBoardControls({
         <label htmlFor="leaderboard-metric" className="text-sm font-medium">
           الترتيب حسب
         </label>
-        <div className="relative">
-          <SlidersHorizontal
-            size={16}
-            aria-hidden="true"
-            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent-11)]"
-          />
-          <select
-            id="leaderboard-metric"
-            value={metric}
-            onChange={(event) =>
-              onMetricChange(event.target.value as SortMetric)
-            }
-            className="h-10 w-full appearance-none rounded-md border border-[var(--gray-6)] bg-[var(--color-panel-solid)] px-9 text-sm outline-none focus:border-[var(--accent-8)]"
-          >  
-            <option value="submissions">الإجابات الصحيحة</option>
-            <option value="progress">الدروس المكتملة</option>
-            <option value="streak">سلسلة التعلم</option>
-          </select>
-        </div>
+
+        <Select.Root onValueChange={onMetricChange} value={metric}>
+          <Select.Trigger dir="rtl" />
+          <Select.Content>
+            <Select.Item value="submissions">الإجابات الصحيحة</Select.Item>
+            <Select.Item value="progress">الدروس المكتملة</Select.Item>
+            <Select.Item value="streak">سلسلة التعلم</Select.Item>
+          </Select.Content>
+        </Select.Root>
       </div>
 
       <div className="flex min-w-44 flex-1 flex-col gap-1">
         <label htmlFor="leaderboard-direction" className="text-sm font-medium">
           اتجاه الترتيب
         </label>
-        <div className="relative">
-          {direction === "-" ? (
-            <ArrowDownAZ
-              size={16}
-              aria-hidden="true"
-              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent-11)]"
-            />
-          ) : (
-            <ArrowUpAZ
-              size={16}
-              aria-hidden="true"
-              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[var(--accent-11)]"
-            />
-          )}
-          <select
-            id="leaderboard-direction"
-            value={direction}
-            onChange={(event) =>
-              onDirectionChange(event.target.value as SortDirection)
-            }
-            className="h-10 w-full appearance-none rounded-md border border-[var(--gray-6)] bg-[var(--color-panel-solid)] px-9 text-sm outline-none focus:border-[var(--accent-8)]"
-          >  
-            <option value="-">الأعلى أولاً</option>
-            <option value="+">الأدنى أولاً</option>
-          </select>
-        </div>
+
+        <Select.Root value={direction} onValueChange={onDirectionChange}>
+          <Select.Trigger dir="rtl" />
+          <Select.Content>
+            <Select.Item value="-">الأعلى أولاً</Select.Item>
+            <Select.Item value="+">الأدنى أولاً</Select.Item>
+          </Select.Content>
+        </Select.Root>
       </div>
     </div>
   );

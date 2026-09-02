@@ -4,6 +4,7 @@ import * as lessonService from "../services/lessonService.js";
 import * as quizService from "../services/quizService.js";
 import * as giveUpService from "../services/giveUpService.js";
 import { prisma } from "../lib/prisma.js";
+import * as achievementService from "../services/achievementService.js";
 import { GetLessonQuizzesGiveUpsResponse } from "@app/types";
 
 export const getCurrentUser = async (
@@ -135,5 +136,18 @@ export const getLessonProgress = async (
   res.json({
     hasCompletedAllQuizzes: progressData.hasCompletedAllQuizzes,
     progress: progressData.progress,
+  });
+};
+
+export const getUserAchievements = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  const currentUserId = req.currentUser?.id as number;
+  const achievements =
+    await achievementService.getUserAchievements(currentUserId);
+
+  res.json({
+    achievements,
   });
 };

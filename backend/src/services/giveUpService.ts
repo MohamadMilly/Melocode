@@ -25,6 +25,12 @@ export const giveUpToQuiz = async (quizAnswerId: number, userId: number) => {
   } catch (err: any) {
     if (err.code === "P2002") {
       throw new HttpError(400, "You have already given up to this lesson");
+    }
+    if (err.code === "P2003") {
+      throw new HttpError(
+        500,
+        `Foreign key constraint error: ${err.meta?.field_name ?? "Unknown"} does not exist`,
+      );
     } else {
       throw err;
     }

@@ -33,3 +33,15 @@ createRoot(document.getElementById("root")!).render(
     </QueryClientProvider>
   </StrictMode>,
 );
+
+/*
+TO DO :
+[
+{slug:""},
+{slug:""},
+{slug:""},
+]
+getting the current lesson index
+if the next lesson is current or completed => enable the button and go to index+1
+if not disable it or hide it
+*/

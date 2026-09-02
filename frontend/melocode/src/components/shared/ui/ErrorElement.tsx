@@ -1,6 +1,6 @@
 import type { ResponseError } from "@app/types";
 import type { AxiosError } from "axios";
-import { getErrorMessage } from "../../../utils/getErrorMessage";
+import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 import { Text } from "@radix-ui/themes";
 import { CircleX } from "lucide-react";
 

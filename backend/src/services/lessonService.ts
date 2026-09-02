@@ -1,6 +1,7 @@
 import { LessonStatus } from "@app/types";
 import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
+import { eventEmitter } from "../lib/eventEmitter.js";
 
 export const getLessons = async ({
   userId,
@@ -105,6 +106,7 @@ export const completeLesson = async ({
       update: {},
       create: { userId, lessonId },
     });
+    eventEmitter.emit("lesson-completed", { userId: userId });
     return true;
   } catch (err: any) {
     if (err?.code === "P2002") {

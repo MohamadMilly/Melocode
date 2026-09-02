@@ -63,7 +63,11 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     try {
-      if (error.response.status === 401 && !originalRequest._retry) {
+      if (
+        error.response &&
+        error.response.status === 401 &&
+        !originalRequest._retry
+      ) {
         await handleRefreshToken(originalRequest);
       }
     } catch (refreshError) {

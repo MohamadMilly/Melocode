@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/themes";
 import { Flame, UserRound } from "lucide-react";
 import { useMe } from "../../hooks/api/me/useMe";
-import { getAvatarFullBack } from "../../utils/getAvatarFullback";
+import { getAvatarFullBack } from "../../shared/utils/getAvatarFullback";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserProgresses } from "../../hooks/api/progress/useUserProgress";
 import { StreakBarChart } from "../../components/Profile/StreakBarChart";

@@ -63,7 +63,7 @@ export function QuizEditor({ code, setCode, disabled }: QuizEditorProps) {
     send("ERROR",args.join(" "))
     originalError.apply(console,args)
     }
-
+    
     window.onerror = function(message, source, lineno, colno, error) {
       const messageWithLine = message + " at " + (lineno - 29);
       send("ERROR",messageWithLine);
@@ -98,7 +98,7 @@ export function QuizEditor({ code, setCode, disabled }: QuizEditorProps) {
         readOnly={disabled}
         className="code-editor"
         placeholder="write your code here..."
-        theme="cloud9_night"
+        theme={`cloud9_night`}
         minLines={5}
         maxLines={25}
         style={{
@@ -155,23 +155,23 @@ export function QuizEditor({ code, setCode, disabled }: QuizEditorProps) {
           </Button>
         </Flex>
         {logs.length > 0 ? (
-          <ul className="space-y-1 font-mono text-xs tracking-tight h-full text-[#a9b1d6]">
+          <ul className="space-y-1 font-mono text-xs tracking-tight h-full text-[var(--gray-11)]">
             {logs.map((messageData, index) => {
               const isError = messageData.type === "ERROR";
 
               return (
                 <li
                   key={index}
-                  className={`flex items-start gap-2 py-1 px-2 border-l-2 rounded-r transition-colors duration-150 hover:bg-[#24283b] ${
+                  className={`flex items-start gap-2 py-1 px-2 border-l-2 rounded-r transition-colors duration-150 ${
                     isError
-                      ? "border-red-500 bg-red-950/20 text-red-400"
-                      : "border-blue-500 bg-blue-950/10 text-slate-300"
+                      ? "border-red-500 bg-red-950/20 text-red-500"
+                      : "border-blue-500 bg-blue-900/10"
                   }`}
                 >
                   <span
                     className={`inline-block px-1.5 py-0.5 text-[10px] font-bold uppercase rounded tracking-wider ${
                       isError
-                        ? "bg-red-500/20 text-red-400"
+                        ? "bg-red-500/20 text-red-600"
                         : "bg-blue-500/20 text-blue-400"
                     }`}
                   >

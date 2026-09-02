@@ -6,6 +6,7 @@ import { MainPage } from "./pages/app/MainPage";
 import { ProfilePage } from "./pages/app/ProfilePage";
 import { ErrorPage } from "./components/shared/ui/NotFoundPage";
 import { UsersLeaderBoardPage } from "./pages/app/UsersLeaderBoardPage";
+import { AchievementsPage } from "./pages/app/AchievementsPage";
 
 export const routes = [
   {
@@ -28,6 +29,10 @@ export const routes = [
       {
         path: "leaderboard",
         element: <UsersLeaderBoardPage />,
+      },
+      {
+        path: "achievements",
+        element: <AchievementsPage />,
       },
     ],
   },

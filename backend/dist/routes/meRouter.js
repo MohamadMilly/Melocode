@@ -13,3 +13,4 @@ meRouter.get("/quizzes/:quizAnswerId/submissions", meController.getQuizSubmissio
 meRouter.post("/quizzes/:quizAnswerId/giveups", meController.giveUpToQuiz);
 meRouter.get("/quizzes/:quizAnswerId/giveups", meController.getUserQuizGiveUp);
 meRouter.get("/lessons/:lessonId/giveups", meController.getUserQuizzesGiveUpsForLesson);
+meRouter.get("/achievements", meController.getUserAchievements);

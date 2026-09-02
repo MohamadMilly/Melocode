@@ -10,6 +10,7 @@ import { LessonContents } from "../../components/Lesson/LessonContents";
 import { useMyLessonProgress } from "../../hooks/api/me/useMyLessonProgress";
 import { useCompleteLesson } from "../../hooks/api/me/useCompleteLesson";
 import { useAuth } from "../../contexts/AuthContext";
+import { EmptyLessonState } from "../../components/Lesson/EmptyLessonState";
 
 export function LessonPage() {
   const { slug } = useParams();
@@ -24,8 +25,9 @@ export function LessonPage() {
     hasCompletedAllQuizzes,
     isLoading: isProgressLoading,
   } = useMyLessonProgress(lesson ? lesson.frontmatter.lessonId : undefined);
+
   if (!lesson) {
-    return <Text>Lesson is not found.</Text>;
+    return <EmptyLessonState />;
   }
 
   const { Article, toc, exercises, frontmatter } = lesson;
@@ -42,7 +44,7 @@ export function LessonPage() {
     if (!user) return;
     completeLesson(lessonId);
   };
-  
+
   return (
     <div className="relative h-full grid grid-cols-1 md:grid-cols-[300px_1fr] gap-4 p-2 md:p-4">
       <LessonContents toc={toc} />

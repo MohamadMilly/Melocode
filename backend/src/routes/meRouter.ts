@@ -32,3 +32,4 @@ meRouter.get(
   meController.getUserQuizzesGiveUpsForLesson,
 );
 
+meRouter.get("/achievements", meController.getUserAchievements);
