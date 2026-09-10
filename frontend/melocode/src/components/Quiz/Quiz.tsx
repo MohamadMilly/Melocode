@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useQuizAnswer } from "../../hooks/api/quiz/useQuizAnswer";
 import { QuizSolution } from "./QuizSolution";
 import { useAuth } from "../../contexts/AuthContext";
-import { useCheckAnswer } from "../../hooks/utils/useCheckAnswer";
+import { useCheckCodeAnswer } from "../../hooks/utils/useCheckCodeAnswer";
 import { QuizLevelBadge } from "./QuizLevelBadge";
 import { QuizQuestion } from "./QuizQuestion";
 import type { QuizGiveUp, QuizSubmission } from "@app/types";
@@ -14,6 +14,9 @@ import { useGiveUpToQuiz } from "../../hooks/api/me/useGiveUpToQuiz";
 import { ErrorElement } from "../shared/ui/ErrorElement";
 import { GiveUpAlertDialog } from "./GiveUpAlertDialog";
 import type { QuizData } from "../../shared/types/Quiz.types";
+import { useSubmitQuizAnswer } from "../../hooks/api/quiz/useSubmitQuizAnswer";
+import { QuizAnswerProvider } from "../../providers/QuizAnswerProvider";
+import { QueryClient } from "@tanstack/react-query";
 
 type QuizProps = {
   name: string;
@@ -34,7 +37,6 @@ export function Quiz({
 }: QuizProps) {
   const { user } = useAuth();
   const [solutionVisible, setSolutionVisible] = useState<boolean>(false);
-
   const quizAnswerId = quiz.answerId;
   const questionItems = quiz.question.items;
   const codeItem = questionItems.find((item) => item.type === "code");
@@ -47,8 +49,13 @@ export function Quiz({
     testCasesFetchError,
     submissionError,
     runCodeError,
-  } = useCheckAnswer(quizAnswerId, lessonId);
+  } = useCheckCodeAnswer(quizAnswerId, lessonId);
 
+  const {
+    mutateAsync: submit,
+    isPending: isSubmitting,
+    error: submitError,
+  } = useSubmitQuizAnswer();
   const {
     mutate: giveUp,
     isPending: isGivingUp,
@@ -56,6 +63,7 @@ export function Quiz({
   } = useGiveUpToQuiz();
 
   const [code, setCode] = useState(initialQuestionCode);
+  const [selectedOption, setSelectedOption] = useState<string>("");
   const isCompleted = submission ? submission.isCorrect : false;
   const isGivenUp = !!giveUpData;
   const [lastResult, setLastResult] = useState<{ isCorrect: boolean } | null>(
@@ -81,11 +89,15 @@ export function Quiz({
   useEffect(() => {
     function setSubmissionCode() {
       if (submission) {
-        setCode(submission.content);
+        if (quiz.badge === "Multiple Choice") {
+          setSelectedOption(submission.content);
+        } else {
+          setCode(submission.content);
+        }
       }
     }
     setSubmissionCode();
-  }, [submission]);
+  }, [submission, quiz.badge]);
 
   const {
     answer,
@@ -96,11 +108,23 @@ export function Quiz({
   const toggleSolutionVisibility = () => setSolutionVisible(!solutionVisible);
 
   const handleSubmitCheck = async () => {
+    let submissionResult: QuizSubmission | undefined;
     try {
-      const submissionResult = await checkAnswer({ code: code });
-
+      if (quiz.badge === "Multiple Choice") {
+        const { submission } = await submit({
+          userOutputs: [],
+          type: "MULTIPLE_CHOICE",
+          content: selectedOption,
+          lessonId: lessonId,
+          quizAnswerId: quiz.answerId,
+        });
+        submissionResult = submission;
+       
+      } else {
+        submissionResult = await checkAnswer({ code: code });
+      }
       if (submissionResult) {
-        setLastResult({ isCorrect: submissionResult?.isCorrect });
+        setLastResult({ isCorrect: submissionResult.isCorrect });
       }
     } catch (err) {
       console.error("Submission failed", err);
@@ -130,12 +154,17 @@ export function Quiz({
           <QuizTypeBadge badge={quiz.badge} />
           <QuizLevelBadge level={quiz.level} />
         </Flex>
-        <QuizQuestion
-          questionItems={questionItems}
+        <QuizAnswerProvider
           code={code}
           setCode={setCode}
-          editorDisabled={isGivenUp}
-        />
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        >
+          <QuizQuestion
+            questionItems={questionItems}
+            editorDisabled={isGivenUp}
+          />
+        </QuizAnswerProvider>
       </Flex>
 
       <Flex

@@ -3,6 +3,7 @@ import { Heading, type HeadingProps } from "@radix-ui/themes";
 export function LessonSubSectionHeading({ children, ...props }: HeadingProps) {
   return (
     <Heading
+      tabIndex={0}
       {...props}
       size={"5"}
       my={"6"}

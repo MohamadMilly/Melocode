@@ -5,7 +5,10 @@ import * as quizService from "../services/quizService.js";
 import * as giveUpService from "../services/giveUpService.js";
 import { prisma } from "../lib/prisma.js";
 import * as achievementService from "../services/achievementService.js";
-import { GetLessonQuizzesGiveUpsResponse } from "@app/types";
+import {
+  GetLessonQuizzesGiveUpsResponse,
+  UserLessonProgress,
+} from "@app/types";
 
 export const getCurrentUser = async (
   req: AuthenticatedRequest,
@@ -26,18 +29,18 @@ export const getCurrentUser = async (
 
 export const createLessonProgress = async (
   req: AuthenticatedRequest<{ lessonId: string }>,
-  res: Response<{ hasCompleted: boolean }>,
+  res: Response<{ progress: UserLessonProgress }>,
 ) => {
   const currentUserId = req.currentUser?.id as number;
   const { lessonId } = req.params;
 
-  const hasCompleted = await lessonService.completeLesson({
+  const progress = await lessonService.completeLesson({
     userId: currentUserId,
     lessonId: Number(lessonId),
   });
 
   return res.json({
-    hasCompleted: hasCompleted,
+    progress,
   });
 };
 
@@ -119,24 +122,6 @@ export const getUserQuizzesGiveUpsForLesson = async (
   );
 
   return res.json({ giveUpsData: giveUps });
-};
-
-export const getLessonProgress = async (
-  req: AuthenticatedRequest<{ lessonId: string }>,
-  res: Response,
-) => {
-  const currentUserId = req.currentUser?.id as number;
-  const { lessonId } = req.params;
-  const numberLessonId = Number(lessonId);
-  const progressData = await lessonService.getLessonProgress(
-    currentUserId,
-    numberLessonId,
-  );
-
-  res.json({
-    hasCompletedAllQuizzes: progressData.hasCompletedAllQuizzes,
-    progress: progressData.progress,
-  });
 };
 
 export const getUserAchievements = async (

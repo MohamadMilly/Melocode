@@ -2,6 +2,27 @@
 title: "حقيقة البرمجة"
 slug: "truth-about-programming"
 lessonId: 1
+exercises:
+  - level: "medium"
+    badge: "Multiple Choice"
+    
+    answerId: 1 
+    question:
+      items:
+        - type: "text"
+          content: "اختر السطر البرمجي الصحيح الذي يكمل دالة 'isPalindrome' لتعود بالقيمة `true` إذا كانت الكلمة تقرأ من الاتجاهين بنفس الطريقة."
+        - type: "code"
+          language: "javascript"
+          content: "function isPalindrome(str) {\n  const cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, '');\n  // ما السطر الذي يجب وضعه هنا؟\n}"
+          isInteractive: true
+
+        - type: "options"
+          options:
+            - "return cleaned === cleaned.split('').reverse().join('');"
+            - "return str === str.reverse();"
+            - "return cleaned === cleaned.reverse();"
+        - type: "hint"
+          content: "تذكر أنك بحاجة إلى عكس السلسلة النصية المنظفة ومقارنتها بالنص الأصلي المنظف."
 ---
 
 export const toc = [

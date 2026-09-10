@@ -34,8 +34,14 @@ export const register = async (
     username: user.username,
     createdAt: user.createdAt,
   };
-  const accessToken = sign(jwtPayload, { expiresIn: "15min" });
-  const refreshToken = sign(jwtPayload, { expiresIn: "7d" });
+  const accessToken = sign(
+    { ...jwtPayload, tokenType: "access" },
+    { expiresIn: "15min" },
+  );
+  const refreshToken = sign(
+    { ...jwtPayload, tokenType: "refresh" },
+    { expiresIn: "7d" },
+  );
 
   res.json({ user: jwtPayload, accessToken, refreshToken });
 };
@@ -67,8 +73,14 @@ export const login = async (
     createdAt: user.createdAt,
   };
 
-  const accessToken = sign(jwtPayload, { expiresIn: "15min" });
-  const refreshToken = sign(jwtPayload, { expiresIn: "7d" });
+  const accessToken = sign(
+    { ...jwtPayload, tokenType: "access" },
+    { expiresIn: "15min" },
+  );
+  const refreshToken = sign(
+    { ...jwtPayload, tokenType: "refresh" },
+    { expiresIn: "7d" },
+  );
 
   res.json({ user: jwtPayload, accessToken, refreshToken });
 };
@@ -85,8 +97,18 @@ export const refreshToken = async (
     });
   }
   const payload = verify<UserJwtPayload>(token);
-  const { exp, iat, ...clearnPayLoad } = payload;
-  const accessToken = sign(clearnPayLoad, { expiresIn: "15min" });
+
+  if (payload.tokenType !== "refresh") {
+    res.status(401).json({
+      message: "Use RefreshToken to refresh the access token.",
+    });
+    return;
+  }
+  const { exp, iat, tokenType, ...cleanPayLoad } = payload;
+  const accessToken = sign(
+    { tokenType: "access", ...cleanPayLoad },
+    { expiresIn: "15min" },
+  );
 
   res.json({
     accessToken: accessToken,

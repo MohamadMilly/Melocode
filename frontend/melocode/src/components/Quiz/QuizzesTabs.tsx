@@ -1,10 +1,11 @@
 import { Box, Button, Tabs } from "@radix-ui/themes";
-import { Quiz, type QuizData } from "./Quiz";
+import { Quiz } from "./Quiz";
 import { useMyLessonSubmissions } from "../../hooks/api/me/useLessonQuizzesSubmissions";
 import { QuizSkeleton } from "./skeleton/QuizSkeleton";
 import { useLessonQuizzesGiveUps } from "../../hooks/api/me/useLessonQuizzesGiveUps";
 import { useCallback, useState } from "react";
 import { Expand, Shrink } from "lucide-react";
+import type { QuizData } from "../../shared/types/Quiz.types";
 
 export function QuizesTabs({
   quizzes,
@@ -27,7 +28,7 @@ export function QuizesTabs({
 
   const quizzesCount = quizzes.length;
   const quizzesNames: string[] = [];
-
+ 
   for (let i = 1; i <= quizzesCount; i++) {
     quizzesNames.push(`التمرين-${i}`);
   }

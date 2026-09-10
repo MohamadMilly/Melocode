@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Flex, Text } from "@radix-ui/themes";
 
 import AceEditor from "react-ace";
@@ -12,14 +6,14 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-cloud9_night";
 import "ace-builds/src-noconflict/ext-language_tools";
+import { useQuizAnswerContext } from "../../contexts/QuizAnswerContext";
 
 type QuizEditorProps = {
-  code: string;
-  setCode: Dispatch<SetStateAction<string>>;
   disabled: boolean;
 };
 
-export function QuizEditor({ code, setCode, disabled }: QuizEditorProps) {
+export function QuizEditor({ disabled }: QuizEditorProps) {
+  const { code, setCode } = useQuizAnswerContext();
   const [logs, setLogs] = useState<
     { type: "ERROR" | "LOG"; message: string }[]
   >([]);
@@ -128,69 +122,71 @@ export function QuizEditor({ code, setCode, disabled }: QuizEditorProps) {
         sandbox="allow-scripts"
       ></iframe>
 
-      <div
-        ref={loggerRef}
-        className="relative max-h-[200px] overflow-y-auto bg-[var(--gray-1)] rounded p-2 flex flex-col gap-1"
-      >
-        {" "}
-        <Flex
-          className="pb-1 border-b border-[var(--gray-3)]"
-          my={"1"}
-          justify={"between"}
-          align={"center"}
+      {!disabled && (
+        <div
+          ref={loggerRef}
+          className="relative max-h-[200px] overflow-y-auto bg-[var(--gray-1)] rounded p-2 flex flex-col gap-1"
         >
-          <Text
-            as="span"
-            size={"1"}
-            className="uppercase text-[var(--gray-12)] font-medium"
+          {" "}
+          <Flex
+            className="pb-1 border-b border-[var(--gray-3)]"
+            my={"1"}
+            justify={"between"}
+            align={"center"}
           >
-            Console
-          </Text>
-          <Button
-            disabled={logs.length === 0}
-            size={"1"}
-            onClick={() => setLogs([])}
-          >
-            مسح
-          </Button>
-        </Flex>
-        {logs.length > 0 ? (
-          <ul className="space-y-1 font-mono text-xs tracking-tight h-full text-[var(--gray-11)]">
-            {logs.map((messageData, index) => {
-              const isError = messageData.type === "ERROR";
+            <Text
+              as="span"
+              size={"1"}
+              className="uppercase text-[var(--gray-12)] font-medium"
+            >
+              Console
+            </Text>
+            <Button
+              disabled={logs.length === 0}
+              size={"1"}
+              onClick={() => setLogs([])}
+            >
+              مسح
+            </Button>
+          </Flex>
+          {logs.length > 0 ? (
+            <ul className="space-y-1 font-mono text-xs tracking-tight h-full text-[var(--gray-11)]">
+              {logs.map((messageData, index) => {
+                const isError = messageData.type === "ERROR";
 
-              return (
-                <li
-                  key={index}
-                  className={`flex items-start gap-2 py-1 px-2 border-l-2 rounded-r transition-colors duration-150 ${
-                    isError
-                      ? "border-red-500 bg-red-950/20 text-red-500"
-                      : "border-blue-500 bg-blue-900/10"
-                  }`}
-                >
-                  <span
-                    className={`inline-block px-1.5 py-0.5 text-[10px] font-bold uppercase rounded tracking-wider ${
+                return (
+                  <li
+                    key={index}
+                    className={`flex items-start gap-2 py-1 px-2 border-l-2 rounded-r transition-colors duration-150 ${
                       isError
-                        ? "bg-red-500/20 text-red-600"
-                        : "bg-blue-500/20 text-blue-400"
+                        ? "border-red-500 bg-red-950/20 text-red-500"
+                        : "border-blue-500 bg-blue-900/10"
                     }`}
                   >
-                    {messageData.type}
-                  </span>
+                    <span
+                      className={`inline-block px-1.5 py-0.5 text-[10px] font-bold uppercase rounded tracking-wider ${
+                        isError
+                          ? "bg-red-500/20 text-red-600"
+                          : "bg-blue-500/20 text-blue-400"
+                      }`}
+                    >
+                      {messageData.type}
+                    </span>
 
-                  <span className="break-all whitespace-pre-wrap flex-1 pt-0.5">
-                    {messageData.message}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        ) : (
-          <Text className="text-xs text-[var(--gray-11)] text-center italic">
-            Console is empty
-          </Text>
-        )}
-      </div>
+                    <span className="break-all whitespace-pre-wrap flex-1 pt-0.5">
+                      {messageData.message}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <Text className="text-xs text-[var(--gray-11)] text-center italic">
+              Console is empty
+            </Text>
+          )}
+        </div>
+      )}
     </div>
   );
 }

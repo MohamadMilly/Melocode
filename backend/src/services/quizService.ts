@@ -51,10 +51,12 @@ export const saveSubmission = async ({
   quizAnswerId,
   userOutputs,
   userId,
+  type,
 }: {
   content: string;
-  language: string | null;
+  language: string | undefined | null;
   quizAnswerId: number;
+  type: "MULTIPLE_CHOICE" | "CODING";
   userOutputs: UserQuizOutput[];
   userId: number;
 }) => {
@@ -78,21 +80,31 @@ export const saveSubmission = async ({
     },
   });
   if (testCases.length === 0) {
-    throw new HttpError(
-      400,
-      "هذا الاختبار لا يحتوي على حالات اختبار. يرجى التواصل مع المسؤول.",
-    );
+    throw new HttpError(400, "هذا الاختبار لا يحتوي على حالات اختبار. ");
   }
-  const isCorrect = testCases.every((testCase) => {
-    const userOutput = userOutputs.find(
-      (userOutput) => userOutput.testCaseId === testCase.id,
-    );
-    if (!userOutput || !userOutput.output) {
-      return false;
+  let isCorrect;
+  if (type === "MULTIPLE_CHOICE") {
+    isCorrect = content.trim() === testCases[0].output.trim();
+    if (!isCorrect) {
+      await prisma.quizGiveUp.create({
+        data: {
+          quizAnswerId: quizAnswerId,
+          userId: userId,
+        },
+      });
     }
+  } else {
+    isCorrect = testCases.every((testCase) => {
+      const userOutput = userOutputs.find(
+        (userOutput) => userOutput.testCaseId === testCase.id,
+      );
+      if (!userOutput || !userOutput.output) {
+        return false;
+      }
 
-    return userOutput.output.toString().includes(testCase.output);
-  });
+      return userOutput.output.trim() === testCase.output.trim();
+    });
+  }
   const submission = await prisma.quizSubmission.upsert({
     where: {
       userId_quizAnswerId_isCorrect: {

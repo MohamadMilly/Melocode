@@ -3,7 +3,7 @@ import { HttpError } from "../shared/errors/HttpError.js";
 
 export const giveUpToQuiz = async (quizAnswerId: number, userId: number) => {
   try {
-    const existingSorrectSubmission = await prisma.quizSubmission.findUnique({
+    const existingCorrectSubmission = await prisma.quizSubmission.findUnique({
       where: {
         userId_quizAnswerId_isCorrect: {
           userId,
@@ -12,9 +12,10 @@ export const giveUpToQuiz = async (quizAnswerId: number, userId: number) => {
         },
       },
     });
-    if (existingSorrectSubmission) {
+    if (existingCorrectSubmission) {
       throw new HttpError(400, "لا يمكن الاستسلام عن تمرين محلول مسبقا");
     }
+    
     const giveUpRecord = await prisma.quizGiveUp.create({
       data: {
         userId: userId,

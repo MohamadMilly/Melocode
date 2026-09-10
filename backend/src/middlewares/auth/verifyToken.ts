@@ -23,6 +23,14 @@ export function getVerifyTokenMiddleware({
       }
       if (token) {
         const authData = verify<UserJwtPayload>(token);
+        
+        if (authData.tokenType !== "access") {
+          res.status(401).json({
+            message:
+              "Refresh the token then send accessToken to access protected routes.",
+          });
+          return;
+        }
         if (authData) {
           req.currentUser = authData;
           req.authStatus = "Authorized";

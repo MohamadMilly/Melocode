@@ -2,27 +2,27 @@ import "dotenv/config";
 import jwt, { SignOptions, VerifyOptions, JwtPayload } from "jsonwebtoken";
 import { HttpError } from "../../errors/HttpError.js";
 
-const SECRET_KEY = process.env.SECRET_KEY;
+const SECRET_KEY = process.env.SECRET_KEY as string;
+
 if (!SECRET_KEY) {
-  console.warn(
-    "WARNING: SECRET_KEY env variable missing. Using unsafe fallback.",
+  throw new Error(
+    "SECRET_KEY is required , please add this env variable in .env first.",
   );
 }
-const SAFE_SECRET = SECRET_KEY ?? "melocode_2026";
 
 export function sign(
   payload: string | object | Buffer,
   options: SignOptions = {},
 ): string {
-  return jwt.sign(payload, SAFE_SECRET, options);
+  return jwt.sign(payload, SECRET_KEY, options);
 }
 
 export function verify<T extends object = Record<string, unknown>>(
   token: string,
   options: VerifyOptions = {},
-): T & JwtPayload {
+): T & JwtPayload & { tokenType: "refresh" | "access" } {
   try {
-    const decoded = jwt.verify(token, SAFE_SECRET, {
+    const decoded = jwt.verify(token, SECRET_KEY, {
       clockTolerance: 60,
       ...options,
     });
@@ -31,7 +31,7 @@ export function verify<T extends object = Record<string, unknown>>(
       throw new Error("Token payload is a raw string, expected an object.");
     }
 
-    return decoded as T & JwtPayload;
+    return decoded as T & JwtPayload & { tokenType: "refresh" | "access" };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Token invalid or expired";
