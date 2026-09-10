@@ -2,7 +2,7 @@ import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
 export const giveUpToQuiz = async (quizAnswerId, userId) => {
     try {
-        const existingSorrectSubmission = await prisma.quizSubmission.findUnique({
+        const existingCorrectSubmission = await prisma.quizSubmission.findUnique({
             where: {
                 userId_quizAnswerId_isCorrect: {
                     userId,
@@ -11,7 +11,7 @@ export const giveUpToQuiz = async (quizAnswerId, userId) => {
                 },
             },
         });
-        if (existingSorrectSubmission) {
+        if (existingCorrectSubmission) {
             throw new HttpError(400, "لا يمكن الاستسلام عن تمرين محلول مسبقا");
         }
         const giveUpRecord = await prisma.quizGiveUp.create({

@@ -21,8 +21,8 @@ export const register = async (req, res) => {
         username: user.username,
         createdAt: user.createdAt,
     };
-    const accessToken = sign(jwtPayload, { expiresIn: "15min" });
-    const refreshToken = sign(jwtPayload, { expiresIn: "7d" });
+    const accessToken = sign({ ...jwtPayload, tokenType: "access" }, { expiresIn: "15min" });
+    const refreshToken = sign({ ...jwtPayload, tokenType: "refresh" }, { expiresIn: "7d" });
     res.json({ user: jwtPayload, accessToken, refreshToken });
 };
 export const login = async (req, res) => {
@@ -43,8 +43,8 @@ export const login = async (req, res) => {
         username: user.username,
         createdAt: user.createdAt,
     };
-    const accessToken = sign(jwtPayload, { expiresIn: "15min" });
-    const refreshToken = sign(jwtPayload, { expiresIn: "7d" });
+    const accessToken = sign({ ...jwtPayload, tokenType: "access" }, { expiresIn: "15min" });
+    const refreshToken = sign({ ...jwtPayload, tokenType: "refresh" }, { expiresIn: "7d" });
     res.json({ user: jwtPayload, accessToken, refreshToken });
 };
 export const refreshToken = async (req, res) => {
@@ -55,8 +55,14 @@ export const refreshToken = async (req, res) => {
         });
     }
     const payload = verify(token);
-    const { exp, iat, ...clearnPayLoad } = payload;
-    const accessToken = sign(clearnPayLoad, { expiresIn: "15min" });
+    if (payload.tokenType !== "refresh") {
+        res.status(401).json({
+            message: "Use RefreshToken to refresh the access token.",
+        });
+        return;
+    }
+    const { exp, iat, tokenType, ...cleanPayLoad } = payload;
+    const accessToken = sign({ tokenType: "access", ...cleanPayLoad }, { expiresIn: "15min" });
     res.json({
         accessToken: accessToken,
     });

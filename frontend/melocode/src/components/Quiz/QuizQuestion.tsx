@@ -1,21 +1,22 @@
 import { Text } from "@radix-ui/themes";
 
 import { LessonNote } from "../Lesson/LessonNote";
-import { lazy, type Dispatch, type SetStateAction } from "react";
+import { lazy } from "react";
 import type { QuizQuestionItem } from "../../shared/types/Quiz.types";
+import { QuizHint } from "./QuizHint";
+import { OptionsList } from "./multiple_choice/OptionsList";
 
 const QuizEditor = lazy(() =>
   import("./QuizEditor").then((module) => ({ default: module.QuizEditor })),
 );
+
 export function QuizQuestion({
   questionItems,
-  code,
-  setCode,
+
   editorDisabled,
 }: {
   questionItems: QuizQuestionItem[];
-  code: string;
-  setCode: Dispatch<SetStateAction<string>>;
+
   editorDisabled: boolean;
 }) {
   return (
@@ -31,17 +32,19 @@ export function QuizQuestion({
               );
             case "code":
               return (
-                <QuizEditor
-                  disabled={editorDisabled}
-                  code={code}
-                  setCode={setCode}
-                />
+                <QuizEditor disabled={editorDisabled || !quiz.isInteractive} />
               );
 
             case "note":
               return <LessonNote>{quiz.content}</LessonNote>;
 
+            case "hint":
+              return <QuizHint>{quiz.content}</QuizHint>;
+
+            case "options":
+              return <OptionsList options={quiz.options ?? []} />;
             default:
+              quiz.type satisfies never;
               return (
                 <Text as="p" dir="auto">
                   {quiz.content}

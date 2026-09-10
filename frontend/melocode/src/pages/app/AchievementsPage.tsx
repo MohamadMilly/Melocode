@@ -10,7 +10,7 @@ export function AchievementsPage() {
     <main
       dir="rtl"
       className="relative mx-auto min-h-screen w-full max-w-5xl overflow-hidden border-x border-[var(--gray-4)] bg-[var(--gray-1)] px-4 sm:px-6 md:px-8"
-    >
+    > 
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_left,var(--gray-3)_1px,transparent_1px),linear-gradient(to_bottom,var(--gray-3)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30" />
 
       <Section size="2" className="relative z-10">

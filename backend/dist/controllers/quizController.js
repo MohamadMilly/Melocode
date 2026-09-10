@@ -16,12 +16,13 @@ export const getQuizTestCasesInputs = async (req, res) => {
 export const saveQuizSubmission = async (req, res) => {
     const currentUserId = req.currentUser?.id;
     const { quizAnswerId } = req.params;
-    const { content, language, userOutputs } = req.body;
+    const { content, language, userOutputs, type } = req.body;
     const submission = await quizService.saveSubmission({
         content,
         language,
         quizAnswerId: Number(quizAnswerId),
         userOutputs,
+        type: type ?? "CODING",
         userId: currentUserId,
     });
     return res.status(201).json({ submission });

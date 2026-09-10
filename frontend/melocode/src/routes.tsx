@@ -7,11 +7,16 @@ import { ProfilePage } from "./pages/app/ProfilePage";
 import { ErrorPage } from "./components/shared/ui/NotFoundPage";
 import { UsersLeaderBoardPage } from "./pages/app/UsersLeaderBoardPage";
 import { AchievementsPage } from "./pages/app/AchievementsPage";
+import { LandingPage } from "./pages/LandingPage";
 
 export const routes = [
   {
-    element: <App />,
+    element: <LandingPage />,
     path: "/",
+  },
+  {
+    element: <App />,
+    path: "/app/",
     errorElement: <ErrorPage />,
     children: [
       {

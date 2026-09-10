@@ -9,6 +9,12 @@ export function getVerifyTokenMiddleware({ isOptional, }) {
             }
             if (token) {
                 const authData = verify(token);
+                if (authData.tokenType !== "access") {
+                    res.status(401).json({
+                        message: "Refresh the token then send accessToken to access protected routes.",
+                    });
+                    return;
+                }
                 if (authData) {
                     req.currentUser = authData;
                     req.authStatus = "Authorized";

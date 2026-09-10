@@ -3,7 +3,7 @@ import { useQuizTestCase } from "../api/quiz/useQuizTestCases";
 import { useRunCode } from "../api/online-compiler/useRunCode";
 import { useSubmitQuizAnswer } from "../api/quiz/useSubmitQuizAnswer";
 
-export function useCheckAnswer(quizAnswerId: number, lessonId: number) {
+export function useCheckCodeAnswer(quizAnswerId: number, lessonId: number) {
   const {
     refetch: fetchTestCases,
     isLoading: areTestCasesLoading,
@@ -15,7 +15,7 @@ export function useCheckAnswer(quizAnswerId: number, lessonId: number) {
     isPending: isRunningPending,
     error: runCodeError,
   } = useRunCode();
-
+  
   const {
     mutateAsync: submitAnswer,
     isPending: isAnswerBeingSubmitted,

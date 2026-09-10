@@ -1,13 +1,15 @@
 import { Card, Flex, Grid, Text } from "@radix-ui/themes";
 import { Award } from "lucide-react";
-import type { Achievement } from "@app/types";
+import type { Achievement, ResponseError } from "@app/types";
 import { AchievementCard } from "./AchievementCard";
 import { AchievementSkeleton } from "./skeleton/AchievementSkeleton";
+import { ErrorElement } from "../shared/ui/ErrorElement";
+import type { AxiosError } from "axios";
 
 type AchievementsListProps = {
   achievements: Achievement[];
   isLoading: boolean;
-  error?: unknown;
+  error?: AxiosError<ResponseError> | null;
 };
 
 export function AchievementsList({
@@ -16,13 +18,13 @@ export function AchievementsList({
   error,
 }: AchievementsListProps) {
   if (error) {
-    return <Text color="red">تعذر تحميل الإنجازات.</Text>;
+    return <ErrorElement axiosError={error} />;
   }
 
   if (isLoading) {
     return <AchievementSkeleton count={4} />;
   }
-   
+
   if (achievements.length === 0) {
     return (
       <Card

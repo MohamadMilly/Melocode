@@ -11,7 +11,7 @@ export const getQuizAnswer = async (
 ) => {
   const currentUserId = req.currentUser?.id as number;
   const { quizAnswerId } = req.params;
-  
+
   const quizAnswer = await quizService.getQuizAnswer({
     answerId: Number(quizAnswerId),
     userId: currentUserId,
@@ -47,16 +47,16 @@ export const saveQuizSubmission = async (
 ) => {
   const currentUserId = req.currentUser?.id as number;
   const { quizAnswerId } = req.params;
-  const { content, language, userOutputs } = req.body;
+  const { content, language, userOutputs, type } = req.body;
 
   const submission = await quizService.saveSubmission({
     content,
     language,
     quizAnswerId: Number(quizAnswerId),
     userOutputs,
+    type: type ?? "CODING",
     userId: currentUserId,
   });
 
   return res.status(201).json({ submission });
 };
-

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 export function LessonConclusionHeading({ children }: { children: ReactNode }) {
   return (
     <Heading
+      tabIndex={0}
       size={"5"}
       mt={"8"}
       mb={"4"}

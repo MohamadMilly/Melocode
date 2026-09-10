@@ -1,10 +1,8 @@
 /* src/index.css */
 @import "tailwindcss"; /* Standard Tailwind v4 entry point */
 
-/* 1. Tell Tailwind v4 to explicitly look inside the Tremor folder */
 @source "../../node_modules/@tremor/react";
 
-/* 2. (Optional) Provide Tremor fallback colors if its custom color names disappear */
 @theme {
   --color-tremor-brand: var(--color-blue-500);
   --color-tremor-brand-hover: var(--color-blue-600);
@@ -17,6 +15,23 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .animate-slideUp {
+    animation: slideUp 1 0.5s;
+    animation-fill-mode: both;
+  }
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0px);
+    }
   }
 }
 
@@ -72,7 +87,7 @@ body::-webkit-scrollbar-track,
 html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb,
 *::-webkit-scrollbar-thumb {
-  background-color: var(--color-lime-600);
+  background-color: var(--gray-8);
   border-radius: 9999px;
 }
 
@@ -118,15 +133,6 @@ pre [data-line]::before {
 
 .code-editor .ace_gutter-cell {
   color: rgba(255, 255, 255, 0.3) !important;
-}
-
-@layer utilities {
-  .progressMap > a:nth-of-type(2n) {
-    @apply translate-x-12;
-  }
-  .progressMap > a:nth-of-type(2n + 1) {
-    @apply -translate-x-12;
-  }
 }
 
 table {

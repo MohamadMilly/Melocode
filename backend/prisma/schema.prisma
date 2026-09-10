@@ -9,38 +9,37 @@ generator client {
 
 datasource db {
   provider = "postgresql"
- 
 }
 
 model User {
   id               Int                  @id @default(autoincrement())
-  fullname         String               
-  username         String               @unique 
+  fullname         String
+  username         String               @unique
   password         String
   createdAt        DateTime             @default(now())
   lessonProgresses UserLessonProgress[]
-  submissions QuizSubmission[]
-  giveUps QuizGiveUp[]
-  achievements Achievement[]
-  profile Profile?
+  submissions      QuizSubmission[]
+  giveUps          QuizGiveUp[]
+  achievements     Achievement[]
+  profile          Profile?
 }
 
 model Achievement {
- id               Int                  @id @default(autoincrement())
- scope AchievementScope
- frequency AchievementFrequency
- userId Int
- user User @relation(fields: [userId],references: [id])
- gainedAt DateTime @default(now())
- 
- @@unique([scope,frequency,userId])
+  id        Int                  @id @default(autoincrement())
+  scope     AchievementScope
+  frequency AchievementFrequency
+  userId    Int
+  user      User                 @relation(fields: [userId], references: [id])
+  gainedAt  DateTime             @default(now())
+
+  @@unique([scope, frequency, userId])
 }
 
 model Profile {
-id    Int @id @default(autoincrement())
-avatarUrl String?
-user User @relation(fields: [userId],references: [id])
-userId Int @unique
+  id        Int     @id @default(autoincrement())
+  avatarUrl String?
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int     @unique
 }
 
 model Lesson {
@@ -54,54 +53,52 @@ model Lesson {
 
 model UserLessonProgress {
   id          Int      @id @default(autoincrement())
-  lessonId    Int          
+  lessonId    Int
   userId      Int
   completedAt DateTime @default(now())
-  lesson Lesson @relation(fields: [lessonId], references: [id],onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id],onDelete: Cascade)
-  
-  @@unique([lessonId, userId])
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([lessonId, userId])
   @@index([lessonId])
 }
 
 model QuizAnswer {
-  id         Int             @id @default(autoincrement())
-  lessonId   Int              
-  lesson     Lesson           @relation(fields: [lessonId], references: [id],onDelete: Cascade)
-  items      QuizAnswerItem[]
+  id          Int              @id @default(autoincrement())
+  lessonId    Int
+  lesson      Lesson           @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  
+  items       QuizAnswerItem[]
   submissions QuizSubmission[]
-  testCases  TestCase[]
-  giveUps QuizGiveUp[]
+  testCases   TestCase[]
+  giveUps     QuizGiveUp[]
 }
 
 model QuizSubmission {
-id         Int              @id @default(autoincrement())
-content String
-language String?
-userId Int
-isCorrect Boolean
-quizAnswerId Int 
-user User @relation(fields: [userId],references: [id])
-quizAnswer QuizAnswer @relation(fields: [quizAnswerId],references: [id],onDelete: Cascade)
-submittedAt DateTime @default(now())
+  id           Int        @id @default(autoincrement())
+  content      String
+  language     String?
+  userId       Int
+  isCorrect    Boolean
+  quizAnswerId Int
+  user         User       @relation(fields: [userId], references: [id])
+  quizAnswer   QuizAnswer @relation(fields: [quizAnswerId], references: [id], onDelete: Cascade)
+  submittedAt  DateTime   @default(now())
 
-@@unique([userId,quizAnswerId,isCorrect])
-
-@@index([userId])
-
+  @@unique([userId, quizAnswerId, isCorrect])
+  @@index([userId])
 }
+
 model QuizGiveUp {
-  id              Int        @id @default(autoincrement())
-  userId          Int
-  quizAnswerId    Int
-  givenUpAt       DateTime   @default(now())
-  user            User       @relation(fields: [userId], references: [id],onDelete: Cascade)
-  quizAnswer      QuizAnswer @relation(fields: [quizAnswerId], references: [id],onDelete: Cascade)
-   
-  @@unique([userId, quizAnswerId]) 
-  
-} 
+  id           Int        @id @default(autoincrement())
+  userId       Int
+  quizAnswerId Int
+  givenUpAt    DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizAnswer   QuizAnswer @relation(fields: [quizAnswerId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, quizAnswerId])
+}
 
 model QuizAnswerItem {
   id           Int                @id @default(autoincrement())
@@ -109,7 +106,7 @@ model QuizAnswerItem {
   content      String
   language     String?
   quizAnswerId Int
-  quizAnswer   QuizAnswer         @relation(fields: [quizAnswerId], references: [id],onDelete: Cascade)
+  quizAnswer   QuizAnswer         @relation(fields: [quizAnswerId], references: [id], onDelete: Cascade)
 }
 
 model TestCase {
@@ -117,7 +114,7 @@ model TestCase {
   input        String
   output       String
   quizAnswerId Int
-  quizAnswer   QuizAnswer @relation(fields: [quizAnswerId], references: [id],onDelete: Cascade)
+  quizAnswer   QuizAnswer @relation(fields: [quizAnswerId], references: [id], onDelete: Cascade)
 }
 
 enum QuizAnswerItemType {
@@ -127,15 +124,14 @@ enum QuizAnswerItemType {
 }
 
 enum AchievementScope {
- PROGRESS
- SUBMISSION
- STREAK
+  PROGRESS
+  SUBMISSION
+  STREAK
 }
 
 enum AchievementFrequency {
-  ONE @map("1")
-  TEN @map("10")
-  HUNDRED @map("100")
+  ONE      @map("1")
+  TEN      @map("10")
+  HUNDRED  @map("100")
   THOUSAND @map("1000")
 }
-

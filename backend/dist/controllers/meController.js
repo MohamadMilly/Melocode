@@ -18,12 +18,12 @@ export const getCurrentUser = async (req, res) => {
 export const createLessonProgress = async (req, res) => {
     const currentUserId = req.currentUser?.id;
     const { lessonId } = req.params;
-    const hasCompleted = await lessonService.completeLesson({
+    const progress = await lessonService.completeLesson({
         userId: currentUserId,
         lessonId: Number(lessonId),
     });
     return res.json({
-        hasCompleted: hasCompleted,
+        progress,
     });
 };
 export const getLessonQuizzesSubmissions = async (req, res) => {
@@ -59,16 +59,6 @@ export const getUserQuizzesGiveUpsForLesson = async (req, res) => {
     const { lessonId } = req.params;
     const giveUps = await giveUpService.getUserQuizzesGiveUpsForLesson(currentUserId, Number(lessonId));
     return res.json({ giveUpsData: giveUps });
-};
-export const getLessonProgress = async (req, res) => {
-    const currentUserId = req.currentUser?.id;
-    const { lessonId } = req.params;
-    const numberLessonId = Number(lessonId);
-    const progressData = await lessonService.getLessonProgress(currentUserId, numberLessonId);
-    res.json({
-        hasCompletedAllQuizzes: progressData.hasCompletedAllQuizzes,
-        progress: progressData.progress,
-    });
 };
 export const getUserAchievements = async (req, res) => {
     const currentUserId = req.currentUser?.id;

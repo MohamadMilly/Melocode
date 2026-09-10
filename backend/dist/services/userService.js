@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma.js";
+import { HttpError } from "../shared/errors/HttpError.js";
 const getUsersByStreak = async (options, direction) => {
     const usersWithOrderedStreaks = await prisma.user.findMany(options);
     return usersWithOrderedStreaks.sort((a, b) => direction === "+" ? a.streak - b.streak : b.streak - a.streak);
@@ -57,5 +58,8 @@ export const getUsers = async (sortedBy) => {
     const direction = sortedBy[0];
     const metric = sortedBy.slice(1).trim().toLowerCase();
     const handler = getUsersHandlers[metric];
+    if (typeof handler !== "function") {
+        throw new HttpError(400, "Unknown query param.");
+    }
     return handler(options, direction);
 };

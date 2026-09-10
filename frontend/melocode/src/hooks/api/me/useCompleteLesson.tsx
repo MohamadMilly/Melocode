@@ -2,7 +2,7 @@ import { apiClient } from "../../../api/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import type {
-  LessonProgressResponse,
+  GetLessonResponse,
   ResponseError,
   UserLessonProgress,
 } from "@app/types";
@@ -12,10 +12,8 @@ import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 
 const completeLesson = async (
   lessonId: number,
-): Promise<{ hasCompleted: boolean }> => {
-  const response = await apiClient.post<{ hasCompleted: boolean }>(
-    `/me/lessons/${lessonId}/progress`,
-  );
+): Promise<{ progress: UserLessonProgress }> => {
+  const response = await apiClient.post(`/me/lessons/${lessonId}/progress`);
 
   return response.data;
 };
@@ -25,39 +23,23 @@ export function useCompleteLesson() {
   const queryClient = useQueryClient();
 
   return useMutation<
-    { hasCompleted: boolean },
+    { progress: UserLessonProgress },
     AxiosError<ResponseError>,
     number
   >({
     mutationKey: ["complete-lesson"],
     mutationFn: completeLesson,
     onSuccess: (data, lessonId) => {
-      if (!data.hasCompleted) {
-        return;
-      }
-
-      queryClient.setQueryData<{
-        hasCompletedAllQuizzes: boolean;
-        progress: UserLessonProgress | null;
-      }>(
-        ["me", "lessons", lessonId, "progress"],
-        (old: LessonProgressResponse | undefined) => {
-          const now = new Date();
-          const existingProgress = old?.progress ?? {
-            id: 0,
-            lessonId,
-            userId: user?.id ?? 0,
-            completedAt: now,
-          };
+      queryClient.setQueryData<GetLessonResponse>(
+        ["me", "lessons", lessonId],
+        (old: GetLessonResponse | undefined) => {
+          if (!old) return;
 
           return {
+            ...old,
             hasCompletedAllQuizzes: true,
-            progress: {
-              ...existingProgress,
-              lessonId,
-              completedAt: now,
-            },
-          } satisfies LessonProgressResponse;
+            progress: data.progress,
+          } satisfies GetLessonResponse;
         },
       );
 

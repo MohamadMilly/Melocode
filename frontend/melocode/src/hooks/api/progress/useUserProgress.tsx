@@ -6,7 +6,7 @@ const getUserProgress = async (
   userId: number,
 ): Promise<GetUserProgressResponse> => {
   const response = await apiClient.get(`/users/${userId}/progress`);
-
+  
   return response.data;
 };
 

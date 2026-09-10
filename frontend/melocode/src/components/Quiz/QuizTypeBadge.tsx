@@ -1,12 +1,12 @@
 import { Badge, type BadgeProps } from "@radix-ui/themes";
-
-export type QuizBadgeType = "Write" | "Debug" | "Fix" | "Theory";
+import type { QuizBadgeType } from "../../shared/types/Quiz.types";
 
 const BADGE_VARIANTS: Record<QuizBadgeType, BadgeProps["color"]> = {
   Write: "green",
   Debug: "orange",
   Fix: "crimson",
   Theory: "blue",
+  "Multiple Choice": "lime",
 };
 
 type QuizBadgeProps = {

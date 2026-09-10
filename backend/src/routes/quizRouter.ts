@@ -2,20 +2,26 @@ import express, { type Router } from "express";
 import { mandatoryVerifyToken } from "../middlewares/auth/verifyToken.js";
 import * as quizController from "../controllers/quizController.js";
 import { extractToken } from "../middlewares/auth/extractToken.js";
+import { validateQuizAnswerId } from "../middlewares/routes/validation/quiz.param.js";
 
 export const quizRouter: Router = express.Router();
 
 quizRouter.use(extractToken);
+quizRouter.use(mandatoryVerifyToken);
 
-quizRouter.get("/:quizAnswerId", quizController.getQuizAnswer);
+quizRouter.get(
+  "/:quizAnswerId",
+  validateQuizAnswerId,
+  quizController.getQuizAnswer,
+);
 quizRouter.get(
   "/:quizAnswerId/test-cases",
+  validateQuizAnswerId,
   quizController.getQuizTestCasesInputs,
 );
 
-quizRouter.use(mandatoryVerifyToken);
-
 quizRouter.post(
   "/:quizAnswerId/submissions",
+  validateQuizAnswerId,
   quizController.saveQuizSubmission,
 );

@@ -1,7 +1,10 @@
 import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
 import { eventEmitter } from "../lib/eventEmitter.js";
-export const getLessons = async ({ userId, }) => {
+import { hasCompletedAllQuizzes } from "../shared/utils/hasCompletedAllQuizzes.js";
+import { deriveLessonsStatuses } from "../shared/utils/deriveLessonsStatuses.js";
+import { extractLessonWithNeighbors } from "../shared/utils/extractLessonWithNeighbors.js";
+export const getUserLessons = async ({ userId, }) => {
     const lessons = await prisma.lesson.findMany({
         include: {
             ...(userId
@@ -21,28 +24,7 @@ export const getLessons = async ({ userId, }) => {
             createdAt: "asc",
         },
     });
-    const lessonsWithStatus = [];
-    for (let i = 0; i < lessons.length; i++) {
-        const currentLesson = lessons[i];
-        const previousLesson = lessons[i - 1];
-        let status;
-        if (currentLesson.lessonProgresses &&
-            currentLesson.lessonProgresses.length === 1) {
-            status = "completed";
-        }
-        else if (!previousLesson ||
-            (previousLesson.lessonProgresses &&
-                previousLesson.lessonProgresses.length === 1)) {
-            status = "current";
-        }
-        else {
-            status = "locked";
-        }
-        lessonsWithStatus.push({
-            ...currentLesson,
-            status: userId ? status : i === 0 ? "current" : "locked",
-        });
-    }
+    const lessonsWithStatus = deriveLessonsStatuses(lessons);
     return lessonsWithStatus;
 };
 export const completeLesson = async ({ userId, lessonId, }) => {
@@ -53,6 +35,7 @@ export const completeLesson = async ({ userId, lessonId, }) => {
             },
             select: {
                 id: true,
+                lessonId: true,
                 submissions: {
                     where: {
                         userId: userId,
@@ -66,22 +49,15 @@ export const completeLesson = async ({ userId, lessonId, }) => {
                 },
             },
         });
-        const isCompletedAllQuizzes = quizzesAnswersWithSubmissionsAndGiveUps.every((quizAnswer) => quizAnswer.submissions.length >= 1 || quizAnswer.giveUps.length >= 1);
-        if (!isCompletedAllQuizzes) {
+        const result = hasCompletedAllQuizzes(quizzesAnswersWithSubmissionsAndGiveUps);
+        if (!result) {
             throw new HttpError(400, "You haven't finished all quizzes yet. Complete them or Give up and try again.");
         }
-        await prisma.userLessonProgress.upsert({
-            where: {
-                lessonId_userId: {
-                    userId,
-                    lessonId,
-                },
-            },
-            update: {},
-            create: { userId, lessonId },
+        const progress = await prisma.userLessonProgress.create({
+            data: { userId, lessonId },
         });
         eventEmitter.emit("lesson-completed", { userId: userId });
-        return true;
+        return progress;
     }
     catch (err) {
         if (err?.code === "P2002") {
@@ -92,35 +68,45 @@ export const completeLesson = async ({ userId, lessonId, }) => {
         }
     }
 };
-export const getLessonProgress = async (userId, lessonId) => {
-    const progress = await prisma.userLessonProgress.findUnique({
-        where: {
-            lessonId_userId: {
-                lessonId,
-                userId,
-            },
-        },
-    });
-    const quizzesWithUserSubmissions = await prisma.quizAnswer.findMany({
-        where: {
-            lessonId: lessonId,
-        },
+export const getUserLesson = async (userId, lessonId) => {
+    const allLessons = await prisma.lesson.findMany({
         include: {
-            submissions: {
-                where: {
-                    userId: userId,
-                },
-            },
-            giveUps: {
+            lessonProgresses: {
                 where: {
                     userId: userId,
                 },
             },
         },
+        orderBy: {
+            createdAt: "asc",
+        },
     });
-    const hasCompletedAllQuizzes = quizzesWithUserSubmissions.every((quiz) => quiz.submissions.some((s) => s.isCorrect) || quiz.giveUps.length >= 1);
+    const allLessonsWithStatuses = deriveLessonsStatuses(allLessons);
+    const lessonWithNeighbors = extractLessonWithNeighbors(allLessonsWithStatuses, lessonId);
+    const quizzesWithUserSubmissions = await prisma.quizAnswer.findMany({
+        where: { lessonId: lessonId },
+        include: {
+            submissions: { where: { userId: userId, isCorrect: true } },
+            giveUps: { where: { userId: userId } },
+        },
+    });
+    const result = hasCompletedAllQuizzes(quizzesWithUserSubmissions);
     return {
-        hasCompletedAllQuizzes: hasCompletedAllQuizzes,
-        progress: progress,
+        hasCompletedAllQuizzes: result,
+        ...lessonWithNeighbors,
     };
+};
+export const getGuestLessons = async () => {
+    return (await prisma.lesson.findMany({
+        orderBy: {
+            createdAt: "asc",
+        },
+    })).map((lesson, index) => index === 0
+        ? { ...lesson, status: "current" }
+        : { ...lesson, status: "locked" });
+};
+export const getGuestLesson = async (lessonId) => {
+    const lessons = await getGuestLessons();
+    const lessonWithNeighbors = extractLessonWithNeighbors(lessons, lessonId);
+    return { ...lessonWithNeighbors, hasCompletedAllQuizzes: false };
 };

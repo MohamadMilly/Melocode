@@ -6,8 +6,8 @@ import { HttpError } from "./shared/errors/HttpError.js";
 import { createServer } from "node:http";
 
 import "./events/listeners.js";
-
 // routers imports
+
 import { authRouter } from "./routes/authRouter.js";
 import { lessonRouter } from "./routes/lessonRouter.js";
 import { meRouter } from "./routes/meRouter.js";
@@ -25,14 +25,17 @@ const io = new Server(server, {
   },
 });
 
-io.on("connection", (socket) => {});
-
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    methods: ["POST", "OPTIONS", "GET", "DELETE", "PUT", "PATCH"],
+  }),
+);
 
 app.use(express.json());
 
 socketService.initializeServer(io);
- 
+
 // routers
 app.use("/auth", authRouter);
 app.use("/lessons", lessonRouter);

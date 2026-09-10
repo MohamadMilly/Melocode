@@ -3,15 +3,14 @@ import jwt from "jsonwebtoken";
 import { HttpError } from "../../errors/HttpError.js";
 const SECRET_KEY = process.env.SECRET_KEY;
 if (!SECRET_KEY) {
-    console.warn("WARNING: SECRET_KEY env variable missing. Using unsafe fallback.");
+    throw new Error("SECRET_KEY is required , please add this env variable in .env first.");
 }
-const SAFE_SECRET = SECRET_KEY ?? "melocode_2026";
 export function sign(payload, options = {}) {
-    return jwt.sign(payload, SAFE_SECRET, options);
+    return jwt.sign(payload, SECRET_KEY, options);
 }
 export function verify(token, options = {}) {
     try {
-        const decoded = jwt.verify(token, SAFE_SECRET, {
+        const decoded = jwt.verify(token, SECRET_KEY, {
             clockTolerance: 60,
             ...options,
         });

@@ -30,7 +30,7 @@ export const getQuizAnswer = async ({ answerId, userId, }) => {
     }
     return quizAnswer;
 };
-export const saveSubmission = async ({ content, language, quizAnswerId, userOutputs, userId, }) => {
+export const saveSubmission = async ({ content, language, quizAnswerId, userOutputs, userId, type, }) => {
     const giveUpForThisQuiz = await prisma.quizGiveUp.findUnique({
         where: {
             userId_quizAnswerId: {
@@ -48,15 +48,29 @@ export const saveSubmission = async ({ content, language, quizAnswerId, userOutp
         },
     });
     if (testCases.length === 0) {
-        throw new HttpError(400, "هذا الاختبار لا يحتوي على حالات اختبار. يرجى التواصل مع المسؤول.");
+        throw new HttpError(400, "هذا الاختبار لا يحتوي على حالات اختبار. ");
     }
-    const isCorrect = testCases.every((testCase) => {
-        const userOutput = userOutputs.find((userOutput) => userOutput.testCaseId === testCase.id);
-        if (!userOutput || !userOutput.output) {
-            return false;
+    let isCorrect;
+    if (type === "MULTIPLE_CHOICE") {
+        isCorrect = content.trim() === testCases[0].output.trim();
+        if (!isCorrect) {
+            await prisma.quizGiveUp.create({
+                data: {
+                    quizAnswerId: quizAnswerId,
+                    userId: userId,
+                },
+            });
         }
-        return userOutput.output.toString().includes(testCase.output);
-    });
+    }
+    else {
+        isCorrect = testCases.every((testCase) => {
+            const userOutput = userOutputs.find((userOutput) => userOutput.testCaseId === testCase.id);
+            if (!userOutput || !userOutput.output) {
+                return false;
+            }
+            return userOutput.output.trim() === testCase.output.trim();
+        });
+    }
     const submission = await prisma.quizSubmission.upsert({
         where: {
             userId_quizAnswerId_isCorrect: {

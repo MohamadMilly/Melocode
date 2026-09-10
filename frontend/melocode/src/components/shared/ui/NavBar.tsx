@@ -43,13 +43,12 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
         ميلوكود
       </Text>
 
-      {!user && (
-        <RouteLink tipContent="انشئ حساب" route="/register">
-          ابدأ ←
-        </RouteLink>
-      )}
-
       <Flex gap={"3"} align={"center"}>
+        {!user && (
+          <RouteLink tipContent="انشئ حساب" route="/register">
+            ابدأ ←
+          </RouteLink>
+        )}
         {user && (
           <>
             <Flex gap={"1"} align={"center"} className="hidden md:flex">
@@ -67,14 +66,16 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
                   •
                 </Text>
               </div>
-              <Skeleton loading={isLoading}>
-                <Text>{streak}</Text>
-              </Skeleton>
-              <Flame className="text-orange-700" size={24} />
+              <Flex gap={"1"}>
+                <Skeleton loading={isLoading}>
+                  <Text>{streak}</Text>
+                </Skeleton>
+                <Flame className="text-orange-700" size={24} />
+              </Flex>
             </Flex>
             <HoverCard.Root openDelay={150}>
               <HoverCard.Trigger>
-                <Link to="/profile" aria-label="الملف الشخصي">
+                <Link to="profile" aria-label="الملف الشخصي">
                   <Avatar
                     src={currentUser?.profile?.avtarUrl}
                     fallback={avatarFullback}
@@ -116,11 +117,11 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
               </button>
             }
           >
-            <RouteLink route="/leaderboard" tipContent="لوحة المتصدرين">
+            <RouteLink route="/app/leaderboard" tipContent="لوحة المتصدرين">
               <span>لوحة المتصدرين</span>
               <Trophy size={18} />
             </RouteLink>
-            <RouteLink route="/achievements" tipContent="الإنجازات">
+            <RouteLink route="/app/achievements" tipContent="الإنجازات">
               <span>الإنجازات</span>
               <Star size={18} />
             </RouteLink>
@@ -147,10 +148,10 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
             </button>
           </Tooltip>
 
-          <RouteLink tipContent="لوحة المتصدرين" route="/leaderboard">
+          <RouteLink tipContent="لوحة المتصدرين" route="/app/leaderboard">
             <Trophy size={18} />
           </RouteLink>
-          <RouteLink route="/achievements" tipContent="الإنجازات">
+          <RouteLink route="/app/achievements" tipContent="الإنجازات">
             <Star size={18} />
           </RouteLink>
         </Flex>

@@ -19,8 +19,10 @@ const io = new Server(server, {
         origin: process.env.CLIENT_URL,
     },
 });
-io.on("connection", (socket) => { });
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    methods: ["POST", "OPTIONS", "GET", "DELETE", "PUT", "PATCH"],
+}));
 app.use(express.json());
 socketService.initializeServer(io);
 // routers

@@ -14,6 +14,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useUserProgresses } from "../../hooks/api/progress/useUserProgress";
 import { StreakBarChart } from "../../components/Profile/StreakBarChart";
 import { ProgressCircleChart } from "../../components/Profile/ProgressCircleChart";
+import { ErrorElement } from "../../components/shared/ui/ErrorElement";
 
 export function ProfilePage() {
   const { user: userInStorage } = useAuth();
@@ -33,14 +34,20 @@ export function ProfilePage() {
     );
   }
 
-  if (error || !user) {
+  if (error) {
     return (
       <main className="max-w-5xl mx-auto px-4 py-12">
-        <Text color="gray">تعذر تحميل الملف الشخصي.</Text>
+        <ErrorElement axiosError={error} />
       </main>
     );
   }
-
+  if (!user) {
+    return (
+      <main className="max-w-5xl mx-auto px-4 py-12">
+        <Text>لم يتم إيجاد الملف الشخصي .</Text>
+      </main>
+    );
+  }
   const avatarFallback = getAvatarFullBack(user.fullname as string);
   const joinedDate = new Date(user.createdAt).toLocaleDateString("ar-EG", {
     year: "numeric",

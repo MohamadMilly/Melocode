@@ -7,6 +7,7 @@ import {
 } from "@app/types";
 import { UserFindManyArgs } from "../generated/prisma/models.js";
 import { prisma } from "../lib/prisma.js";
+import { HttpError } from "../shared/errors/HttpError.js";
 
 const getUsersByStreak = async (
   options: UserFindManyArgs,
@@ -90,6 +91,8 @@ export const getUsers = async (sortedBy: LeaderboardSortOrder) => {
   const metric = sortedBy.slice(1).trim().toLowerCase() as SortMetric;
 
   const handler = getUsersHandlers[metric];
+  if (typeof handler !== "function") {
+    throw new HttpError(400, "Unknown query param.");
+  }
   return handler(options, direction);
 };
-

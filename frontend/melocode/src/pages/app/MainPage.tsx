@@ -3,33 +3,45 @@ import { ProgressMap } from "../../components/ProgressMap/ProgressMap";
 import { useLessons } from "../../hooks/api/lesson/useLessons";
 import { useAuth } from "../../contexts/AuthContext";
 import { RouteLink } from "../../components/shared/ui/RouteLink";
+import { MainSideNav } from "../../components/Main/MainSideNav";
+import { CheckCircle2, Flag, Sparkles } from "lucide-react";
 
 export function MainPage() {
   const { lessons: nodes, isLoading, error } = useLessons();
   const { user } = useAuth();
 
+  const currentLesson = nodes.find((node) => node.status === "current");
+
   return (
     <main
       dir="rtl"
-      className="relative max-w-5xl w-full mx-auto px-4 sm:px-6 md:px-8 border-x border-[var(--gray-4)] min-h-screen bg-[var(--gray-1)] selection:bg-[var(--accent-a3)] overflow-hidden"
+      className="relative grid grid-cols-[auto_1fr] grid-rows-1 gap-4 w-full px-2 sm:px-3 border-x border-(--gray-4) min-h-screen bg-(--gray-1) selection:bg-(--accent-a3)"
     >
-      <div className="absolute inset-0 bg-[linear-gradient(to_left,var(--gray-3)_1px,transparent_1px),linear-gradient(to_bottom,var(--gray-3)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
-
-      <Section size="2" className="relative z-10">
+      <Section
+        size="2"
+        p={{
+          initial: "4",
+          sm: "6",
+          lg: "9",
+        }}
+        className="relative flex! flex-col! md:flex-row! gap-8! items-stretch! z-10 col-start-2 col-end-3 row-start-1 row-end-2"
+      >
         <Flex
-          direction={{ initial: "column", md: "row" }}
-          align={{ initial: "stretch", md: "center" }}
-          justify="between"
+          direction="column"
           gap="6"
-          pb="6"
-          mb="8"
-          className="border-b border-dashed border-[var(--gray-5)]"
+          className="w-full shrink-0 border-b border-dashed border-(--gray-5) pb-6 md:w-80 md:border-b-0 md:border-l md:pl-8"
         >
-          <Flex direction="column" gap="3" className="max-w-2xl">
+          <Flex direction="column" gap="3" className="max-w-2xl md:max-w-none">
+            <Flex align="center" gap="2" className="text-(--accent-11)">
+              <Sparkles size={16} strokeWidth={2.25} aria-hidden="true" />
+              <Text size="2" weight="bold">
+                خريطة رحلتك التعليمية
+              </Text>
+            </Flex>
             <Heading
               size={{ initial: "7", md: "8" }}
               weight="bold"
-              className="text-[var(--accent-11)] tracking-tight font-black"
+              className="text-(--accent-11) tracking-tight font-black"
             >
               مسار تطوير الويب
             </Heading>
@@ -39,6 +51,32 @@ export function MainPage() {
               وحتى بناء وإطلاق مشاريع حقيقية متكاملة.
             </Text>
 
+            <Flex
+              direction={{ initial: "column", sm: "row" }}
+              align={{ initial: "stretch", sm: "center" }}
+              gap="4"
+              p="3"
+              mt="2"
+              className="border border-(--accent-5) bg-(--accent-2)/45 rounded-(--radius-3)"
+            >
+              <Flex align="center" gap="3" className="min-w-0 flex-1">
+                <Flex
+                  align="center"
+                  justify="center"
+                  className="h-9 w-9 shrink-0 rounded-full bg-(--accent-4) text-(--accent-11)"
+                >
+                  <Flag size={17} aria-hidden="true" />
+                </Flex>
+                <Flex direction="column" gap="1" className="min-w-0">
+                  <Text size="2" weight="bold" highContrast>
+                    {currentLesson
+                      ? `الدرس الحالي: ${currentLesson.title}`
+                      : "ابدأ أول خطوة في رحلتك"}
+                  </Text>
+                </Flex>
+              </Flex>
+            </Flex>
+
             {!user && (
               <Flex
                 gap="4"
@@ -46,10 +84,14 @@ export function MainPage() {
                 justify="between"
                 p="4"
                 mt="2"
-                className="bg-[var(--gray-2)] border border-[var(--gray-4)] rounded-[var(--radius-3)] shadow-xs"
+                className="bg-(--gray-2) border border-(--gray-4) rounded-(--radius-3) shadow-xs"
               >
                 <Flex gap="3" align="center">
-                  <Box className="w-2 h-2 rounded-full bg-[var(--accent-9)] shrink-0" />
+                  <CheckCircle2
+                    className="text-(--accent-9) shrink-0"
+                    size={19}
+                    aria-hidden="true"
+                  />
                   <Flex direction="column" gap="1">
                     <Text size="3" weight="bold" highContrast>
                       أو جرب درساً !
@@ -68,11 +110,15 @@ export function MainPage() {
             )}
           </Flex>
         </Flex>
-         
-        <Box px={{ initial: "1", sm: "2" }}>
+
+        <Box
+          className="min-w-0 flex-1!"
+          px={{ initial: "0", sm: "2" }}
+        >
           <ProgressMap nodes={nodes} isLoading={isLoading} error={error} />
         </Box>
       </Section>
+      <MainSideNav nodes={nodes} />
     </main>
   );
 }
