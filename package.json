@@ -5,6 +5,10 @@
   "main": "index.js",
   "keywords": [],
   "author": "",
+  "scripts": {
+    "start-front": "cd frontend/melocode && npm run dev",
+    "start-back": "cd backend && npm run start"
+  },
   "license": "ISC",
   "description": "",
   "workspaces": [

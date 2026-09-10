@@ -6,9 +6,14 @@ export type UserLessonProgress = {
   [key: string]: any;
 };
 
-export type LessonProgressResponse = {
+export type GetLessonResponse = {
   hasCompletedAllQuizzes: boolean;
   progress: UserLessonProgress | null;
+  previousLessonSlug: string;
+  previousLessonStatus: LessonStatus;
+  nextLessonSlug: string;
+  nextLessonStatus: LessonStatus;
+  lesson: ExtendedLesson;
 };
 
 export type Profile = {
@@ -110,7 +115,7 @@ export type QuizAnswer = {
 export type QuizSubmission = {
   id: number;
   content: string;
-  language: string | null;
+  language?: string | null;
   userId: number;
   isCorrect: boolean;
   quizAnswerId: number;
@@ -124,6 +129,7 @@ export type CreateSubmissionRequestBody = Pick<
   "content" | "language"
 > & {
   userOutputs: UserQuizOutput[];
+  type?: "MULTIPLE_CHOICE" | "CODING";
 };
 
 export type CreateQuizSubmissionResponse = {
