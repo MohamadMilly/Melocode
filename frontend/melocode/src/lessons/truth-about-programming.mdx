@@ -14,8 +14,8 @@ exercises:
         - type: "code"
           language: "javascript"
           content: "function isPalindrome(str) {\n  const cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, '');\n  // ما السطر الذي يجب وضعه هنا؟\n}"
-          isInteractive: true
-
+          isInteractive: false
+          
         - type: "options"
           options:
             - "return cleaned === cleaned.split('').reverse().join('');"
@@ -23,8 +23,8 @@ exercises:
             - "return cleaned === cleaned.reverse();"
         - type: "hint"
           content: "تذكر أنك بحاجة إلى عكس السلسلة النصية المنظفة ومقارنتها بالنص الأصلي المنظف."
+  
 ---
-
 export const toc = [
   { text: "المفهوم الصحيح للبرمجة", slug: "#المفهوم-الصحيح-للبرمجة" },
   { text: "دور المكتبات وإطارات العمل", slug: "#دور-المكتبات-وإطارات-العمل" },

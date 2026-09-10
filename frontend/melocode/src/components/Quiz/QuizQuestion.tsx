@@ -9,7 +9,7 @@ import { OptionsList } from "./multiple_choice/OptionsList";
 const QuizEditor = lazy(() =>
   import("./QuizEditor").then((module) => ({ default: module.QuizEditor })),
 );
-
+ 
 export function QuizQuestion({
   questionItems,
 

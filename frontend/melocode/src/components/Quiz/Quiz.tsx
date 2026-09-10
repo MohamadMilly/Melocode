@@ -16,7 +16,6 @@ import { GiveUpAlertDialog } from "./GiveUpAlertDialog";
 import type { QuizData } from "../../shared/types/Quiz.types";
 import { useSubmitQuizAnswer } from "../../hooks/api/quiz/useSubmitQuizAnswer";
 import { QuizAnswerProvider } from "../../providers/QuizAnswerProvider";
-import { QueryClient } from "@tanstack/react-query";
 
 type QuizProps = {
   name: string;
@@ -64,8 +63,10 @@ export function Quiz({
 
   const [code, setCode] = useState(initialQuestionCode);
   const [selectedOption, setSelectedOption] = useState<string>("");
-  const isCompleted = submission ? submission.isCorrect : false;
+  const isCorrect = submission ? submission.isCorrect : false;
   const isGivenUp = !!giveUpData;
+  const isCompleted = isCorrect || isGivenUp;
+
   const [lastResult, setLastResult] = useState<{ isCorrect: boolean } | null>(
     null,
   );
@@ -103,7 +104,7 @@ export function Quiz({
     answer,
     isLoading: quizAnswerLoading,
     error: quizAnswerError,
-  } = useQuizAnswer(quizAnswerId, isCompleted || isGivenUp);
+  } = useQuizAnswer(quizAnswerId, isCompleted);
 
   const toggleSolutionVisibility = () => setSolutionVisible(!solutionVisible);
 
@@ -119,7 +120,6 @@ export function Quiz({
           quizAnswerId: quiz.answerId,
         });
         submissionResult = submission;
-       
       } else {
         submissionResult = await checkAnswer({ code: code });
       }
@@ -138,14 +138,14 @@ export function Quiz({
   return (
     <Tabs.Content
       value={name}
-      className={`${expanded ? "grid grid-cols-[400px_1fr] grid-rows-1 overflow-y-auto no-scrollbar" : ""}`}
+      className={`${expanded ? "grid min-w-0 grid-cols-1 md:grid-cols-[minmax(0,400px)_minmax(0,1fr)] md:grid-rows-1" : ""}`}
     >
       <Flex
         direction={"column"}
         align={"end"}
         mb={"4"}
         p={"2"}
-        className="col-start-2 col-end-3 row-start-1 row-end-2"
+        className="min-w-0 md:col-start-2 md:col-end-3 md:row-start-1 md:row-end-2"
       >
         {submission && !expanded && (
           <SubmissionStatusBanner isCompleted={isCompleted} />
@@ -168,7 +168,7 @@ export function Quiz({
       </Flex>
 
       <Flex
-        className={`col-start-1 col-end-2 row-start-1 row-end-2`}
+        className={`min-w-0 md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2`}
         direction={"column"}
         gap={"2"}
         align={"end"}
@@ -198,7 +198,7 @@ export function Quiz({
           >
             <Button
               className="grow!"
-              disabled={quizAnswerLoading || (!isCompleted && !isGivenUp)}
+              disabled={quizAnswerLoading || !isCompleted}
               onClick={toggleSolutionVisibility}
             >
               {solutionVisible ? "إخفاء الحل" : "إظهار الحل"}
@@ -224,7 +224,7 @@ export function Quiz({
             <GiveUpAlertDialog
               onGiveUp={handleGiveUp}
               isGivingUp={isGivingUp}
-              disabled={isCompleted || isGivenUp}
+              disabled={isCompleted}
             />
           </Flex>
         )}

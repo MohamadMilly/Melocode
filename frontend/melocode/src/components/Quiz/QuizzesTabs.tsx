@@ -28,7 +28,7 @@ export function QuizesTabs({
 
   const quizzesCount = quizzes.length;
   const quizzesNames: string[] = [];
- 
+
   for (let i = 1; i <= quizzesCount; i++) {
     quizzesNames.push(`التمرين-${i}`);
   }
@@ -38,17 +38,18 @@ export function QuizesTabs({
   }, []);
   return (
     <Tabs.Root
-      className={`bg-[var(--gray-2)] p-2 rounded-md ${expanded ? "fixed inset-0 z-9999 flex h-screen flex-col overflow-hidden rounded-none p-4" : ""}`}
+      className={`bg-(--gray-2) rounded-md p-2 ${expanded ? "fixed inset-0 z-9999 flex h-dvh min-h-0 flex-col overflow-hidden rounded-none p-3 sm:p-4" : ""}`}
       defaultValue="التمرين-1"
     >
       <Tabs.List className={`${expanded ? "shrink-0" : ""}`}>
-        <div className="flex justify-between items-center w-full">
-          <div className="flex gap-1">
+        <div className="flex w-full items-center justify-between gap-2">
+          <div className="flex min-w-0 flex-1 gap-1 overflow-x-auto no-scrollbar">
             {quizzesNames.map((name) => {
               return (
                 <Tabs.Trigger
+                  key={name}
                   disabled={isLoadingSubmissions}
-                  className="capitalize"
+                  className="shrink-0 capitalize"
                   value={name}
                 >
                   {name.replace("-", " ")}
@@ -57,6 +58,7 @@ export function QuizesTabs({
             })}
           </div>
           <Button
+            className="shrink-0"
             aria-label={expanded ? "تصغير" : "توسيع"}
             variant="outline"
             onClick={toggleExpand}
@@ -66,7 +68,10 @@ export function QuizesTabs({
         </div>
       </Tabs.List>
 
-      <Box className={expanded ? "min-h-0 flex-1 overflow-y-auto" : ""} pt="3">
+      <Box
+        className={expanded ? "min-h-0 min-w-0 flex-1 overflow-y-auto" : ""}
+        pt="3"
+      >
         {isLoadingSubmissions ? (
           <QuizSkeleton name="التمرين-1" />
         ) : (

@@ -6,6 +6,6 @@ export async function getUserAchievements(userId: number) {
       userId: userId,
     },
   });
-  
+   
   return achievements;
 }
