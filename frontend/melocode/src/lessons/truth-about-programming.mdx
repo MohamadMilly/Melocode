@@ -3,26 +3,38 @@ title: "حقيقة البرمجة"
 slug: "truth-about-programming"
 lessonId: 1
 exercises:
-  - level: "medium"
+  - level: "easy"
     badge: "Multiple Choice"
-    
-    answerId: 1 
+    type: "MULTIPLE_CHOICE"
+    answerId: 1
     question:
       items:
         - type: "text"
-          content: "اختر السطر البرمجي الصحيح الذي يكمل دالة 'isPalindrome' لتعود بالقيمة `true` إذا كانت الكلمة تقرأ من الاتجاهين بنفس الطريقة."
-        - type: "code"
-          language: "javascript"
-          content: "function isPalindrome(str) {\n  const cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, '');\n  // ما السطر الذي يجب وضعه هنا؟\n}"
-          isInteractive: true
-
+          content: "أي عنصر لا يعد من الركائز الأساسية للبرمجة حسب الدرس؟"
         - type: "options"
           options:
-            - "return cleaned === cleaned.split('').reverse().join('');"
-            - "return str === str.reverse();"
-            - "return cleaned === cleaned.reverse();"
+            - "حل المشكلات"
+            - "تحديد المشكلة بوضوح"
+            - "استخدام المكتبات كبديل عن التفكير"
+            - "تصحيح الأخطاء"
         - type: "hint"
-          content: "تذكر أنك بحاجة إلى عكس السلسلة النصية المنظفة ومقارنتها بالنص الأصلي المنظف."
+          content: "المكتبات أدوات مساعدة، لكنها لا تحل محل فهم المشكلة أو التفكير المنطقي."
+  - level: "easy"
+    badge: "Multiple Choice"
+    type: "MULTIPLE_CHOICE"
+    answerId: 2
+    question:
+      items:
+        - type: "text"
+          content: "ما الذي يميز المبرمج القوي في الدرس؟"
+        - type: "options"
+          options:
+            - "كتابة كود نظيف وقابل للتوسع"
+            - "حفظ أكبر عدد من الكلمات الرئيسية"
+            - "الاعتماد على التجربة العشوائية فقط"
+            - "تجنب تعديل الكود بعد كتابته"
+        - type: "hint"
+          content: "الدرس يؤكد أن الاحترافية تُقاس بنظافة الكود وقابليته للتوسع، وليس بعدد اللغات فقط."
 ---
 
 export const toc = [

@@ -1,3 +1,4 @@
+import type { QuizSubmission } from "@app/types";
 import {
   createContext,
   useContext,
@@ -10,6 +11,7 @@ export type QuizAnswerContextValue = {
   setCode: Dispatch<SetStateAction<string>>;
   selectedOption: string;
   setSelectedOption: Dispatch<SetStateAction<string>>;
+  submission: QuizSubmission | null | undefined;
 };
 
 export const QuizAnswerContext = createContext<QuizAnswerContextValue | null>(

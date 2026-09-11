@@ -16,7 +16,6 @@ import { GiveUpAlertDialog } from "./GiveUpAlertDialog";
 import type { QuizData } from "../../shared/types/Quiz.types";
 import { useSubmitQuizAnswer } from "../../hooks/api/quiz/useSubmitQuizAnswer";
 import { QuizAnswerProvider } from "../../providers/QuizAnswerProvider";
-import { QueryClient } from "@tanstack/react-query";
 
 type QuizProps = {
   name: string;
@@ -89,7 +88,7 @@ export function Quiz({
   useEffect(() => {
     function setSubmissionCode() {
       if (submission) {
-        if (quiz.badge === "Multiple Choice") {
+        if (quiz.type === "MULTIPLE_CHOICE") {
           setSelectedOption(submission.content);
         } else {
           setCode(submission.content);
@@ -97,7 +96,7 @@ export function Quiz({
       }
     }
     setSubmissionCode();
-  }, [submission, quiz.badge]);
+  }, [submission, quiz.type]);
 
   const {
     answer,
@@ -110,7 +109,7 @@ export function Quiz({
   const handleSubmitCheck = async () => {
     let submissionResult: QuizSubmission | undefined;
     try {
-      if (quiz.badge === "Multiple Choice") {
+      if (quiz.type === "MULTIPLE_CHOICE") {
         const { submission } = await submit({
           userOutputs: [],
           type: "MULTIPLE_CHOICE",
@@ -119,7 +118,6 @@ export function Quiz({
           quizAnswerId: quiz.answerId,
         });
         submissionResult = submission;
-       
       } else {
         submissionResult = await checkAnswer({ code: code });
       }
@@ -138,43 +136,43 @@ export function Quiz({
   return (
     <Tabs.Content
       value={name}
-      className={`${expanded ? "grid grid-cols-[400px_1fr] grid-rows-1 overflow-y-auto no-scrollbar" : ""}`}
+      className={`rounded-2xl bg-[var(--gray-1)] p-3 shadow-sm ${expanded ? "grid grid-cols-[400px_1fr] gap-4 overflow-y-auto no-scrollbar p-4" : ""}`}
     >
       <Flex
         direction={"column"}
-        align={"end"}
-        mb={"4"}
-        p={"2"}
-        className="col-start-2 col-end-3 row-start-1 row-end-2"
+        align={"stretch"}
+        gap={"3"}
+        className={`order-2 ${expanded ? "col-start-2 col-end-3" : ""}`}
       >
         {submission && !expanded && (
           <SubmissionStatusBanner isCompleted={isCompleted} />
         )}
-        <Flex gap={"2"}>
+        <Flex gap={"2"} wrap={"wrap"} align={"center"} justify={"end"}>
           <QuizTypeBadge badge={quiz.badge} />
           <QuizLevelBadge level={quiz.level} />
         </Flex>
-        <QuizAnswerProvider
-          code={code}
-          setCode={setCode}
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
-        >
-          <QuizQuestion
-            questionItems={questionItems}
-            editorDisabled={isGivenUp}
-          />
-        </QuizAnswerProvider>
+        <div className="rounded-xl border border-[var(--gray-6)] bg-[var(--gray-2)] p-3">
+          <QuizAnswerProvider
+            code={code}
+            setCode={setCode}
+            selectedOption={selectedOption}
+            setSelectedOption={setSelectedOption}
+            submission={submission}
+          >
+            <QuizQuestion
+              questionItems={questionItems}
+              editorDisabled={isGivenUp}
+            />
+          </QuizAnswerProvider>
+        </div>
       </Flex>
 
       <Flex
-        className={`col-start-1 col-end-2 row-start-1 row-end-2`}
+        className={`order-1 ${expanded ? "col-start-1 col-end-2" : ""}`}
         direction={"column"}
-        gap={"2"}
-        align={"end"}
-        my={"2"}
+        gap={"3"}
+        align={"stretch"}
       >
-        {" "}
         {submission && expanded && (
           <SubmissionStatusBanner isCompleted={isCompleted} />
         )}
@@ -186,7 +184,7 @@ export function Quiz({
         />
         {giveUpError && <ErrorElement axiosError={giveUpError} />}
         {isGivenUp && (
-          <Text className="text-sm text-red-500">
+          <Text className="rounded-lg border border-[var(--red-6)] bg-[var(--red-2)] px-3 py-2 text-sm text-[var(--red-11)]">
             تم الاستسلام عن هذا التمرين
           </Text>
         )}
@@ -197,14 +195,14 @@ export function Quiz({
             direction={expanded ? "column" : "row"}
           >
             <Button
-              className="grow!"
+              className="grow! rounded-xl"
               disabled={quizAnswerLoading || (!isCompleted && !isGivenUp)}
               onClick={toggleSolutionVisibility}
             >
               {solutionVisible ? "إخفاء الحل" : "إظهار الحل"}
             </Button>
             <Button
-              className="grow!"
+              className="grow! rounded-xl"
               onClick={handleSubmitCheck}
               disabled={
                 areTestCasesLoading ||

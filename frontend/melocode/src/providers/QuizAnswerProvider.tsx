@@ -8,11 +8,12 @@ export function QuizAnswerProvider({
   setCode,
   selectedOption,
   setSelectedOption,
+  submission,
   children,
 }: QuizAnswerContextValue & { children: React.ReactNode }) {
   return (
     <QuizAnswerContext.Provider
-      value={{ code, setCode, selectedOption, setSelectedOption }}
+      value={{ code, setCode, selectedOption, setSelectedOption, submission }}
     >
       {children}
     </QuizAnswerContext.Provider>

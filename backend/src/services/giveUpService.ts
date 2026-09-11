@@ -15,7 +15,7 @@ export const giveUpToQuiz = async (quizAnswerId: number, userId: number) => {
     if (existingCorrectSubmission) {
       throw new HttpError(400, "لا يمكن الاستسلام عن تمرين محلول مسبقا");
     }
-    
+     
     const giveUpRecord = await prisma.quizGiveUp.create({
       data: {
         userId: userId,

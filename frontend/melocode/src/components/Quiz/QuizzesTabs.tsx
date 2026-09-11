@@ -28,7 +28,7 @@ export function QuizesTabs({
 
   const quizzesCount = quizzes.length;
   const quizzesNames: string[] = [];
- 
+
   for (let i = 1; i <= quizzesCount; i++) {
     quizzesNames.push(`التمرين-${i}`);
   }
@@ -38,17 +38,19 @@ export function QuizesTabs({
   }, []);
   return (
     <Tabs.Root
-      className={`bg-[var(--gray-2)] p-2 rounded-md ${expanded ? "fixed inset-0 z-9999 flex h-screen flex-col overflow-hidden rounded-none p-4" : ""}`}
+      className={`overflow-hidden rounded-2xl border border-[var(--gray-6)] bg-[var(--gray-1)] shadow-sm ${expanded ? "fixed inset-0 z-9999 flex h-screen flex-col rounded-none border-0 shadow-none" : ""}`}
       defaultValue="التمرين-1"
     >
-      <Tabs.List className={`${expanded ? "shrink-0" : ""}`}>
-        <div className="flex justify-between items-center w-full">
-          <div className="flex gap-1">
+      <Tabs.List
+        className={`bg-[var(--gray-2)] px-3 py-2 ${expanded ? "shrink-0" : ""}`}
+      >
+        <div className="flex w-full items-center justify-between gap-3">
+          <div className="flex flex-1 gap-2 overflow-x-auto pb-1">
             {quizzesNames.map((name) => {
               return (
                 <Tabs.Trigger
                   disabled={isLoadingSubmissions}
-                  className="capitalize"
+                  className="rounded-xl border border-transparent px-3 py-2 text-sm font-medium capitalize text-[var(--gray-11)] transition-all data-[state=active]:border-[var(--accent-6)] data-[state=active]:bg-[var(--accent-3)] data-[state=active]:text-[var(--accent-11)] data-[state=active]:shadow-sm"
                   value={name}
                 >
                   {name.replace("-", " ")}
@@ -59,14 +61,22 @@ export function QuizesTabs({
           <Button
             aria-label={expanded ? "تصغير" : "توسيع"}
             variant="outline"
+            color="gray"
+            className="shrink-0 rounded-xl"
             onClick={toggleExpand}
           >
-            {expanded ? <Shrink size={24} /> : <Expand size={24} />}
+            {expanded ? <Shrink size={20} /> : <Expand size={20} />}
           </Button>
         </div>
       </Tabs.List>
 
-      <Box className={expanded ? "min-h-0 flex-1 overflow-y-auto" : ""} pt="3">
+      <Box
+        className={
+          expanded
+            ? "min-h-0 flex-1 overflow-y-auto px-3 pb-3 pt-4"
+            : "px-3 pb-3 pt-4"
+        }
+      >
         {isLoadingSubmissions ? (
           <QuizSkeleton name="التمرين-1" />
         ) : (

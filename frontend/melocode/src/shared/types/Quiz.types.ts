@@ -19,8 +19,11 @@ export type QuizBadgeType =
   | "Theory"
   | "Multiple Choice";
 
+export type QuizType = "CODING" | "MULTIPLE_CHOICE";
+
 export type QuizData = {
   badge: QuizBadgeType;
+  type: QuizType;
   answerId: number;
   question: QuizQuestion;
   level: QuizLevelType;

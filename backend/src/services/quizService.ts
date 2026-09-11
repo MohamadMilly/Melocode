@@ -85,14 +85,6 @@ export const saveSubmission = async ({
   let isCorrect;
   if (type === "MULTIPLE_CHOICE") {
     isCorrect = content.trim() === testCases[0].output.trim();
-    if (!isCorrect) {
-      await prisma.quizGiveUp.create({
-        data: {
-          quizAnswerId: quizAnswerId,
-          userId: userId,
-        },
-      });
-    }
   } else {
     isCorrect = testCases.every((testCase) => {
       const userOutput = userOutputs.find(
