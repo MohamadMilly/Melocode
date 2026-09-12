@@ -5,6 +5,7 @@ import { Trophy } from "lucide-react";
 import { useUsers } from "../../hooks/api/user/useUsers";
 import { LeaderBoardControls } from "../../components/LeaderBoard/LeaderBoardControls";
 import { UserList } from "../../components/LeaderBoard/UserList";
+import { PageMain } from "../../components/shared/PageMain";
 import type { LeaderBoardUser } from "@app/types";
 import type {
   LeaderboardSortOrder,
@@ -43,11 +44,7 @@ export function UsersLeaderBoardPage() {
   );
 
   return (
-    <main
-      dir="rtl"
-      className="relative max-w-5xl mx-auto min-h-screen overflow-hidden border-x border-[var(--gray-4)] bg-[var(--gray-1)] px-4 sm:px-6 md:px-8"
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_left,var(--gray-3)_1px,transparent_1px),linear-gradient(to_bottom,var(--gray-3)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30" />
+    <PageMain className="mx-auto max-w-5xl px-4 sm:px-6 md:px-8">
       <Section size="2" className="relative z-10">
         <Flex direction="column" gap="6">
           <Flex direction="column" gap="2">
@@ -85,6 +82,6 @@ export function UsersLeaderBoardPage() {
           )}
         </Flex>
       </Section>
-    </main>
+    </PageMain>
   );
 }

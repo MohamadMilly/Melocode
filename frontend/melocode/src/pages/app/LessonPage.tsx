@@ -12,6 +12,7 @@ import { EmptyLessonState } from "../../components/Lesson/EmptyLessonState";
 import { useLesson } from "../../hooks/api/lesson/useLesson";
 import { LessonPagination } from "../../components/Lesson/LessonPagination";
 import { Brain } from "lucide-react";
+import { PageMain } from "../../components/shared/PageMain";
 
 export function LessonPage() {
   const { slug } = useParams();
@@ -84,7 +85,10 @@ export function LessonPage() {
     return <Navigate to={"/app"} replace />;
   }
   return (
-    <div className="relative h-full grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4 px-1 md:px-2 sm:px-3">
+    <PageMain
+      className="grid h-full grid-cols-1 gap-4 px-1 sm:px-3 md:grid-cols-[auto_1fr] md:px-2"
+      showGrid={false}
+    >
       <LessonContents toc={toc} />
       <main className="h-full max-w-4xl mx-auto   w-full order-1 md:order-2 min-h-0 overflow-y-auto py-12 p-2 md:py-16 md:p-4">
         <MDXProvider components={markDownComponents}>
@@ -146,6 +150,6 @@ export function LessonPage() {
           handlePreviousLesson={handlePreviousLesson}
         />
       </main>
-    </div>
+    </PageMain>
   );
 }
