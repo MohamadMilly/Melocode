@@ -3,7 +3,7 @@ import { Button, Flex, Heading, Text } from "@radix-ui/themes";
 import { MDXProvider } from "@mdx-js/react";
 import { markDownComponents } from "../../components/Lesson/MarkDownComponents";
 import { lessons } from "../../lessons/lessons";
-import { QuizesTabs } from "../../components/Quiz/QuizzesTabs";
+import { QuizzesTabs } from "../../components/Quiz/QuizzesTabs";
 import toast from "react-hot-toast";
 import { LessonContents } from "../../components/Lesson/LessonContents";
 import { useCompleteLesson } from "../../hooks/api/me/useCompleteLesson";
@@ -84,9 +84,9 @@ export function LessonPage() {
     return <Navigate to={"/app"} replace />;
   }
   return (
-    <div className="relative h-full grid grid-cols-1 md:grid-cols-[320px_1fr] gap-4 px-2 sm:px-3">
+    <div className="relative h-full grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4 px-1 md:px-2 sm:px-3">
       <LessonContents toc={toc} />
-      <main className="h-full max-w-4xl w-full order-1 md:order-2 min-h-0 overflow-y-auto py-6 p-2 md:py-12 md:p-4">
+      <main className="h-full max-w-4xl mx-auto   w-full order-1 md:order-2 min-h-0 overflow-y-auto py-12 p-2 md:py-16 md:p-4">
         <MDXProvider components={markDownComponents}>
           <Article />
         </MDXProvider>
@@ -103,7 +103,7 @@ export function LessonPage() {
               <Brain size={35} />
               <Text as="p">تدريبات</Text>
             </Heading>
-            <QuizesTabs quizzes={exercises} lessonId={lessonId} />
+            <QuizzesTabs quizzes={exercises} lessonId={lessonId} />
           </>
         )}
 

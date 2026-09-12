@@ -7,7 +7,7 @@ import { useCallback, useState } from "react";
 import { Expand, Shrink } from "lucide-react";
 import type { QuizData } from "../../shared/types/Quiz.types";
 
-export function QuizesTabs({
+export function QuizzesTabs({
   quizzes,
   lessonId,
 }: {
@@ -42,7 +42,7 @@ export function QuizesTabs({
       defaultValue="التمرين-1"
     >
       <Tabs.List
-        className={`bg-[var(--gray-2)] px-3 py-2 ${expanded ? "shrink-0" : ""}`}
+        className={`bg-[var(--gray-2)] px-3 py-1 md:py-2 ${expanded ? "shrink-0" : ""}`}
       >
         <div className="flex w-full items-center justify-between gap-3">
           <div className="flex flex-1 gap-2 overflow-x-auto pb-1">
@@ -62,7 +62,7 @@ export function QuizesTabs({
             aria-label={expanded ? "تصغير" : "توسيع"}
             variant="outline"
             color="gray"
-            className="shrink-0 rounded-xl"
+            className="shrink-0 rounded-xl hidden! md:block!"
             onClick={toggleExpand}
           >
             {expanded ? <Shrink size={20} /> : <Expand size={20} />}
@@ -74,7 +74,7 @@ export function QuizesTabs({
         className={
           expanded
             ? "min-h-0 flex-1 overflow-y-auto px-3 pb-3 pt-4"
-            : "px-3 pb-3 pt-4"
+            : "px-1 md:px-3 pb-3 pt-4"
         }
       >
         {isLoadingSubmissions ? (

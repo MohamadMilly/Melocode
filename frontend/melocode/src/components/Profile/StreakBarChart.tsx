@@ -18,9 +18,14 @@ export function StreakBarChart({ userLessonProgresses }: StreakBarChartProps) {
   const chartData = Object.values(
     userLessonProgresses.reduce(
       (acc: Record<string, { date: string; count: number }>, progress) => {
-        const current = new Date(progress.completedAt)
-          .toISOString()
-          .split("T")[0];
+        const current = new Date(progress.completedAt).toLocaleDateString(
+          "en-CA",
+          {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          },
+        );
 
         if (acc[current]) {
           acc[current].count++;
@@ -41,7 +46,10 @@ export function StreakBarChart({ userLessonProgresses }: StreakBarChartProps) {
     }).format(new Date(`${date}T00:00:00`));
 
   return (
-    <Card size="3" className="border border-[var(--gray-5)] bg-[var(--gray-2)] grow">
+    <Card
+      size="3"
+      className="border border-[var(--gray-5)] bg-[var(--gray-2)] grow"
+    >
       <Flex direction="column" gap="4">
         <Flex direction="column" gap="1">
           <Heading size="5">نشاط التعلم اليومي</Heading>

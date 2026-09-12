@@ -136,7 +136,7 @@ export function Quiz({
   return (
     <Tabs.Content
       value={name}
-      className={`rounded-2xl bg-[var(--gray-1)] p-3 shadow-sm ${expanded ? "grid grid-cols-[400px_1fr] gap-4 overflow-y-auto no-scrollbar p-4" : ""}`}
+      className={`rounded-2xl bg-[var(--gray-1)] p-1 ${expanded ? "grid grid-cols-[400px_1fr] gap-4 overflow-y-auto no-scrollbar p-4" : ""}`}
     >
       <Flex
         direction={"column"}
@@ -192,6 +192,7 @@ export function Quiz({
           <Flex
             className="w-full"
             gap={"2"}
+            mt={"4"}
             direction={expanded ? "column" : "row"}
           >
             <Button
