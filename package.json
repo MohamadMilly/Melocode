@@ -13,7 +13,7 @@
   "description": "",
   "workspaces": [
     "frontend/melocode",
-    "backend/*",
+    "backend",
     "shared-types"
   ]
 }
