@@ -63,11 +63,7 @@ export function Quiz({
 
   const [code, setCode] = useState(initialQuestionCode);
   const [selectedOption, setSelectedOption] = useState<string>("");
-<<<<<<< HEAD
   const isCorrect = submission ? submission.isCorrect : false;
-=======
-  const isCompleted = submission ? submission.isCorrect : false;
->>>>>>> landingPage
   const isGivenUp = !!giveUpData;
   const isCompleted = isCorrect || isGivenUp;
 
@@ -94,11 +90,7 @@ export function Quiz({
   useEffect(() => {
     function setSubmissionCode() {
       if (submission) {
-<<<<<<< HEAD
-        if (quiz.badge === "Multiple Choice") {
-=======
         if (quiz.type === "MULTIPLE_CHOICE") {
->>>>>>> landingPage
           setSelectedOption(submission.content);
         } else {
           setCode(submission.content);
@@ -106,11 +98,7 @@ export function Quiz({
       }
     }
     setSubmissionCode();
-<<<<<<< HEAD
-  }, [submission, quiz.badge]);
-=======
   }, [submission, quiz.type]);
->>>>>>> landingPage
 
   const {
     answer,
@@ -150,16 +138,6 @@ export function Quiz({
   return (
     <Tabs.Content
       value={name}
-<<<<<<< HEAD
-      className={`${expanded ? "grid min-w-0 grid-cols-1 md:grid-cols-[minmax(0,400px)_minmax(0,1fr)] md:grid-rows-1" : ""}`}
-    >
-      <Flex
-        direction={"column"}
-        align={"end"}
-        mb={"4"}
-        p={"2"}
-        className="min-w-0 md:col-start-2 md:col-end-3 md:row-start-1 md:row-end-2"
-=======
       className={`rounded-2xl bg-[var(--gray-1)] p-1 ${expanded ? "grid grid-cols-[400px_1fr] gap-4 overflow-y-auto no-scrollbar p-4" : ""}`}
     >
       <Flex
@@ -167,7 +145,6 @@ export function Quiz({
         align={"stretch"}
         gap={"3"}
         className={`order-2 ${expanded ? "col-start-2 col-end-3" : ""}`}
->>>>>>> landingPage
       >
         {submission && !expanded && (
           <SubmissionStatusBanner isCompleted={isCompleted} />
@@ -176,23 +153,6 @@ export function Quiz({
           <QuizTypeBadge badge={quiz.badge} />
           <QuizLevelBadge level={quiz.level} />
         </Flex>
-<<<<<<< HEAD
-        <QuizAnswerProvider
-          code={code}
-          setCode={setCode}
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
-        >
-          <QuizQuestion
-            questionItems={questionItems}
-            editorDisabled={isGivenUp}
-          />
-        </QuizAnswerProvider>
-      </Flex>
-
-      <Flex
-        className={`min-w-0 md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2`}
-=======
         <div className="rounded-xl border border-[var(--gray-6)] bg-[var(--gray-2)] p-3">
           <QuizAnswerProvider
             code={code}
@@ -211,7 +171,6 @@ export function Quiz({
 
       <Flex
         className={`order-1 ${expanded ? "col-start-1 col-end-2" : ""}`}
->>>>>>> landingPage
         direction={"column"}
         gap={"3"}
         align={"stretch"}
@@ -223,7 +182,7 @@ export function Quiz({
           runCodeError={runCodeError}
           lastResult={lastResult}
           testCasesFetchError={testCasesFetchError}
-          submissionError={submissionError}
+          submissionError={submissionError ?? submitError}
         />
         {giveUpError && <ErrorElement axiosError={giveUpError} />}
         {isGivenUp && (
@@ -239,13 +198,8 @@ export function Quiz({
             direction={expanded ? "column" : "row"}
           >
             <Button
-<<<<<<< HEAD
-              className="grow!"
-              disabled={quizAnswerLoading || !isCompleted}
-=======
               className="grow! rounded-xl"
               disabled={quizAnswerLoading || (!isCompleted && !isGivenUp)}
->>>>>>> landingPage
               onClick={toggleSolutionVisibility}
             >
               {solutionVisible ? "إخفاء الحل" : "إظهار الحل"}
@@ -264,7 +218,7 @@ export function Quiz({
                 ? "جاري تحميل الاختبارات"
                 : isRunningPending
                   ? "يتم تنفيذ الكود"
-                  : isAnswerBeingSubmitted
+                  : isAnswerBeingSubmitted || isSubmitting
                     ? "جاري التحقق"
                     : "تحقق من الحل"}
             </Button>

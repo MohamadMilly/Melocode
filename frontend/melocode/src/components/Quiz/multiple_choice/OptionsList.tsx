@@ -1,7 +1,7 @@
 import { Flex } from "@radix-ui/themes";
 
 import { OptionItem } from "./OptionItem";
-import { numberToLetter } from "../../../shared/utils/NumberToLetter";
+import { numberToLetter } from "../../../shared/utils/numberToLetter";
 
 export function OptionsList({ options }: { options: string[] }) {
   return (

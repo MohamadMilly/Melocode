@@ -5,7 +5,12 @@ import { getStreak } from "../shared/utils/getStreak.js";
 
 import { Args, Result } from "@prisma/client/runtime/client";
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const connectionString =
+  process.env.NODE_ENV === "production"
+    ? process.env.DATABASE_URL
+    : process.env.DEV_DATABASE_URL;
+
+const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 
 export const basePrisma = new PrismaClient({ adapter });

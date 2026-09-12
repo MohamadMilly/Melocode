@@ -15,16 +15,9 @@ export function QuizzesTabs({
   lessonId: number;
 }) {
   const [expanded, setExpanded] = useState<boolean>(false);
-  const {
-    submissionsData,
-    isLoading: isLoadingSubmissions,
-    error: submissionFetchError,
-  } = useMyLessonSubmissions(lessonId);
-  const {
-    giveUpsData,
-    isLoading: isLoadingGiveUps,
-    error: giveUpFetchError,
-  } = useLessonQuizzesGiveUps(lessonId);
+  const { submissionsData, isLoading: isLoadingSubmissions } =
+    useMyLessonSubmissions(lessonId);
+  const { giveUpsData } = useLessonQuizzesGiveUps(lessonId);
 
   const quizzesCount = quizzes.length;
   const quizzesNames: string[] = [];
@@ -60,11 +53,10 @@ export function QuizzesTabs({
             })}
           </div>
           <Button
-            className="shrink-0"
+            className="shrink-0 rounded-xl hidden! md:block!"
             aria-label={expanded ? "تصغير" : "توسيع"}
             variant="outline"
             color="gray"
-            className="shrink-0 rounded-xl hidden! md:block!"
             onClick={toggleExpand}
           >
             {expanded ? <Shrink size={20} /> : <Expand size={20} />}
