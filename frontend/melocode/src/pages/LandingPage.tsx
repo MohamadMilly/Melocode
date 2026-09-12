@@ -7,7 +7,7 @@ export function LandingPage() {
     <main
       dir="rtl"
       className="min-h-screen overflow-hidden  text-[var(--gray-12)]"
-    >
+    >  
       <LandingNav />
       <div className="mx-auto w-[min(1120px,calc(100%-2rem))] max-sm:w-[calc(100%-1.25rem)]">
         <LandingHero />

@@ -3,6 +3,10 @@ import * as learningMindsetLesson from "./learning-mindset.mdx";
 import * as whatIsTheWebLesson from "./what-is-the-web.mdx";
 import * as whatIsWebDevelopmentAndWebDeveloper from "./what-is-web-development-and-web-developer.mdx";
 import * as installationsLesson from "./installations.mdx";
+<<<<<<< HEAD
+=======
+import * as commandLineBasicsLesson from "./command-line-basics.mdx";
+>>>>>>> landingPage
 import type { ComponentType } from "react";
 import type { QuizData } from "../shared/types/Quiz.types";
 
@@ -14,6 +18,7 @@ const groupedLessonsData: Lesson[] = [
   whatIsTheWebLesson,
   whatIsWebDevelopmentAndWebDeveloper,
   installationsLesson,
+  commandLineBasicsLesson,
 ];
 
 export const lessons: Record<

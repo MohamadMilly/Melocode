@@ -1,6 +1,10 @@
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
+function getInitialState() {
+  return window.innerWidth > 768 ? true : false;
+}
+
 export function SidePanelContainer({
   children,
   position = "right",
@@ -8,7 +12,7 @@ export function SidePanelContainer({
   children: ReactNode;
   position: "left" | "right";
 }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(() => getInitialState());
   const classes = {
     left: "col-start-1 col-end-2",
     right: "-col-span-1",
@@ -16,7 +20,7 @@ export function SidePanelContainer({
   return (
     <nav
       aria-label="دروس المسار"
-      className={`sticky ${classes[position]}  z-10 h-[calc(100vh-55px)] backdrop-blur-sm top-[55px]! border-l border-[var(--gray-4)] transition-[width] duration-300 ease-in-out ${isOpen ? "w-80" : "w-0"}`}
+      className={`md:sticky fixed ${classes[position]}  z-10 h-[calc(100vh-55px)] backdrop-blur-sm bg-[var(--gray-1)]/90 top-[55px]! border-l border-[var(--gray-4)] transition-[width] duration-300 ease-in-out ${isOpen ? "md:w-80 w-5/6" : "w-0"}`}
     >
       <button
         type="button"
@@ -27,7 +31,9 @@ export function SidePanelContainer({
         {isOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
       </button>
 
-      <div className={`w-80  ${isOpen ? "" : "hidden"}`}>{children}</div>
+      <div className={`md:w-80 w-full   ${isOpen ? "" : "hidden"}`}>
+        {children}
+      </div>
     </nav>
   );
 }

@@ -13,7 +13,7 @@ export function QuizHint({ children }: { children: ReactNode }) {
         <Lightbulb size={24} />
         <Text>تلميح</Text>
       </Flex>
-      <Box dir="auto" className="text-balance">
+      <Box dir="rtl" className="text-balance">
         {children}
       </Box>
     </Box>

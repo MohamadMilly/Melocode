@@ -3,6 +3,7 @@ import { ProgressMap } from "../../components/ProgressMap/ProgressMap";
 import { useLessons } from "../../hooks/api/lesson/useLessons";
 import { useAuth } from "../../contexts/AuthContext";
 import { RouteLink } from "../../components/shared/ui/RouteLink";
+import { PageMain } from "../../components/shared/PageMain";
 import { MainSideNav } from "../../components/Main/MainSideNav";
 import { CheckCircle2, Flag, Sparkles } from "lucide-react";
 
@@ -13,10 +14,7 @@ export function MainPage() {
   const currentLesson = nodes.find((node) => node.status === "current");
 
   return (
-    <main
-      dir="rtl"
-      className="relative grid grid-cols-[auto_1fr] grid-rows-1 gap-4 w-full px-2 sm:px-3 border-x border-(--gray-4) min-h-screen bg-(--gray-1) selection:bg-(--accent-a3)"
-    >
+    <PageMain className="grid w-full grid-cols-1 grid-rows-1 gap-y-4 px-2 selection:bg-(--accent-a3) sm:px-3 md:grid-cols-[auto_1fr]">
       <Section
         size="2"
         p={{
@@ -24,6 +22,7 @@ export function MainPage() {
           sm: "6",
           lg: "9",
         }}
+        mt={"3"}
         className="relative flex! flex-col! md:flex-row! gap-8! items-stretch! z-10 col-start-2 col-end-3 row-start-1 row-end-2"
       >
         <Flex
@@ -111,14 +110,11 @@ export function MainPage() {
           </Flex>
         </Flex>
 
-        <Box
-          className="min-w-0 flex-1!"
-          px={{ initial: "0", sm: "2" }}
-        >
+        <Box className="min-w-0 flex-1!" px={{ initial: "0", sm: "2" }}>
           <ProgressMap nodes={nodes} isLoading={isLoading} error={error} />
         </Box>
       </Section>
       <MainSideNav nodes={nodes} />
-    </main>
+    </PageMain>
   );
 }
