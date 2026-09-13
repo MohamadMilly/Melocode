@@ -1,8 +1,10 @@
 import { Button, Flex, Heading, Text } from "@radix-ui/themes";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { Link } from "react-router";
+import { useAuth } from "../../contexts/AuthContext";
 
 export function LandingHero() {
+  const { user } = useAuth();
   return (
     <section
       className="grid min-h-[530px] grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)] items-center gap-[clamp(2rem,8vw,7rem)] py-16 max-md:grid-cols-1 max-md:gap-4 max-md:py-12"
@@ -41,18 +43,22 @@ export function LandingHero() {
           justify={{ initial: "center", sm: "start" }}
           className="mt-8"
         >
-          <Button asChild size="3" variant="solid">
-            <Link to="/register">
-              أنشئ حساباً
-              <ArrowLeft size={18} aria-hidden="true" />
-            </Link>
-          </Button>
-          <Button asChild size="3" variant="soft">
-            <Link to="/login">لديّ حساب بالفعل</Link>
-          </Button>
+          {!user && (
+            <>
+              <Button asChild size="3" variant="solid">
+                <Link to="/register">
+                  أنشئ حساباً
+                  <ArrowLeft size={18} aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button asChild size="3" variant="soft">
+                <Link to="/login">لديّ حساب بالفعل</Link>
+              </Button>
+            </>
+          )}
           <Button size={"3"} asChild variant="solid">
             <Link to={"/app"}>
-              جرب درساً
+              {user ? "أكمل رحلتك" : " جرب درساً"}
               <ArrowLeft size={18} aria-hidden="true" />
             </Link>
           </Button>

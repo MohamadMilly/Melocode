@@ -34,7 +34,7 @@ export function useLogin() {
     mutationKey: ["login"],
     onSuccess: (data) => {
       loginInStorage(data);
-      navigate("/");
+      navigate("/app");
     },
   });
 }

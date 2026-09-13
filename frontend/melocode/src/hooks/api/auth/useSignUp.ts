@@ -38,7 +38,7 @@ export function useSignup() {
     mutationFn: signup,
     onSuccess: (data) => {
       loginInStorage(data);
-      navigate("/");
+      navigate("/app");
     },
   });
 }
