@@ -109,7 +109,7 @@ export function Quiz({
   const toggleSolutionVisibility = () => setSolutionVisible(!solutionVisible);
 
   const handleSubmitCheck = async () => {
-    let submissionResult: QuizSubmission | undefined;
+    let submissionResult: QuizSubmission | undefined | null;
     try {
       if (quiz.type === "MULTIPLE_CHOICE") {
         const { submission } = await submit({
@@ -211,6 +211,7 @@ export function Quiz({
                 areTestCasesLoading ||
                 isRunningPending ||
                 isAnswerBeingSubmitted ||
+                isSubmitting ||
                 isGivenUp
               }
             >

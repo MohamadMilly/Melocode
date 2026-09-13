@@ -1,6 +1,7 @@
-import type { QuizTestCase } from "@app/types";
+import type { QuizTestCase, ResponseError } from "@app/types";
 import { apiClient } from "../../../api/api";
 import { useQuery } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 
 const getQuizTestCases = async (
   quizAsnwerId: number,
@@ -10,7 +11,10 @@ const getQuizTestCases = async (
 };
 
 export function useQuizTestCase(quizAnswerId: number) {
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery<
+    { testCases: Omit<QuizTestCase, "output">[] },
+    AxiosError<ResponseError>
+  >({
     queryKey: ["quizzes", quizAnswerId, "test-cases"],
     queryFn: () => getQuizTestCases(quizAnswerId),
     enabled: false,

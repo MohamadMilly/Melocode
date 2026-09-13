@@ -1,5 +1,6 @@
+import type { ResponseError } from "@app/types";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 type RunCodeOutput = {
   output: string;
@@ -29,7 +30,7 @@ const runCode = async (code: string): Promise<RunCodeOutput> => {
 };
 
 export function useRunCode() {
-  return useMutation({
+  return useMutation<RunCodeOutput, AxiosError<ResponseError>, string>({
     mutationKey: ["run-code"],
     mutationFn: runCode,
     onError: (error) => {

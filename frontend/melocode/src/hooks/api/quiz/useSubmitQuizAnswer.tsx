@@ -87,7 +87,7 @@ export function useSubmitQuizAnswer() {
         exact: true,
       });
       queryClient.invalidateQueries({
-        queryKey: ["me", "lessons", lessonId, "progress"],
+        queryKey: ["me", "lessons", lessonId],
         exact: true,
       });
       queryClient.invalidateQueries({

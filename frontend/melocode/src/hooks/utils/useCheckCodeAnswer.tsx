@@ -2,6 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useQuizTestCase } from "../api/quiz/useQuizTestCases";
 import { useRunCode } from "../api/online-compiler/useRunCode";
 import { useSubmitQuizAnswer } from "../api/quiz/useSubmitQuizAnswer";
+import type { QuizSubmission, ResponseError } from "@app/types";
+import type { AxiosError } from "axios";
 
 export function useCheckCodeAnswer(quizAnswerId: number, lessonId: number) {
   const {
@@ -9,13 +11,13 @@ export function useCheckCodeAnswer(quizAnswerId: number, lessonId: number) {
     isLoading: areTestCasesLoading,
     error: testCasesFetchError,
   } = useQuizTestCase(quizAnswerId);
-  
+
   const {
     mutateAsync: run,
     isPending: isRunningPending,
     error: runCodeError,
   } = useRunCode();
-  
+
   const {
     mutateAsync: submitAnswer,
     isPending: isAnswerBeingSubmitted,
@@ -78,11 +80,15 @@ export function useCheckCodeAnswer(quizAnswerId: number, lessonId: number) {
     isPending,
     error,
     mutateAsync: triggerCheckAnswer,
-  } = useMutation({
+  } = useMutation<
+    QuizSubmission | null | undefined,
+    AxiosError<ResponseError>,
+    { code: string }
+  >({
     mutationKey: ["check-answer"],
     mutationFn: checkAnswer,
   });
-  
+
   return {
     checkAnswer: triggerCheckAnswer,
     isPending,
