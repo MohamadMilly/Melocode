@@ -14,9 +14,11 @@ export function getStreak(lessonProgresses: UserLessonProgress[]) {
     if (!l1 || !l2) break;
 
     const d1 = new Date(l1.completedAt);
+    console.log(d1);
     d1.setHours(0, 0, 0, 0);
 
     const d2 = new Date(l2.completedAt);
+    console.log(d2);
     d2.setHours(0, 0, 0, 0);
 
     const diffTime = Math.abs(d2.getTime() - d1.getTime());
@@ -35,10 +37,10 @@ export function getStreak(lessonProgresses: UserLessonProgress[]) {
     lessonProgresses[lessonProgresses.length - 1].completedAt,
   );
   lastLessonDate.setHours(0, 0, 0, 0);
-  
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   const finalDiffTime = Math.abs(today.getTime() - lastLessonDate.getTime());
   const finalDiffDays = Math.round(finalDiffTime / (1000 * 60 * 60 * 24));
 

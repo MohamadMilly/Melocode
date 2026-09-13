@@ -18,9 +18,9 @@ export function StreakBarChart({ userLessonProgresses }: StreakBarChartProps) {
   const chartData = Object.values(
     userLessonProgresses.reduce(
       (acc: Record<string, { date: string; count: number }>, progress) => {
-        const current = new Date(
-          new Date(progress.completedAt).setHours(0, 0, 0, 0),
-        ).toUTCString();
+        const current = new Date(progress.completedAt)
+          .toISOString()
+          .split("T")[0];
 
         if (acc[current]) {
           acc[current].count++;
@@ -35,10 +35,10 @@ export function StreakBarChart({ userLessonProgresses }: StreakBarChartProps) {
   ).sort((first, second) => first.date.localeCompare(second.date));
 
   const formatDate = (date: string) =>
-    new Intl.DateTimeFormat("ar-EG", {
+    new Intl.DateTimeFormat("ar", {
       day: "numeric",
       month: "short",
-    }).format(new Date(date));
+    }).format(new Date(`${date}T00:00:00`));
 
   return (
     <Card
