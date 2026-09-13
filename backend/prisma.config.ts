@@ -7,10 +7,11 @@ export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
-    
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    url:
+      process.env["NODE_ENV"] === "production"
+        ? process.env["PROD_DATABASE_URL"]
+        : process.env["DEV_DATABASE_URL"],
   },
-  
 });

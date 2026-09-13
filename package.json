@@ -7,7 +7,7 @@
   "author": "",
   "scripts": {
     "start-front": "cd frontend/melocode && npm run dev",
-    "start-back": "cd backend && npm run start"
+    "start-back": "cd backend && npm run start -- NODE_ENV=development"
   },
   "license": "ISC",
   "description": "",

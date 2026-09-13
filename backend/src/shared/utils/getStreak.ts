@@ -6,7 +6,7 @@ export function getStreak(lessonProgresses: UserLessonProgress[]) {
   }
 
   let streak = 1;
-  
+
   for (let i = 0; i < lessonProgresses.length; i++) {
     let l1 = lessonProgresses[i];
     let l2 = lessonProgresses[i + 1];
@@ -20,7 +20,7 @@ export function getStreak(lessonProgresses: UserLessonProgress[]) {
     d2.setHours(0, 0, 0, 0);
 
     const diffTime = Math.abs(d2.getTime() - d1.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) continue;
 
@@ -35,12 +35,12 @@ export function getStreak(lessonProgresses: UserLessonProgress[]) {
     lessonProgresses[lessonProgresses.length - 1].completedAt,
   );
   lastLessonDate.setHours(0, 0, 0, 0);
-
+  
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
   const finalDiffTime = Math.abs(today.getTime() - lastLessonDate.getTime());
-  const finalDiffDays = Math.ceil(finalDiffTime / (1000 * 60 * 60 * 24));
+  const finalDiffDays = Math.round(finalDiffTime / (1000 * 60 * 60 * 24));
 
   if (finalDiffDays > 1) {
     streak = 0;

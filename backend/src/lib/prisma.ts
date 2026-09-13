@@ -2,12 +2,11 @@ import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client.js";
 import { getStreak } from "../shared/utils/getStreak.js";
-
-import { Args, Result } from "@prisma/client/runtime/client";
+import { Args, Result } from "../generated/prisma/internal/prismaNamespace.js";
 
 const connectionString =
   process.env.NODE_ENV === "production"
-    ? process.env.DATABASE_URL
+    ? process.env.PROD_DATABASE_URL
     : process.env.DEV_DATABASE_URL;
 
 const pool = new Pool({ connectionString });

@@ -181,7 +181,7 @@ export type GetUsersReponse = {
 export type LeaderBoardUser = ExtendedUser & {
   lessonProgressesCount?: number | null;
   submissionsCount?: number | null;
-  _count?: { lessonProgresses?: number; submissions?: number };
+
   streak?: number;
 };
 
