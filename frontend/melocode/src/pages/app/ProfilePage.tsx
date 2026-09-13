@@ -15,6 +15,7 @@ import { useUserProgresses } from "../../hooks/api/progress/useUserProgress";
 import { StreakBarChart } from "../../components/Profile/StreakBarChart";
 import { ProgressCircleChart } from "../../components/Profile/ProgressCircleChart";
 import { ErrorElement } from "../../components/shared/ui/ErrorElement";
+import { ProfileSkeleton } from "../../components/Profile/skeleton/ProfileSkeleton";
 
 export function ProfilePage() {
   const { user: userInStorage } = useAuth();
@@ -27,11 +28,7 @@ export function ProfilePage() {
   } = useUserProgresses(userInStorage?.id as number);
 
   if (isLoading) {
-    return (
-      <main className="max-w-5xl mx-auto px-4 py-12">
-        <Text color="gray">جاري تحميل الملف الشخصي...</Text>
-      </main>
-    );
+    return <ProfileSkeleton />;
   }
 
   if (error) {

@@ -12,7 +12,7 @@ declare module "*.md" {
   };
   
   export const toc: Array<{
-    depth: number;
+    depth?: number;
     text: string;
     slug: string;
   }>;

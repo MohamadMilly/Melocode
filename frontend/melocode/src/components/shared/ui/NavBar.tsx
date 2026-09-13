@@ -39,9 +39,15 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
 
   return (
     <nav className="flex justify-between items-center sticky top-0 z-100 backdrop-blur-md bg-[var(--gray-1)]/90 md:px-6 px-3 py-2 border-b border-[var(--gray-6)]/15">
-      <Text className="text-[var(--accent-11)]" size={"6"} weight={"medium"}>
-        ميلوكود
-      </Text>
+      <Link
+        to="/app"
+        aria-label="ميلوكود - الصفحة الرئيسية"
+        className="text-[var(--accent-11)] no-underline"
+      >
+        <Text size={"6"} weight={"medium"}>
+          ميلوكود
+        </Text>
+      </Link>
 
       <Flex gap={"3"} align={"center"}>
         {!user && (

@@ -13,15 +13,22 @@ import { useLesson } from "../../hooks/api/lesson/useLesson";
 import { LessonPagination } from "../../components/Lesson/LessonPagination";
 import { Brain } from "lucide-react";
 import { PageMain } from "../../components/shared/PageMain";
+import { use, useMemo } from "react";
 
 export function LessonPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
+
   const { mutate: completeLesson, isPending: isCompleting } =
     useCompleteLesson();
   const { user } = useAuth();
 
-  const lesson = lessons[slug as string];
+  const lessonPromise = useMemo(() => {
+    const fetchLesson = lessons[slug as string];
+    return fetchLesson ? fetchLesson() : null;
+  }, [slug]);
+
+  const lesson = lessonPromise ? use(lessonPromise) : null;
 
   const {
     lesson: lessonMetaData,

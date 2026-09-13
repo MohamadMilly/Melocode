@@ -8,6 +8,8 @@ import { ErrorPage } from "./components/shared/ui/NotFoundPage";
 import { UsersLeaderBoardPage } from "./pages/app/UsersLeaderBoardPage";
 import { AchievementsPage } from "./pages/app/AchievementsPage";
 import { LandingPage } from "./pages/LandingPage";
+import { Suspense } from "react";
+import { LessonSkeleton } from "./components/Lesson/skeleton/LessonSkeleton";
 
 export const routes = [
   {
@@ -25,7 +27,12 @@ export const routes = [
       },
       {
         path: "lessons/:slug",
-        element: <LessonPage />,
+
+        element: (
+          <Suspense fallback={<LessonSkeleton />}>
+            <LessonPage />
+          </Suspense>
+        ),
       },
       {
         path: "profile",

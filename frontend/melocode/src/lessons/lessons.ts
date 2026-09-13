@@ -1,34 +1,49 @@
-import * as truthAboutProgrammingLesson from "./truth-about-programming.mdx";
-import * as learningMindsetLesson from "./learning-mindset.mdx";
-import * as whatIsTheWebLesson from "./what-is-the-web.mdx";
-import * as whatIsWebDevelopmentAndWebDeveloper from "./what-is-web-development-and-web-developer.mdx";
-import * as installationsLesson from "./installations.mdx";
-import * as commandLineBasicsLesson from "./command-line-basics.mdx";
 import type { ComponentType } from "react";
 import type { QuizData } from "../shared/types/Quiz.types";
 
-type Lesson = typeof truthAboutProgrammingLesson;
-
-const groupedLessonsData: Lesson[] = [
-  truthAboutProgrammingLesson,
-  learningMindsetLesson,
-  whatIsTheWebLesson,
-  whatIsWebDevelopmentAndWebDeveloper,
-  installationsLesson,
-  commandLineBasicsLesson,
+const slugs = [
+  "truth-about-programming",
+  "learning-mindset",
+  "what-is-the-web",
+  "what-is-web-development-and-web-developer",
+  "installations",
+  "command-line-basics",
 ];
+
+const cache = new Map();
 
 export const lessons: Record<
   string,
-  Lesson & { exercises: QuizData[]; Article: ComponentType<unknown> }
-> = groupedLessonsData.reduce((acc, curr) => {
+  () => Promise<{
+    Article: ComponentType<unknown>;
+    toc: { slug: string; text: string }[];
+    frontmatter: {
+      title: string;
+      slug: string;
+      lessonId: number;
+    };
+    exercises: QuizData[];
+  }>
+> = slugs.reduce((acc, curr) => {
   return {
     ...acc,
-    [curr.frontmatter.slug]: {
-      Article: curr.default,
-      toc: curr.toc,
-      exercises: curr.frontmatter.exercises,
-      frontmatter: curr.frontmatter,
+    [curr]: function () {
+      const currentSlug = curr; // to fix closures bug
+
+      if (cache.has(currentSlug)) return cache.get(currentSlug);
+
+      const loadPromise = (async () => {
+        const module = await import(`./${currentSlug}.mdx`);
+        return {
+          Article: module.default,
+          toc: module.toc,
+          exercises: module.frontmatter.exercises,
+          frontmatter: module.frontmatter,
+        };
+      })();
+
+      cache.set(currentSlug, loadPromise);
+      return loadPromise;
     },
   };
 }, {});
