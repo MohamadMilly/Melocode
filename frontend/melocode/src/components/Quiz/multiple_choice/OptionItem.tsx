@@ -17,7 +17,7 @@ export function OptionItem({
 
   return (
     <label
-      dir="auto"
+      dir="rtl"
       className={`group flex cursor-pointer items-center gap-3 rounded-(--radius-3) border px-4 py-3 text-(--gray-12) shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-(--accent-7) hover:bg-(--accent-2) hover:shadow-md ${
         isThisOptionCorrect
           ? "border-(--green-7) bg-(--green-3) text-(--green-11)"

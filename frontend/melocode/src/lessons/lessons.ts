@@ -8,6 +8,7 @@ const slugs = [
   "what-is-web-development-and-web-developer",
   "installations",
   "command-line-basics",
+  "intro-to-html",
 ];
 
 const cache = new Map();

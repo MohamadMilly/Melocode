@@ -66,26 +66,26 @@ export function Quiz({
   const isCorrect = submission ? submission.isCorrect : false;
   const isGivenUp = !!giveUpData;
   const isCompleted = isCorrect || isGivenUp;
-
+  
   const [lastResult, setLastResult] = useState<{ isCorrect: boolean } | null>(
     null,
   );
 
-  useEffect(() => {
-    if (expanded) {
-      document.documentElement.style.overflow = "hidden";
-      document.documentElement.style.height = "100vh";
-      document.body.style.overflow = "hidden";
-      document.body.style.height = "100vh";
-    }
+  // useEffect(() => {
+  //   if (expanded) {
+  //     document.documentElement.style.overflow = "hidden";
+  //     document.documentElement.style.height = "100vh";
+  //     document.body.style.overflow = "hidden";
+  //     document.body.style.height = "100vh";
+  //   }
 
-    return () => {
-      document.documentElement.style.overflow = "";
-      document.documentElement.style.height = "";
-      document.body.style.overflow = "";
-      document.body.style.height = "";
-    };
-  }, [expanded]);
+  //   return () => {
+  //     document.documentElement.style.overflow = "";
+  //     document.documentElement.style.height = "";
+  //     document.body.style.overflow = "";
+  //     document.body.style.height = "";
+  //   };
+  // }, [expanded]);
 
   useEffect(() => {
     function setSubmissionCode() {

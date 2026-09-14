@@ -13,7 +13,7 @@ function App() {
   const [activeAchievement, setActiveAchievement] =
     useState<Achievement | null>(null);
   const { user } = useAuth();
-  
+
   useEffect(() => {
     if (!user) return;
 
@@ -34,12 +34,11 @@ function App() {
     function initializeConnectedUsers(count: number): void {
       setConnectedUsersCount(count);
     }
-    
+
     function onReceiveAchievement(achievement: Achievement) {
       setActiveAchievement(achievement);
-      toast.loading("Updating your achievements...");
     }
-    
+
     function onAppError({
       context,
       message,
