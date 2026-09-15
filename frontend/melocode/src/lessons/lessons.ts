@@ -9,6 +9,7 @@ const slugs = [
   "installations",
   "command-line-basics",
   "intro-to-html",
+  "working-with-text",
 ];
 
 const cache = new Map();

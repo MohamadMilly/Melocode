@@ -10,7 +10,7 @@ import { AchievementsPage } from "./pages/app/AchievementsPage";
 import { LandingPage } from "./pages/LandingPage";
 import { Suspense } from "react";
 import { LessonSkeleton } from "./components/Lesson/skeleton/LessonSkeleton";
-
+import { ErrorBoundary } from "react-error-boundary";
 export const routes = [
   {
     element: <LandingPage />,
@@ -31,9 +31,11 @@ export const routes = [
         path: "lessons/:slug",
 
         element: (
-          <Suspense fallback={<LessonSkeleton />}>
-            <LessonPage />
-          </Suspense>
+          <ErrorBoundary fallback={<p>Error</p>}>
+            <Suspense fallback={<LessonSkeleton />}>
+              <LessonPage />
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {

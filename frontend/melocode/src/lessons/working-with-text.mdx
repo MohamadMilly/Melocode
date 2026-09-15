@@ -1,0 +1,342 @@
+---
+title: "التعامل مع النصوص في HTML"
+slug: "working-with-text"
+lessonId: 8
+exercises:
+  - level: "easy"
+    badge: "Multiple Choice"
+    type: "MULTIPLE_CHOICE"
+    answerId: 21
+    question:
+      items:
+        - type: "text"
+          content: "أي markup يحافظ على وجود فقرتين منفصلتين في browser؟"
+        - type: "options"
+          options:
+            - "كتابة النصين داخل body مع ترك سطر فارغ بينهما"
+            - "وضع كل نص داخل عنصر <p> مستقل"
+            - "وضع كل نص داخل عنصر <br> فقط"
+            - "استخدام مسافات كثيرة بين النصين"
+        - type: "hint"
+          content: "المتصفح يضغط whitespace وline breaks العادية إلى space واحد؛ استخدم semantic element للفقرات."
+  - level: "easy"
+    badge: "Multiple Choice"
+    type: "MULTIPLE_CHOICE"
+    answerId: 22
+    question:
+      items:
+        - type: "text"
+          content: "كم مستوى للعناوين في HTML، وما العنوان المناسب لعنوان الصفحة الرئيسي؟"
+        - type: "options"
+          options:
+            - "أربعة مستويات، و<h4>"
+            - "خمسة مستويات، و<h5>"
+            - "ستة مستويات، و<h1>"
+            - "سبعة مستويات، و<h7>"
+        - type: "hint"
+          content: "المستويات تبدأ من h1 وتنتهي عند h6، وh1 يمثل أعلى مستوى في hierarchy."
+  - level: "medium"
+    badge: "Multiple Choice"
+    type: "MULTIPLE_CHOICE"
+    answerId: 23
+    question:
+      items:
+        - type: "text"
+          content: "تريد جعل كلمة تحذير bold مع توضيح أنها مهمة دلاليًا لبرامج screen readers. أي عنصر تختار؟"
+        - type: "options"
+          options:
+            - "<b>"
+            - "<strong>"
+            - "<em>"
+            - "<!-- -->"
+        - type: "hint"
+          content: "اختر semantic element عندما يكون المعنى أهم من المظهر فقط."
+  - level: "medium"
+    badge: "Multiple Choice"
+    type: "MULTIPLE_CHOICE"
+    answerId: 24
+    question:
+      items:
+        - type: "text"
+          content: "في الكود التالي، ما العلاقة بين <p> الأول والثاني؟"
+        - type: "code"
+          content: "<body>\n  <p>First</p>\n  <p>Second</p>\n</body>"
+          language: "html"
+          isInteractive: false
+        - type: "options"
+          options:
+            - "الأول parent للثاني"
+            - "كلاهما siblings، وbody هو parent لهما"
+            - "كلاهما children لبعضهما"
+            - "لا توجد علاقة بينهما"
+        - type: "hint"
+          content: "العناصر التي تشترك في نفس parent وتقع في نفس nesting level تسمى siblings."
+  - level: "medium"
+    badge: "Multiple Choice"
+    type: "MULTIPLE_CHOICE"
+    answerId: 25
+    question:
+      items:
+        - type: "text"
+          content: "أي تعديل يصلح البنية ويحافظ على hierarchy الصحيحة لمقال؟"
+        - type: "code"
+          content: "<h1>My article</h1>\n<h3>Introduction</h3>\n<p>...</p>\n<h2>Details</h2>\n<p>...</p>"
+          language: "html"
+          isInteractive: false
+        - type: "options"
+          options:
+            - "تغيير h1 إلى h3 حتى تتطابق كل العناوين"
+            - "تغيير h3 إلى h2 لأن القسمان يتبعان عنوان المقال h1"
+            - "تغيير h2 إلى h4 لأن العناوين يجب أن تصغر دائمًا"
+            - "إزالة كل العناوين واستخدام strong بدلًا منها"
+        - type: "hint"
+          content: "heading level يعبّر عن البنية والتسلسل (structure)، وليس عن الحجم المرئي الذي يمكن تغييره لاحقًا عبر CSS."
+  - level: "hard"
+    badge: "Multiple Choice"
+    type: "MULTIPLE_CHOICE"
+    answerId: 26
+    question:
+      items:
+        - type: "text"
+          content: "أي عبارة تشرح بدقة الفرق بين <strong> و<strong><em> داخل فقرة؟"
+        - type: "options"
+          options:
+            - "الأول يضيف importance دلالية، والثاني يضيف importance مع emphasis دلالي"
+            - "الأول يعمل في head فقط، والثاني يعمل في body فقط"
+            - "الأول تعليق HTML، والثاني نص مخفي"
+            - "لا يمكن nesting بينهما"
+        - type: "hint"
+          content: "strong يعبّر عن importance، وem يعبّر عن emphasis؛ يمكن nesting للعناصر عندما يخدم المعنى."
+---
+
+export const toc = [
+  { text: "مقدمة ونظرة عامة", slug: "#مقدمة-ونظرة-عامة" },
+  { text: "Paragraphs", slug: "#paragraphs" },
+  { text: "Headings", slug: "#headings" },
+  { text: "Strong element", slug: "#strong-element" },
+  { text: "Em element", slug: "#em-element" },
+  {
+    text: "Nesting و indentation",
+    slug: "#nesting-تداخل-العناصر-و-indentation-المسافة-البادئة",
+  },
+  { text: "HTML comments", slug: "#html-comments" },
+  { text: "مصادر إضافية", slug: "#مصادر-إضافية" },
+];
+
+# التعامل مع النصوص في HTML
+
+## مقدمة ونظرة عامة
+
+معظم محتوى الويب عبارة عن نصوص، لذلك ستتعامل كثيرًا مع **HTML text elements**. في هذا الدرس ستتعلم العناصر الأكثر استخدامًا لكتابة نص واضح ومنظم داخل الصفحة.
+
+ستتعلم:
+
+- إنشاء `paragraphs` و`headings`.
+- استخدام `strong` للنص المهم دلاليًا و`em` للنص الذي يحتاج إلى emphasis (تأكيد).
+- فهم علاقات `parent` و`child` و`sibling` بين العناصر.
+- كتابة `HTML comments` لا تظهر للمستخدم.
+
+## Paragraphs
+
+قد تتوقع أن يعرض هذا الكود فقرتين، لكن browser لا يعتبر الانتقال لسطر جديد (`line breaks`) داخل `body` فقرة جديدة:
+
+```html
+<body>
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim
+  veniam, quis nostrud exercitation ullamco laboris.
+</body>
+```
+
+عندما يقرأ browser هذا النص، يضغط line breaks و المسافات الفارغة الإضافية (`extra whitespace`) إلى space واحد، فيظهر المحتوى كسطر طويل. لإنشاء فقرة فعلية، استخدم عنصر `<p>`:
+
+```html
+<body>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+</body>
+```
+
+كل `<p>` هو عنصر مستقل وله معنى واضح. لا تعتمد على empty lines أو تكرار المسافات لتحديد بنية المحتوى؛ استخدم HTML element المناسب.
+
+قبل :
+
+<iframe
+  src="https://codepen.io/TheOdinProjectExamples/embed/xxrKqeV?default-tab=html%2Cresult&theme-id=dark"
+  title="مثال الفقرات بدون p"
+  loading="lazy"
+  style={{ width: "100%", height: "300px", border: 0 }}
+></iframe>
+
+بعد استخدام عنصر `<p>`:
+
+<iframe
+  src="https://codepen.io/TheOdinProjectExamples/embed/mdwbmdp?default-tab=html%2Cresult&theme-id=dark"
+  title="مثال الفقرات باستخدام p"
+  loading="lazy"
+  style={{ width: "100%", height: "300px", border: 0 }}
+></iframe>
+
+## Headings
+
+تظهر `headings` عادةً بحجم أكبر ووزن أثقل لأنها توضّح hierarchy المحتوى (ترتيب المحتوى في الصفحة كسلسلة) يوجد **ستة مستويات** تبدأ من `<h1>` وتنتهي عند `<h6>`:
+
+```html
+<h1>عنوان الصفحة</h1>
+<h2>قسم رئيسي</h2>
+<h3>قسم فرعي</h3>
+<h6>أدق مستوى من العناوين</h6>
+```
+
+استخدم `<h1>` لعنوان الصفحة أو المقال الرئيسي، ثم استخدم المستويات الأقل للأقسام التابعة له. `h2` ليس مجرد طريقة لجعل النص أصغر من `h1`؛ إنه يعبّر عن مستوى في document hierarchy. أما الحجم والألوان فمكانها CSS.
+
+<iframe
+  src="https://codepen.io/TheOdinProjectExamples/embed/LYLPLbg?default-tab=html%2Cresult&theme-id=dark"
+  title="مثال HTML headings"
+  loading="lazy"
+  style={{ width: "100%", height: "300px", border: 0 }}
+></iframe>
+
+<LessonNote>
+  استخدم دائما (`Headings`) بالترتيب , لا تستخدم مثلا `h2` قبل `h1` أبدا.
+</LessonNote>
+
+## Strong element (عنصر الأهمية)
+
+يمنح عنصر `<strong>` النص مظهرًا bold (عريض)، والأهم أنه يضيف معنى **importance (الأهمية)**. قد تستخدم screen readers (قارئات الشاشة) نبرة مختلفة عند قراءة هذا المحتوى.
+
+```html
+<strong>تنبيه مهم</strong>
+
+<p>يجب حفظ الملف <strong>قبل</strong> فتحه في browser.</p>
+```
+
+استخدم `<strong>` عندما تكون أهمية النص جزءًا من المعنى، لا لمجرد تغيير مظهره. ستتعلم لاحقًا طرق جعل النص bold بصريًا فقط باستخدام CSS.
+
+المثال التالي يوضح استخدام `<strong>` وحده لجعل النص مهمًا دلاليًا:
+
+<iframe
+  src="https://codepen.io/TheOdinProjectExamples/embed/qBjWXrB?default-tab=html%2Cresult&theme-id=dark"
+  title="مثال strong مستقل"
+  loading="lazy"
+  style={{ width: "100%", height: "300px", border: 0 }}
+></iframe>
+
+أما المثال التالي فيوضح استخدام `<strong>` داخل فقرة، مع إبراز كلمة واحدة باعتبارها مهمة:
+
+<iframe
+  src="https://codepen.io/TheOdinProjectExamples/embed/wvewqJr?default-tab=html%2Cresult&theme-id=dark"
+  title="مثال strong داخل فقرة"
+  loading="lazy"
+  style={{ width: "100%", height: "300px", border: 0 }}
+></iframe>
+
+## Em element (عنصر التأكيد)
+
+يضيف `<em>` مظهرًا italic (مائلًا) ومعنى **emphasis (التأكيد)** للنص. وكما هو الحال مع `<strong>`، فهذا المعنى قد يكون مهمًا لبرامج accessibility (إتاحة الوصول).
+
+```html
+<em>هذا النص يحتاج إلى emphasis.</em>
+
+<p>هذا هو <em>الجزء الأهم في الجملة</em>.</p>
+```
+
+يمكنك nesting (تداخل العناصر) بين عناصر النص عندما يخدم ذلك المعنى:
+
+```html
+<strong><em>تحذير مهم جدًا</em></strong>
+```
+
+المثال التالي يوضح استخدام `<em>` وحده لإضافة emphasis إلى النص:
+
+<iframe
+  src="https://codepen.io/TheOdinProjectExamples/embed/wvewqpp?default-tab=html%2Cresult&theme-id=dark"
+  title="مثال em مستقل"
+  loading="lazy"
+  style={{ width: "100%", height: "300px", border: 0 }}
+></iframe>
+
+أما المثال التالي فيوضح استخدام `<em>` داخل فقرة للتأكيد على جزء محدد منها:
+
+<iframe
+  src="https://codepen.io/TheOdinProjectExamples/embed/VwWZzyj?default-tab=html%2Cresult&theme-id=dark"
+  title="مثال em داخل فقرة"
+  loading="lazy"
+  style={{ width: "100%", height: "300px", border: 0 }}
+></iframe>
+
+## Nesting (تداخل العناصر) و indentation (المسافة البادئة)
+
+عندما تضع عنصرًا داخل عنصر آخر، تنشئ علاقة `parent` (العنصر الأب) و`child` (العنصر الابن). العنصر الخارجي هو `parent`، والعنصر الموجود داخله هو `child`:
+
+```html
+<body>
+  <p>هذه الفقرة child لعنصر body.</p>
+</body>
+```
+
+يمكن للـ `parent` أن يحتوي على أكثر من `child`. والعناصر الموجودة في نفس المستوى ولها نفس `parent` تسمى `siblings` (العناصر الأشقاء):
+
+```html
+<body>
+  <p>First paragraph</p>
+  <p>Second paragraph</p>
+</body>
+```
+
+في المثال السابق، الفقرتان siblings، وعنصر `body` هو parent لهما. استخدم indentation بمقدار مسافتين لكل nesting level حتى تكون هذه العلاقات واضحة لك ولأي developer يقرأ الكود.
+
+المثال التالي يوضح علاقة `parent` و`child`: عنصر `body` يحتوي على عنصر `p` بداخله:
+
+<iframe
+  src="https://codepen.io/TheOdinProjectExamples/embed/oNwjEvO?default-tab=html%2Cresult&theme-id=dark"
+  title="مثال parent و child"
+  loading="lazy"
+  style={{ width: "100%", height: "300px", border: 0 }}
+></iframe>
+
+أما المثال التالي فيوضح علاقة `siblings`: فقرتان لهما نفس `parent` وتقعان في نفس المستوى:
+
+<iframe
+  src="https://codepen.io/TheOdinProjectExamples/embed/ZEybrYx?default-tab=html%2Cresult&theme-id=dark"
+  title="مثال siblings"
+  loading="lazy"
+  style={{ width: "100%", height: "300px", border: 0 }}
+></iframe>
+
+هذه العلاقات ستصبح أكثر أهمية عند استخدام CSS لتنسيق العناصر وJavaScript لإضافة behavior.
+
+## HTML comments (التعليقات)
+
+لا تظهر `HTML comments` (تعليقات HTML) في الصفحة، لكنها تترك context (سياقًا توضيحيًا) مفيدًا للمطورين. اكتبها بين `<!--` و`-->`:
+
+```html
+<!-- هذا التعليق يشرح سبب وجود القسم التالي -->
+<p>هذا النص فقط هو الذي يظهر للمستخدم.</p>
+```
+
+لا تضع معلومات سرية داخل comments؛ فهي مخفية بصريًا فقط ويمكن لأي شخص رؤية source code.
+
+المثال التالي يوضح تعليقًا داخل HTML؛ سيظهر العنصر `<p>` فقط في الصفحة، ولن يظهر نص التعليق:
+
+<iframe
+  src="https://codepen.io/TheOdinProjectExamples/embed/abwoyBg?default-tab=html%2Cresult&theme-id=dark"
+  title="مثال HTML comments"
+  loading="lazy"
+  style={{ width: "100%", height: "300px", border: 0 }}
+></iframe>
+
+### اختصار VS Code
+
+في Windows وLinux استخدم `Ctrl + /`، وفي macOS استخدم `Cmd + /` لإنشاء comment أو تحويل السطر إلى comment أو إزالته. هذه الاختصارات مبنية على English keyboard layout، وقد تختلف مع layouts أخرى.
+
+## مصادر إضافية
+
+1. شاهد فيديو [HTML Paragraph and Headings](https://www.youtube.com/watch?v=yqcd-XkxZNM&t=35s) من Kevin Powell.
+2. شاهد فيديو [HTML Bold and Italic Text](https://www.youtube.com/watch?v=gW6cBZLUk6M&t=5s).
+3. أنشئ صفحة blog article بسيطة تحتوي على `h1` و`headings` فرعية و`paragraphs`، واستخدم `strong` و`em` داخل بعض الفقرات.
+4. استخدم [Lorem Ipsum](https://en.wikipedia.org/wiki/Lorem_ipsum) عند الحاجة. في VS Code اكتب `lorem` ثم اضغط Enter لتوليد نص تجريبي.
+
+#### خلاصة القول
+
+استخدم `<p>` للفقرات، و`h1` إلى `h6` لبناء تسلسل للعناوين، و`strong` و`em` عندما يكون importance أو emphasis جزءًا من المعنى. حافظ على nesting وindentation الواضحين، واستخدم HTML comments لإضافة context إلى source code دون أن يظهر للمستخدم.
+

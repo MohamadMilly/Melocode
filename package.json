@@ -15,5 +15,8 @@
     "frontend/melocode",
     "backend",
     "shared-types"
-  ]
+  ],
+  "dependencies": {
+    "react-error-boundary": "^6.1.5"
+  }
 }

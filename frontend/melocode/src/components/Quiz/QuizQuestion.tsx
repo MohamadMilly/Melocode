@@ -1,7 +1,7 @@
-import { Text } from "@radix-ui/themes";
+import { Skeleton, Text } from "@radix-ui/themes";
 
 import { LessonNote } from "../Lesson/LessonNote";
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import type { QuizQuestionItem } from "../../shared/types/Quiz.types";
 import { QuizHint } from "./QuizHint";
 import { OptionsList } from "./multiple_choice/OptionsList";
@@ -31,7 +31,15 @@ export function QuizQuestion({
               );
             case "code":
               return (
-                <QuizEditor disabled={editorDisabled || !quiz.isInteractive} />
+                <Suspense
+                  fallback={
+                    <Skeleton width={"100%"} height={"100px"}></Skeleton>
+                  }
+                >
+                  <QuizEditor
+                    disabled={editorDisabled || !quiz.isInteractive}
+                  />
+                </Suspense>
               );
 
             case "note":
