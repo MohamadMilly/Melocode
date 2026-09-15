@@ -42,6 +42,13 @@ app.use("/lessons", lessonRouter);
 app.use("/quizzes", quizRouter);
 app.use("/users", userRouter);
 
+// health route
+app.get("/health", (req: Request, res: Response<{ health: "ok" }>) => {
+  res.json({
+    health: "ok",
+  });
+});
+
 app.use("/me", meRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
