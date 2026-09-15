@@ -133,7 +133,7 @@ export function Quiz({
         className={`order-2 ${expanded ? "col-start-2 col-end-3" : ""}`}
       >
         {submission && !expanded && (
-          <SubmissionStatusBanner isCompleted={isQuizCompleted} />
+          <SubmissionStatusBanner hasCorrectSubmission={hasCorrectSubmission} />
         )}
         <Flex gap={"2"} wrap={"wrap"} align={"center"} justify={"end"}>
           <QuizTypeBadge badge={quiz.badge} />
@@ -162,7 +162,7 @@ export function Quiz({
         align={"stretch"}
       >
         {submission && expanded && (
-          <SubmissionStatusBanner isCompleted={isQuizCompleted} />
+          <SubmissionStatusBanner hasCorrectSubmission={isQuizCompleted} />
         )}
         <SubmissionFeedback
           runCodeError={runCodeError}

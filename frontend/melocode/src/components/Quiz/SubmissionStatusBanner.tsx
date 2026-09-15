@@ -4,18 +4,20 @@ import { SuccessCheckMark } from "../shared/ui/SuccessCheckMark";
 import { WrongCheckMark } from "../shared/ui/WrongCheckMark";
 
 export function SubmissionStatusBanner({
-  isCompleted,
+  hasCorrectSubmission,
 }: {
-  isCompleted: boolean;
+  hasCorrectSubmission: boolean;
 }) {
-  const title = isCompleted ? "تم حله بنجاح" : "إجابة خاطئة";
-  const statusText = isCompleted ? "مكتمل" : "غير صحيح";
+  const title = hasCorrectSubmission ? "تم حله بنجاح" : "إجابة خاطئة";
+  const statusText = hasCorrectSubmission ? "مكتمل" : "غير صحيح";
 
-  const textColor = isCompleted
+  const textColor = hasCorrectSubmission
     ? "text-[var(--accent-11)]"
     : "text-[var(--red-11)]";
-  const iconBg = isCompleted ? "bg-[var(--accent-2)]" : "bg-[var(--red-2)]";
-  const iconBorder = isCompleted
+  const iconBg = hasCorrectSubmission
+    ? "bg-[var(--accent-2)]"
+    : "bg-[var(--red-2)]";
+  const iconBorder = hasCorrectSubmission
     ? "border-[var(--accent-4)]"
     : "border-[var(--red-4)]";
 
@@ -26,7 +28,7 @@ export function SubmissionStatusBanner({
           <div
             className={`w-14 h-14 flex items-center justify-center rounded-lg border ${iconBg} ${iconBorder}`}
           >
-            {isCompleted ? <SuccessCheckMark /> : <WrongCheckMark />}
+            {hasCorrectSubmission ? <SuccessCheckMark /> : <WrongCheckMark />}
           </div>
 
           <Text className={`${textColor} font-bold text-base m-0`}>
@@ -39,7 +41,7 @@ export function SubmissionStatusBanner({
         </Text>
       </Flex>
 
-      {isCompleted && <SuccessConfetti />}
+      {hasCorrectSubmission && <SuccessConfetti />}
     </>
   );
 }
