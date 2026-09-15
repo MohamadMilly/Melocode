@@ -17,6 +17,7 @@ export function QuizzesTabs({
   const [expanded, setExpanded] = useState<boolean>(false);
   const { submissionsData, isLoading: isLoadingSubmissions } =
     useMyLessonSubmissions(lessonId);
+  const [currentQuiz, setCurrentQuiz] = useState<string>("التمرين-1");
   const { giveUpsData } = useLessonQuizzesGiveUps(lessonId);
 
   const quizzesCount = quizzes.length;
@@ -29,10 +30,19 @@ export function QuizzesTabs({
   const toggleExpand = useCallback(() => {
     setExpanded((prev) => !prev);
   }, []);
+
+  const goNext = () => {
+    const nextQuiz = `التمرين-${Number(currentQuiz.split("-")[1]) + 1}`;
+    if (quizzesNames.includes(nextQuiz)) {
+      setCurrentQuiz(nextQuiz);
+    }
+  };
+  const onValueChange = (value: string) => setCurrentQuiz(value);
   return (
     <Tabs.Root
       className={`overflow-hidden rounded-2xl border border-[var(--gray-6)] bg-[var(--gray-1)] shadow-sm ${expanded ? "fixed inset-0 z-9999 flex h-screen flex-col rounded-none border-0 shadow-none" : ""}`}
-      defaultValue="التمرين-1"
+      value={currentQuiz}
+      onValueChange={onValueChange}
     >
       <Tabs.List
         className={`bg-[var(--gray-2)] px-3 py-1 md:py-2 ${expanded ? "shrink-0" : ""}`}
@@ -100,6 +110,7 @@ export function QuizzesTabs({
                 submission={submission}
                 giveUpData={giveUp}
                 lessonId={lessonId}
+                goNext={goNext}
               />
             );
           })

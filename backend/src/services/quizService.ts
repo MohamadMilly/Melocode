@@ -2,6 +2,7 @@ import { UserQuizOutput } from "@app/types";
 import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
 import { eventEmitter } from "../lib/eventEmitter.js";
+import { verifyOutputs } from "../shared/utils/verifyOutputs.js";
 
 export const getQuizAnswer = async ({
   answerId,
@@ -32,6 +33,7 @@ export const getQuizAnswer = async ({
   if (!quizAnswer) {
     throw new HttpError(404, "لم يتم العثور على إجابة هذا الاختبار.");
   }
+
   const hasGivenUpOrAnsweredCorrectly =
     quizAnswer.giveUps.length >= 1 || quizAnswer.submissions.length >= 1;
 
@@ -60,6 +62,7 @@ export const saveSubmission = async ({
   userOutputs: UserQuizOutput[];
   userId: number;
 }) => {
+  // validation
   const giveUpForThisQuiz = await prisma.quizGiveUp.findUnique({
     where: {
       userId_quizAnswerId: {
@@ -74,6 +77,7 @@ export const saveSubmission = async ({
       "لقد استسلمت لهذا الاختبار. لا يمكنك إرسال حلول جديدة.",
     );
   }
+
   const testCases = await prisma.testCase.findMany({
     where: {
       quizAnswerId: quizAnswerId,
@@ -82,21 +86,23 @@ export const saveSubmission = async ({
   if (testCases.length === 0) {
     throw new HttpError(400, "هذا الاختبار لا يحتوي على حالات اختبار. ");
   }
+  // verification
   let isCorrect;
   if (type === "MULTIPLE_CHOICE") {
+    const existingSubmissions = await prisma.quizSubmission.findMany({
+      where: {
+        quizAnswerId: quizAnswerId,
+        userId: userId,
+      },
+    });
+    if (existingSubmissions.length > 0) {
+      throw new HttpError(400, "لقد أجبت عن هذا السؤال من قبل.");
+    }
     isCorrect = content.trim() === testCases[0].output.trim();
   } else {
-    isCorrect = testCases.every((testCase) => {
-      const userOutput = userOutputs.find(
-        (userOutput) => userOutput.testCaseId === testCase.id,
-      );
-      if (!userOutput || !userOutput.output) {
-        return false;
-      }
-
-      return userOutput.output.trim() === testCase.output.trim();
-    });
+    isCorrect = verifyOutputs(testCases, userOutputs);
   }
+  // creation
   const submission = await prisma.quizSubmission.upsert({
     where: {
       userId_quizAnswerId_isCorrect: {
@@ -117,6 +123,7 @@ export const saveSubmission = async ({
       isCorrect,
     },
   });
+  // emitation
   if (submission.isCorrect) {
     eventEmitter.emit("submission-created", { userId: userId });
   }

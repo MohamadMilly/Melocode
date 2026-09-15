@@ -1,4 +1,4 @@
-import { Button, Flex, Tabs, Text } from "@radix-ui/themes";
+import { Flex, Tabs, Text } from "@radix-ui/themes";
 import { QuizTypeBadge } from "./QuizTypeBadge";
 import { useEffect, useState } from "react";
 import { useQuizAnswer } from "../../hooks/api/quiz/useQuizAnswer";
@@ -12,10 +12,10 @@ import { SubmissionStatusBanner } from "./SubmissionStatusBanner";
 import { SubmissionFeedback } from "./QuizSubmissionFeedback";
 import { useGiveUpToQuiz } from "../../hooks/api/me/useGiveUpToQuiz";
 import { ErrorElement } from "../shared/ui/ErrorElement";
-import { GiveUpAlertDialog } from "./GiveUpAlertDialog";
 import type { QuizData } from "../../shared/types/Quiz.types";
 import { useSubmitQuizAnswer } from "../../hooks/api/quiz/useSubmitQuizAnswer";
 import { QuizAnswerProvider } from "../../providers/QuizAnswerProvider";
+import { QuizButtons } from "./QuizButtons";
 
 type QuizProps = {
   name: string;
@@ -24,6 +24,7 @@ type QuizProps = {
   lessonId: number;
   giveUpData: QuizGiveUp | undefined;
   expanded?: boolean;
+  goNext: () => void;
 };
 
 export function Quiz({
@@ -33,9 +34,10 @@ export function Quiz({
   lessonId,
   giveUpData,
   expanded = false,
+  goNext,
 }: QuizProps) {
   const { user } = useAuth();
-  const [solutionVisible, setSolutionVisible] = useState<boolean>(false);
+  const [isSolutionVisible, setIsSolutionVisible] = useState<boolean>(false);
   const quizAnswerId = quiz.answerId;
   const questionItems = quiz.question.items;
   const codeItem = questionItems.find((item) => item.type === "code");
@@ -52,7 +54,7 @@ export function Quiz({
 
   const {
     mutateAsync: submit,
-    isPending: isSubmitting,
+    isPending: isSubmissionPending,
     error: submitError,
   } = useSubmitQuizAnswer();
   const {
@@ -63,68 +65,52 @@ export function Quiz({
 
   const [code, setCode] = useState(initialQuestionCode);
   const [selectedOption, setSelectedOption] = useState<string>("");
-  const isCorrect = submission ? submission.isCorrect : false;
-  const isGivenUp = !!giveUpData;
-  const isCompleted = isCorrect || isGivenUp;
-  
-  const [lastResult, setLastResult] = useState<{ isCorrect: boolean } | null>(
-    null,
-  );
+  const hasCorrectSubmission = submission?.isCorrect ?? false;
+  const hasGivenUp = !!giveUpData;
+  const isQuizCompleted = hasCorrectSubmission || hasGivenUp;
 
-  // useEffect(() => {
-  //   if (expanded) {
-  //     document.documentElement.style.overflow = "hidden";
-  //     document.documentElement.style.height = "100vh";
-  //     document.body.style.overflow = "hidden";
-  //     document.body.style.height = "100vh";
-  //   }
-
-  //   return () => {
-  //     document.documentElement.style.overflow = "";
-  //     document.documentElement.style.height = "";
-  //     document.body.style.overflow = "";
-  //     document.body.style.height = "";
-  //   };
-  // }, [expanded]);
+  const [latestResult, setLatestResult] = useState<{
+    isCorrect: boolean;
+  } | null>(null);
 
   useEffect(() => {
-    function setSubmissionCode() {
-      if (submission) {
-        if (quiz.type === "MULTIPLE_CHOICE") {
-          setSelectedOption(submission.content);
-        } else {
-          setCode(submission.content);
-        }
+    if (submission) {
+      if (quiz.type === "MULTIPLE_CHOICE") {
+        setSelectedOption(submission.content);
+      } else {
+        setCode(submission.content);
       }
     }
-    setSubmissionCode();
   }, [submission, quiz.type]);
 
   const {
     answer,
     isLoading: quizAnswerLoading,
     error: quizAnswerError,
-  } = useQuizAnswer(quizAnswerId, isCompleted);
+  } = useQuizAnswer(quizAnswerId, isQuizCompleted);
 
-  const toggleSolutionVisibility = () => setSolutionVisible(!solutionVisible);
+  const handleToggleSolution = () => setIsSolutionVisible(!isSolutionVisible);
 
-  const handleSubmitCheck = async () => {
+  const handleSubmit = async () => {
     let submissionResult: QuizSubmission | undefined | null;
     try {
       if (quiz.type === "MULTIPLE_CHOICE") {
-        const { submission } = await submit({
+        const { submission: createdSubmission } = await submit({
           userOutputs: [],
           type: "MULTIPLE_CHOICE",
           content: selectedOption,
-          lessonId: lessonId,
-          quizAnswerId: quiz.answerId,
+          lessonId,
+          quizAnswerId,
         });
-        submissionResult = submission;
+        submissionResult = createdSubmission;
       } else {
-        submissionResult = await checkAnswer({ code: code });
+        submissionResult = await checkAnswer({ code });
       }
       if (submissionResult) {
-        setLastResult({ isCorrect: submissionResult.isCorrect });
+        setLatestResult({ isCorrect: submissionResult.isCorrect });
+        if (submissionResult.isCorrect) {
+          goNext();
+        }
       }
     } catch (err) {
       console.error("Submission failed", err);
@@ -132,7 +118,7 @@ export function Quiz({
   };
 
   const handleGiveUp = () => {
-    giveUp({ quizAnswerId: quizAnswerId, lessonId: lessonId });
+    giveUp({ quizAnswerId, lessonId });
   };
 
   return (
@@ -147,7 +133,7 @@ export function Quiz({
         className={`order-2 ${expanded ? "col-start-2 col-end-3" : ""}`}
       >
         {submission && !expanded && (
-          <SubmissionStatusBanner isCompleted={isCompleted} />
+          <SubmissionStatusBanner isCompleted={isQuizCompleted} />
         )}
         <Flex gap={"2"} wrap={"wrap"} align={"center"} justify={"end"}>
           <QuizTypeBadge badge={quiz.badge} />
@@ -163,7 +149,7 @@ export function Quiz({
           >
             <QuizQuestion
               questionItems={questionItems}
-              editorDisabled={isGivenUp}
+              editorDisabled={hasGivenUp}
             />
           </QuizAnswerProvider>
         </div>
@@ -176,65 +162,44 @@ export function Quiz({
         align={"stretch"}
       >
         {submission && expanded && (
-          <SubmissionStatusBanner isCompleted={isCompleted} />
+          <SubmissionStatusBanner isCompleted={isQuizCompleted} />
         )}
         <SubmissionFeedback
           runCodeError={runCodeError}
-          lastResult={lastResult}
+          lastResult={latestResult}
           testCasesFetchError={testCasesFetchError}
           submissionError={submissionError ?? submitError}
         />
         {giveUpError && <ErrorElement axiosError={giveUpError} />}
-        {isGivenUp && (
+        {hasGivenUp && (
           <Text className="rounded-lg border border-[var(--red-6)] bg-[var(--red-2)] px-3 py-2 text-sm text-[var(--red-11)]">
             تم الاستسلام عن هذا التمرين
           </Text>
         )}
         {user && (
-          <Flex
-            className="w-full"
-            gap={"2"}
-            mt={"4"}
-            direction={expanded ? "column" : "row"}
-          >
-            <Button
-              className="grow! rounded-xl"
-              disabled={quizAnswerLoading || (!isCompleted && !isGivenUp)}
-              onClick={toggleSolutionVisibility}
-            >
-              {solutionVisible ? "إخفاء الحل" : "إظهار الحل"}
-            </Button>
-            <Button
-              className="grow! rounded-xl"
-              onClick={handleSubmitCheck}
-              disabled={
-                areTestCasesLoading ||
-                isRunningPending ||
-                isAnswerBeingSubmitted ||
-                isSubmitting ||
-                isGivenUp
-              }
-            >
-              {areTestCasesLoading
-                ? "جاري تحميل الاختبارات"
-                : isRunningPending
-                  ? "يتم تنفيذ الكود"
-                  : isAnswerBeingSubmitted || isSubmitting
-                    ? "جاري التحقق"
-                    : "تحقق من الحل"}
-            </Button>
-            <GiveUpAlertDialog
-              onGiveUp={handleGiveUp}
-              isGivingUp={isGivingUp}
-              disabled={isCompleted}
-            />
-          </Flex>
+          <QuizButtons
+            expanded={expanded}
+            isSolutionVisible={isSolutionVisible}
+            isSolutionLoading={quizAnswerLoading}
+            isQuizCompleted={isQuizCompleted}
+            hasGivenUp={hasGivenUp}
+            isMultipleChoice={quiz.type === "MULTIPLE_CHOICE"}
+            hasSubmission={!!submission}
+            isTestCasesLoading={areTestCasesLoading}
+            isCodeRunning={isRunningPending}
+            isAnswerBeingSubmitted={isAnswerBeingSubmitted}
+            isSubmissionPending={isSubmissionPending}
+            isGivingUp={isGivingUp}
+            onToggleSolution={handleToggleSolution}
+            onSubmit={handleSubmit}
+            onGiveUp={handleGiveUp}
+          />
         )}
         <QuizSolution
           answer={answer}
           isLoading={quizAnswerLoading}
           error={quizAnswerError}
-          solutionVisible={solutionVisible}
+          solutionVisible={isSolutionVisible}
         />
       </Flex>
     </Tabs.Content>

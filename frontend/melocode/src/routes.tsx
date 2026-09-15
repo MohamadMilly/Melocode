@@ -15,11 +15,13 @@ export const routes = [
   {
     element: <LandingPage />,
     path: "/",
+    errorElement: <ErrorPage />,
   },
+
   {
     element: <App />,
-    path: "/app/",
-    errorElement: <ErrorPage />,
+    path: "/app",
+
     children: [
       {
         index: true,
