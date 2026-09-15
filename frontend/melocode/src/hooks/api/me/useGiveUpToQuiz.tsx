@@ -55,7 +55,7 @@ export function useGiveUpToQuiz() {
       );
 
       queryClient.invalidateQueries({
-        queryKey: ["me", "lessons", lessonId, "progress"],
+        queryKey: ["me", "lessons", lessonId],
         exact: true,
       });
     },
