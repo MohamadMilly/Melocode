@@ -34,7 +34,9 @@ const getUsersByProgress = async (
     },
     orderBy: {
       lessonProgresses: {
+        
         _count: direction === "+" ? "asc" : "desc",
+        
       },
     },
   });
@@ -59,14 +61,15 @@ const getUsersBySubmissions = async (
         },
       },
     },
-    orderBy: {
-      submissions: {
-        _count: direction === "+" ? "asc" : "desc",
-      },
-    },
+    
   });
+  const sortOrder = direction === "+" ? 1 : -1;
 
-  return usersBySubmissions;
+  const sortedUsers = usersBySubmissions.sort((a, b) => {
+  return (a.submissionsCount - b.submissionsCount) * sortOrder;
+});
+
+  return sortedUsers;
 };
 
 const getUsersHandlers: Record<

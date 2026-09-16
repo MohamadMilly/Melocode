@@ -16,16 +16,17 @@
     "@prisma/client": "^7.8.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "socket.io": "^4.8.3",
+    "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
-    "pg": "^8.22.0"
+    "pg": "^8.22.0",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.5",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^26.5.1",
+    "@types/node": "^26.6.1",
     "prisma": "^7.8.0",
     "typescript": "^7.0.2"
   }
