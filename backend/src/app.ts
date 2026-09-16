@@ -71,9 +71,9 @@ app.use(
     if (!message) {
       message = "Unexpected server error has occured";
     }
-    if (process.env.NODE_ENV === "development") {
-      console.log(err.stack);
-    }
+
+    console.log(err.stack);
+
     res.status(status).json({
       message: message,
       ...(process.env.NODE_ENV === "development" ? { stack: err.stack } : {}),
