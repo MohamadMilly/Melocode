@@ -29,7 +29,7 @@ export const getUsers = async (
 ) => {
   const { sortBy } = req.query;
 
-  const users = await userService.getUsers(sortBy);
+  const users = await userService.getUsers(sortBy ?? "-progress");
 
   res.json({ users: users });
 };

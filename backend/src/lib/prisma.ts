@@ -34,50 +34,58 @@ export const prisma = basePrisma.$extends({
   query: {
     user: {
       async $allOperations({ operation, args, query }) {
-        if (!["findMany", "findUnique", "findFirst"].includes(operation)) {
-          return query(args);
-        }
+        try {
+          if (!["findMany", "findUnique", "findFirst"].includes(operation)) {
+            return query(args);
+          }
 
-        const userArgs = (args || {}) as Args<
-          typeof basePrisma.user,
-          "findMany"
-        >;
-
-        userArgs.include = {
-          ...userArgs.include,
-          lessonProgresses: true,
-        };
-
-        let result = await query(userArgs);
-
-        const mapUserWithStreak = (record: any) => {
-          if (!record) return record;
-          const { lessonProgresses, _count, ...user } = record;
-          return {
-            ...user,
-            lessonProgresses: lessonProgresses,
-            streak: getStreak(lessonProgresses || []),
-            ...(_count
-              ? {
-                  [`${Object.keys(_count)}Count`]: Object.values(_count)[0],
-                }
-              : {}),
-          };
-        };
-
-        if (Array.isArray(result)) {
-          return result.map(mapUserWithStreak) as Result<
+          const userArgs = (args || {}) as Args<
             typeof basePrisma.user,
-            typeof userArgs,
             "findMany"
           >;
-        }
 
-        return mapUserWithStreak(result) as Result<
-          typeof basePrisma.user,
-          typeof userArgs,
-          "findFirst"
-        >;
+          userArgs.include = {
+            ...userArgs.include,
+            lessonProgresses: true,
+          };
+
+          let result = await query(userArgs);
+
+          const mapUserWithStreak = (record: any) => {
+            if (!record) return record;
+            const { lessonProgresses, _count, ...user } = record;
+            return {
+              ...user,
+              lessonProgresses: lessonProgresses,
+              streak: getStreak(lessonProgresses || []),
+              ...(_count
+                ? {
+                    [`${Object.keys(_count)}Count`]: Object.values(_count)[0],
+                  }
+                : {}),
+            };
+          };
+
+          if (Array.isArray(result)) {
+            return result.map(mapUserWithStreak) as Result<
+              typeof basePrisma.user,
+              typeof userArgs,
+              "findMany"
+            >;
+          }
+
+          return mapUserWithStreak(result) as Result<
+            typeof basePrisma.user,
+            typeof userArgs,
+            "findFirst"
+          >;
+        } catch (error: any) {
+          console.error("Prisma error:", {
+            code: error?.code,
+            stack: error?.stack,
+          });
+          throw error;
+        }
       },
       async findMany({ model, operation, args, query }) {
         args = { ...args, take: 100 };

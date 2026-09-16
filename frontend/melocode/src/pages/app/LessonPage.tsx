@@ -114,7 +114,12 @@ export function LessonPage() {
               <Brain size={35} />
               <Text as="p">تدريبات</Text>
             </Heading>
-            <QuizzesTabs quizzes={exercises} lessonId={lessonId} />
+            {/* to reset the state of quizzes tabs when navigation */}
+            <QuizzesTabs
+              key={`$quizzes-${lessonId}`}
+              quizzes={exercises}
+              lessonId={lessonId}
+            />
           </>
         )}
 
