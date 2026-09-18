@@ -51,7 +51,7 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
 
       <Flex gap={"3"} align={"center"}>
         {!user && (
-          <RouteLink tipContent="انشئ حساب" route="/register">
+          <RouteLink varient={"solid"} tipContent="انشئ حساب" route="/register">
             ابدأ ←
           </RouteLink>
         )}
@@ -81,7 +81,11 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
             </Flex>
             <HoverCard.Root openDelay={150}>
               <HoverCard.Trigger>
-                <Link to="profile" aria-label="الملف الشخصي">
+                <Link
+                  className="h-[38px]!"
+                  to="profile"
+                  aria-label="الملف الشخصي"
+                >
                   <Avatar
                     src={currentUser?.profile?.avtarUrl}
                     fallback={avatarFullback}
@@ -127,10 +131,12 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
               <span>لوحة المتصدرين</span>
               <Trophy size={18} />
             </RouteLink>
-            <RouteLink route="/app/achievements" tipContent="الإنجازات">
-              <span>الإنجازات</span>
-              <Star size={18} />
-            </RouteLink>
+            {user && (
+              <RouteLink route="/app/achievements" tipContent="الإنجازات">
+                <span>الإنجازات</span>
+                <Star size={18} />
+              </RouteLink>
+            )}
             <button
               type="button"
               onClick={handleToggleTheme}
@@ -148,7 +154,7 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
           >
             <button
               onClick={handleToggleTheme}
-              className="text-[var(--accent-11)]"
+              className="text-[var(--accent-11)] mx-1"
             >
               {theme === "light" ? <Sun size={24} /> : <Moon size={24} />}
             </button>

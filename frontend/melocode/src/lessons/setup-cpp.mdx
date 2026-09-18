@@ -1,0 +1,295 @@
+---
+title: "تهيئة عمل ++C في VS code."
+slug: "setup-cpp"
+lessonId: 10
+---
+
+import msys2ToolkitImage from "../assests/images/lessons/setup-cpp/installing-mingw-w64_toolkit.png";
+import compilerChoiceImage from "../assests/images/lessons/setup-cpp/choosing-compiler-popup.png";
+import environmentVariablesSearchImage from "../assests/images/lessons/setup-cpp/enviroment-variables-searchbar-in-settings.png";
+import environmentVariablesImage from "../assests/images/lessons/setup-cpp/environment-variables-menu.png";
+import pathImage from "../assests/images/lessons/setup-cpp/adding-msys64-to-path.png";
+import gccCheckImage from "../assests/images/lessons/setup-cpp/checking-in-cmd.png";
+import createProjectsImage from "../assests/images/lessons/setup-cpp/creating-projects-folder.png";
+import projectsFolderImage from "../assests/images/lessons/setup-cpp/the-created-projects-folder.png";
+import cppFolderImage from "../assests/images/lessons/setup-cpp/creating-cpp-folder-in-projects.png";
+import openCppFolderImage from "../assests/images/lessons/setup-cpp/opening-cpp-folder-in-vs_code.png";
+import extensionSearchImage from "../assests/images/lessons/setup-cpp/installing-cpp-extension-searchbar.png";
+import extensionInstallImage from "../assests/images/lessons/setup-cpp/installing-cpp-extension-button.png";
+import createFileImage from "../assests/images/lessons/setup-cpp/reating-cpp-file.png";
+import runFileImage from "../assests/images/lessons/setup-cpp/running-cpp-file.png";
+import resultImage from "../assests/images/lessons/setup-cpp/program-result-end.png";
+import { LessonImage } from "../components/Lesson/LessonImage";
+
+export const toc = [
+  { text: "تنزيل MSYS2", slug: "#تنزيل-msys2" },
+  { text: "تنزيل Compiler وMinGW-w64", slug: "#تنزيل-compiler-وmingw-w64" },
+  { text: "إضافة MinGW-w64 إلى Path", slug: "#إضافة-mingw-w64-إلى-path" },
+  { text: "اختبار GCC في CMD", slug: "#اختبار-gcc-في-cmd" },
+  { text: "إنشاء مجلد Projects", slug: "#إنشاء-مجلد-projects" },
+  { text: "تنزيل C/++C Extension", slug: "#تنزيل-cc-extension" },
+  { text: "إنشاء أول ملف ++C", slug: "#إنشاء-أول-ملف-c" },
+  { text: "تنفيذ ملف ++C", slug: "#تنفيذ-ملف-c-ورؤية-النتيجة" },
+];
+
+# تهيئة عمل ++C في VS code
+
+في هذا الدرس سنتعلم كيفية تهيئة ++C وتنزيل ال Compiler لتشغيل برامجنا في VS Code على Windows.
+
+<LessonNote>
+  لإكمال هذا الدرس ستحتاج إلى تنزيل VS code وإضافته لمتغير PATH. إذا لم تقم بذلك
+  بعد يمكنك زيارة صفحة [دليل تنزيل VS code](/app/lessons/installations)
+</LessonNote>
+
+كما قلنا في الدرس السابق , لتشغيل كود ++C , نحتاج إلى compiler , وظيفته الأساسية هي ترجمة كود ++C وتحويله إلى لغة الآلة (Machine code).
+
+## تنزيل MSYS2
+
+سنستخدم `MSYS2` على Windows، وهو بيئة توفر أدوات Unix ومدير حزم يساعدنا على تنزيل `GCC` وبقية أدوات ++C بسهولة.
+
+إذا كان جهازك يعمل بنظام Windows حديث بمعمارية 64-bit، يمكنك تنزيل ملف التثبيت مباشرة من [الرابط الرسمي لـ MSYS2](https://github.com/msys2/msys2-installer/releases/download/2024-12-08/msys2-x86_64-20241208.exe). هذا هو الخيار المناسب لمعظم أجهزة Windows الحالية.
+
+إذا أردت اختيار ملف التنزيل بنفسك، افتح [صفحة التنزيل الرسمية لـ MSYS2](https://www.msys2.org/)، ثم اختر ملف `x86_64` لأجهزة Windows 64-bit. لا تختَر ملف `ARM64` إلا إذا كان جهازك يعمل بمعالج ARM. يمكنك معرفة نوع النظام من **Settings** أو **الإعدادات** ثم **System** أو **النظام** ثم **About** أو **حول**، وبعد ذلك راجع قيمة **System type** أو **نوع النظام**.
+
+بعد انتهاء التنزيل، افتح ملف التثبيت واترك مكان التثبيت الافتراضي:
+
+```text
+C:\msys64
+```
+
+أكمل خطوات التثبيت حتى النهاية. إذا ظهر خيار **Run MSYS2 now** فعّله قبل الضغط على **Finish**. ستظهر لك نافذة سوداء سنستخدمها لإكمال عملية التنزيل.
+
+<LessonNote>
+  إذا لم تجد أن هناك نافذة قد ظهرت و إذا لم تجد أن هناك نافذة قد ظهرت , و إذا
+  كانت لغة Windows لديك عربية، ابحث عن `MSYS2 UCRT64` كما هي؛ أسماء البرامج
+  والأوامر لا تتغير بتغير لغة النظام. إذا ظهرت لك عدة نوافذ MSYS2، استخدم
+  النافذة التي ينتهي اسمها بـ `UCRT64` لأننا سنستخدم هذا المسار مع VS Code.
+</LessonNote>
+
+## تنزيل ال Compiler و MinGW-w64
+
+داخل نافذة `MSYS2 UCRT64` اكتب الأمر التالي ثم اضغط Enter لتحديث `MSYS2`:
+
+```bash
+pacman -Syu
+```
+
+قد يطلب منك الأمر إغلاق النافذة وإعادة فتح `MSYS2 UCRT64` لإكمال التحديث. بعد إعادة فتحها، شغّل الأمر نفسه مرة أخرى إذا طلب منك ذلك.
+
+الآن ثبّت أدوات التطوير وCompiler الخاص بـ `MinGW-w64`:
+
+```bash
+pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
+```
+
+سيعرض لك `pacman` قائمة بالحزم التي سيتم تثبيتها، ثم سيظهر السؤال:
+
+```text
+Enter a selection (default=all):
+```
+
+اضغط Enter لاختيار كل الحزم، ثم عندما يظهر:
+
+```text
+Proceed with installation? [Y/n]
+```
+
+اكتب `Y` واضغط Enter. انتظر حتى تنتهي عملية التنزيل والتثبيت. الصورة التالية توضح شكل عملية التثبيت:
+
+<LessonImage
+  src={msys2ToolkitImage}
+  alt="تثبيت حزم MinGW-w64 داخل MSYS2 UCRT64"
+/>
+
+بعد التثبيت أصبح لدينا `gcc` لتجميع ملفات C، و`g++` لتجميع ملفات ++C، بالإضافة إلى أدوات أخرى مثل `gdb` لتصحيح الأخطاء. هذه الأدوات هي التي سيستخدمها VS Code عند بناء وتشغيل ملفات ++C.
+
+## إضافة مسار MinGW-w64 إلى مسار Windows
+
+يحتاج Windows إلى معرفة المكان الذي توجد فيه ملفات `gcc.exe` و`g++.exe`. لذلك سنضيف مجلد الأدوات إلى متغير النظام `Path`. بعد ذلك ستتمكن من تشغيل `gcc` و`g++` من أي `CMD` أو `Terminal`، وسيتمكن VS Code من العثور على Compiler.
+
+المسار الذي سنضيفه هو:
+
+```text
+C:\msys64\ucrt64\bin
+```
+
+لإضافة المسار، افتح **Settings** أو **الإعدادات** من قائمة Windows، ثم استخدم شريط البحث الموجود داخل نافذة الإعدادات. اكتب:
+
+```text
+Edit environment variables for your account
+```
+
+إذا كانت لغة Windows لديك عربية، اكتب:
+
+```text
+تحرير متغيرات البيئة للحساب الخاص بك
+```
+
+من نتائج البحث اختر **Edit environment variables for your account** أو **تحرير متغيرات البيئة للحساب الخاص بك**. انتبه إلى اختيار هذا الخيار تحديدًا، وليس **Edit the system environment variables** أو **تحرير متغيرات بيئة النظام**؛ لأننا سنعدّل `Path` الخاص بحساب المستخدم فقط.
+
+<LessonImage
+  src={environmentVariablesSearchImage}
+  alt="البحث عن متغيرات البيئة في Windows"
+/>
+
+ستظهر نافذة **Environment Variables** أو **متغيرات البيئة** مباشرة. في القسم العلوي **User variables for [اسم المستخدم]** أو **متغيرات المستخدم لـ [اسم المستخدم]**، حدّد المتغير `Path` ثم اضغط **Edit...** أو **تحرير...**.
+
+<LessonImage
+  src={environmentVariablesImage}
+  alt="نافذة متغيرات البيئة وخيارات User variables في Windows"
+/>
+
+اضغط **New** أو **جديد**، والصق المسار التالي، ثم اضغط **OK** في جميع النوافذ:
+
+```text
+C:\msys64\ucrt64\bin
+```
+
+الصورة توضح إضافة المسار ثم الضغط على **OK / موافق**:
+
+<LessonImage src={pathImage} alt="إضافة مسار MSYS2 UCRT64 إلى Path" />
+
+<LessonNote>
+  أغلق أي نافذة `CMD` أو `Terminal` مفتوحة وافتح نافذة جديدة بعد تعديل `Path`.
+  النوافذ القديمة لا تقرأ التعديل الجديد عادةً.
+</LessonNote>
+
+## اختبار أدوات ++C في CMD
+
+والآن لنتأكد أن كل شيء تم تنزيله بالشكل الصحيح، افتح نافذة جديدة من `Command Prompt` أو `موجه الأوامر` أو `Terminal`، ثم اكتب الأوامر التالية:
+
+```cmd
+gcc --version
+g++ --version
+gdb --version
+```
+
+إذا ظهر رقم الإصدار لكل أداة وعبارة مثل `Built by MSYS2 project`، فهذا يعني أن Windows وجد الأدوات بنجاح. قد يختلف رقم الإصدار عندك، وهذا طبيعي.
+
+<LessonImage src={gccCheckImage} alt="التحقق من إصدار GCC في Command Prompt" />
+
+إذا ظهر لك الخطأ `gcc is not recognized` أو `g++ is not recognized`، راجع أن المسار مكتوب بالضبط هكذا `C:\msys64\ucrt64\bin`، ثم أغلق `CMD` أو `Terminal` وافتح نافذة جديدة. يجب فتح نافذة جديدة لأن النوافذ القديمة قد لا تقرأ التعديل الجديد في `Path`.
+
+## إنشاء مجلد Projects وفتح VS Code
+
+من الأفضل أن نضع مشاريعنا داخل مجلد واحد ليسهل الوصول إليها. افتح **File Explorer** أو **مستكشف الملفات**، ثم انتقل إلى المكان الذي تريد حفظ مشاريعك فيه، مثل القرص `C:`.
+
+اضغط **New** أو **جديد** ثم اختر **Folder** أو **مجلد**، وسمّه:
+
+```text
+Projects
+```
+
+<LessonImage
+  src={createProjectsImage}
+  alt="إنشاء مجلد Projects في مستكشف الملفات"
+/>
+
+بعد إنشائه ستراه ضمن ملفات القرص:
+
+<LessonImage src={projectsFolderImage} alt="مجلد Projects بعد إنشائه" />
+
+افتح مجلد `Projects` وأنشئ بداخله مجلدًا جديدًا باسم `cpp`، فهذا سيكون مشروع ++C الأول:
+
+<LessonImage src={cppFolderImage} alt="إنشاء مجلد cpp داخل Projects" />
+
+اضغط بزر الفأرة الأيمن داخل مجلد `cpp`، ثم اختر **Open with Code**. قد يظهر الخيار بالعربية باسم **فتح باستخدام Code**. يمكنك أيضًا اختيار **Open in Terminal** أو **فتح في الوحدة الطرفية** ثم تنفيذ الأمر:
+
+```cmd
+code .
+```
+
+<LessonImage
+  src={openCppFolderImage}
+  alt="فتح مجلد cpp في VS Code من مستكشف الملفات"
+/>
+
+## تنزيل C/++C Extension
+
+نحتاج إلى إضافة `C/++C` من Microsoft حتى يتعرف `VS Code` على ملفات ++C ويقدم لنا `IntelliSense`، أي الاقتراحات وإكمال الكود، بالإضافة إلى اكتشاف الأخطاء وميزات `debugging` و`code browsing`. تذكّر أن الإضافة لا تثبّت `g++` بدلًا عنا؛ لذلك يجب تنفيذ خطوات `MSYS2` و`Path` السابقة أولًا.
+
+من الشريط الجانبي في VS Code اضغط على أيقونة **Extensions** أو **الإضافات**، ثم اكتب في مربع البحث:
+
+```text
+C/++C
+```
+
+اختر الإضافة التي ناشرها **Microsoft**، وتأكد من ظهور علامة التحقق بجانب اسم الناشر.
+
+<LessonImage
+  src={extensionSearchImage}
+  alt="البحث عن إضافة C/++C من Microsoft في VS Code"
+/>
+
+افتح صفحة الإضافة التي ناشرها **Microsoft** ثم اضغط **Install** أو **تثبيت**.
+
+<LessonImage src={extensionInstallImage} alt="تثبيت إضافة C/++C في VS Code" />
+
+بعد التثبيت، ستتمكن الإضافة من استخدام `gcc` و`g++` اللذين أضفناهما إلى `Path`.
+
+## إنشاء أول ملف ++C
+
+من قسم **Explorer** أو **المستكشف** في VS Code، اضغط على أيقونة إنشاء ملف جديد بجانب مجلد `cpp`.
+
+<LessonImage
+  src={createFileImage}
+  alt="إنشاء ملف جديد داخل مجلد cpp في VS Code"
+/>
+
+سمّ الملف:
+
+```text
+helloworld.cpp
+```
+
+انتبه إلى امتداد الملف `.cpp`؛ فهو يخبر VS Code أن الملف يحتوي على كود ++C.
+
+اكتب داخل الملف البرنامج التالي، ثم احفظه باستخدام `Ctrl + S` أو من قائمة **File** ثم **Save** أو **ملف** ثم **حفظ**:
+
+```cpp
+#include <iostream>
+
+int main() {
+  std::cout << "Hello, World!" << std::endl;
+  return 0;
+}
+```
+
+الدالة `main` هي نقطة بداية تشغيل البرنامج. أما `std::cout` فتطبع النص داخل `Terminal`، و`return 0` تعني أن البرنامج انتهى بنجاح.
+
+## تنفيذ ملف ++C ورؤية النتيجة
+
+تأكد أولًا من أن ملف `helloworld.cpp` مفتوح وهو الملف النشط في المحرر. اضغط على زر التشغيل في أعلى يمين المحرر، أو اضغط بزر الفأرة الأيمن داخل الملف ثم اختر **Run or Debug...** وبعدها **Run C/++C File**.
+
+<LessonImage
+  src={runFileImage}
+  alt="تشغيل ملف ++C من قائمة Run or Debug في VS Code"
+/>
+
+ستظهر نافذة **Select a debug configuration** أو **اختيار إعدادات التصحيح**. اختر الخيار الذي يحتوي على:
+
+```text
+C/++C: g++.exe build and debug active file
+```
+
+وسيظهر أسفل الخيار المسار المكتشف `C:\msys64\ucrt64\bin\g++.exe`. اختر هذا الخيار لأننا نريد استخدام `g++` لتجميع ملف ++C الحالي، وليس خيار `gcc.exe` المخصص عادةً لملفات C.
+
+<LessonImage
+  src={compilerChoiceImage}
+  alt="اختيار g++.exe كـ Compiler لملف ++C في VS Code"
+/>
+
+عادةً سيُطلب منك اختيار Compiler في المرة الأولى فقط. بعد اختيار `g++.exe`، سيجمع VS Code الملف ثم يفتح `Terminal` ويشغّل البرنامج. إذا نجح البناء (أي توليد ملف ذو اللاحقة .exe) ، ستظهر النتيجة في  `Terminal` المدمج داخل VS Code.
+
+يجب أن ترى النتيجة:
+
+```text
+Hello, World!
+```
+
+<LessonImage
+  src={resultImage}
+  alt="نتيجة تشغيل برنامج Hello World في Terminal"
+/>
+
+مبروك، لقد جهزت بيئة ++C كاملة على Windows وشغلت أول برنامج لك في VS Code 🎉

@@ -11,6 +11,7 @@ const slugs = [
   "intro-to-html",
   "working-with-text",
   "lists",
+  "setup-cpp",
 ];
 
 const cache = new Map();

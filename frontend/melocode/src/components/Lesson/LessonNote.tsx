@@ -13,7 +13,9 @@ export function LessonNote({ children }: { children: ReactNode }) {
         <Lightbulb size={24} />
         <Text>ملاحظة</Text>
       </Flex>
-      <Box className="text-balance">{children}</Box>
+      <Box width={"100%"} className="text-balance">
+        {children}
+      </Box>
     </Box>
   );
 }

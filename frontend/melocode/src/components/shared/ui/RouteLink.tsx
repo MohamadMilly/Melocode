@@ -1,15 +1,22 @@
 import { Button, Tooltip } from "@radix-ui/themes";
-import { useCallback, type JSX, type ReactNode } from "react";
+import {
+  useCallback,
+  type ComponentPropsWithoutRef,
+  type JSX,
+  type ReactNode,
+} from "react";
 import { useNavigate } from "react-router";
 
 export function RouteLink({
   children,
   route,
   tipContent = "",
+  varient = "soft",
 }: {
   children: ReactNode;
   route: string;
   tipContent?: string;
+  varient?: ComponentPropsWithoutRef<typeof Button>["variant"];
 }): JSX.Element {
   const navigate = useNavigate();
 
@@ -24,7 +31,7 @@ export function RouteLink({
         onClick={handleNavigate}
         aria-label="Route Link"
         size={"2"}
-        variant="soft"
+        variant={varient}
       >
         {children}
       </Button>

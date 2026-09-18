@@ -73,7 +73,7 @@ export const completeLesson = async ({
         "You haven't finished all quizzes yet. Complete them or Give up and try again.",
       );
     }
-    
+
     const progress = await prisma.userLessonProgress.create({
       data: { userId, lessonId },
     });
@@ -115,7 +115,7 @@ export const getUserLesson = async (userId: number, lessonId: number) => {
       giveUps: { where: { userId: userId } },
     },
   });
- 
+
   const result = hasCompletedAllQuizzes(quizzesWithUserSubmissions);
 
   return {
@@ -132,7 +132,7 @@ export const getGuestLessons = async (): Promise<ExtendedLesson[]> => {
       },
     })
   ).map((lesson, index) =>
-    index === 0
+    index <= 10
       ? { ...lesson, status: "current" }
       : { ...lesson, status: "locked" },
   );

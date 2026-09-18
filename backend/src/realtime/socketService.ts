@@ -4,12 +4,12 @@ import { Achievement } from "../generated/prisma/client.js";
 class SocketService {
   private socketsMap: Map<string, number>;
   _io: Server | null;
-
+  
   constructor() {
     this.socketsMap = new Map();
     this._io = null;
   }
-
+  
   private get io(): Server {
     if (!this._io) {
       throw new Error("Cannot emit evenets without initializing the server.");
@@ -54,7 +54,7 @@ class SocketService {
   public sendConnectedUsersCount() {
     this.io.emit("connected users", this.getConnectedUsersCount());
   }
-
+  
   public sendAchievement(userId: number, achievement: Achievement) {
     const roomId = `user:${userId}`;
     this.io.to(roomId).emit("achievement", achievement);
