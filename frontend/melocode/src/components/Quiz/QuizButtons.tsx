@@ -55,12 +55,7 @@ export function QuizButtons({
         : "تحقق من الحل";
 
   return (
-    <Flex
-      className="w-full"
-      gap={"2"}
-      mt={"4"}
-      direction={expanded ? "column" : "row"}
-    >
+    <Flex className="w-full" gap={"2"} direction={expanded ? "column" : "row"}>
       <Button
         className="grow! rounded-xl"
         disabled={isSolutionButtonDisabled}

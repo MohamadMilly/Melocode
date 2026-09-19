@@ -1,4 +1,5 @@
 import { useState, type SubmitEvent } from "react";
+import { Link } from "react-router";
 import { useLogin } from "../../hooks/api/auth/useLogin";
 import { Form } from "radix-ui";
 import { Button, Flex, Spinner, Text, TextField } from "@radix-ui/themes";
@@ -57,16 +58,22 @@ export function LoginPage() {
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-[var(--gray-1)] px-4">
+    <main className="flex items-center justify-center min-h-screen bg-[var(--gray-1)] px-4 py-8">
       <Form.Root
         dir="rtl"
-        className="my-auto py-8 px-6 bg-[var(--gray-2)] border border-[var(--gray-4)] max-w-sm w-full min-h-[420px] rounded-xl shadow-sm flex flex-col gap-5"
+        className="my-auto py-8 px-6 bg-[var(--gray-2)] border border-[var(--gray-5)] max-w-sm w-full min-h-[420px] rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.12)] flex flex-col gap-5"
         onSubmit={handleFormSubmit}
         onClearServerErrors={() =>
           setServerErrors({ username: "", password: "" })
         }
       >
-        <div className="text-center mb-2">
+        <div className="text-center mb-1">
+          <div className="inline-flex items-center justify-center rounded-full border border-[var(--accent-6)] bg-[var(--accent-3)] px-3 py-1.5 mb-3 shadow-sm">
+            <span className="text-[10px] font-bold tracking-[0.28em] text-[var(--accent-11)] uppercase">
+              Melocode
+            </span>
+          </div>
+
           <h1 className="text-xl font-bold text-[var(--gray-12)] mb-1">
             تسجيل الدخول
           </h1>
@@ -79,6 +86,21 @@ export function LoginPage() {
               <Text as="p">{serverErrorMessage}</Text>
             </div>
           )}
+        </div>
+
+        <div className="flex rounded-full bg-[var(--gray-3)] p-1 shadow-inner ring-1 ring-[var(--gray-5)]">
+          <Link
+            to="/login"
+            className="flex-1 rounded-full px-3 py-2 text-center text-xs font-semibold text-[var(--gray-12)] bg-[var(--gray-1)] shadow-sm"
+          >
+            تسجيل الدخول
+          </Link>
+          <Link
+            to="/register"
+            className="flex-1 rounded-full px-3 py-2 text-center text-xs font-medium text-[var(--gray-10)] transition hover:text-[var(--gray-12)]"
+          >
+            إنشاء حساب
+          </Link>
         </div>
 
         <Form.Field
@@ -164,6 +186,16 @@ export function LoginPage() {
             {isPending ? "يتم التسجيل..." : "تسجيل الدخول"}
           </Button>
         </Form.Submit>
+
+        <p className="text-center text-xs text-[var(--gray-10)]">
+          ليس لديك حساب؟{" "}
+          <Link
+            to="/register"
+            className="font-semibold text-[var(--accent-11)] hover:underline"
+          >
+            إنشاء حساب
+          </Link>
+        </p>
       </Form.Root>
     </main>
   );

@@ -7,14 +7,14 @@ type ExternalLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
 export function ExternalLink({
   href,
   children,
-  target,
   rel,
   ...props
 }: ExternalLinkProps) {
+  const isSectionLink = href?.startsWith("#");
   return (
     <a
       href={href}
-      target={target ?? "_blank"}
+      target={isSectionLink ? "_self" : "_blank"}
       rel={rel ?? "noopener noreferrer"}
       className="text-[var(--accent-11)] underline decoration-[var(--accent-10)] underline-offset-4 transition-colors hover:text-[var(--accent-12)]"
       {...props}

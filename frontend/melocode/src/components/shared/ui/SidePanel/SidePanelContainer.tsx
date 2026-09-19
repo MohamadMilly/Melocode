@@ -20,7 +20,7 @@ export function SidePanelContainer({
   return (
     <nav
       aria-label="دروس المسار"
-      className={`md:sticky fixed ${classes[position]}  z-10 h-[calc(100vh-55px)] backdrop-blur-sm bg-[var(--gray-1)]/90 top-[55px]! border-l border-[var(--gray-4)] transition-[width] duration-300 ease-in-out ${isOpen ? "md:w-80 w-5/6" : "w-0"}`}
+      className={`md:sticky flex flex-col fixed ${classes[position]} min-h-0 z-10 h-[calc(100vh-55px)] backdrop-blur-sm bg-[var(--gray-1)]/90 top-[55px]! border-l border-[var(--gray-4)] transition-[width] duration-300 ease-in-out ${isOpen ? "md:w-80 w-5/6" : "w-0"}`}
     >
       <button
         type="button"
@@ -31,7 +31,9 @@ export function SidePanelContainer({
         {isOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
       </button>
 
-      <div className={`md:w-80 w-full   ${isOpen ? "" : "hidden"}`}>
+      <div
+        className={`md:w-80 w-full flex flex-col h-full  ${isOpen ? "" : "hidden"}`}
+      >
         {children}
       </div>
     </nav>

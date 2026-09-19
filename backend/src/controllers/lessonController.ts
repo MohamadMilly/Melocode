@@ -2,22 +2,17 @@ import { AuthenticatedRequest } from "../types/index.js";
 import { type Response } from "express";
 import * as lessonService from "../services/lessonService.js";
 import { ExtendedLesson, GetLessonResponse } from "@app/types";
-import { prisma } from "../lib/prisma.js";
 
 export const getAllLessons = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
-  const currentUserId = req.currentUser?.id as number | undefined; // can be undefined ...
-  let lessons: ExtendedLesson[] = [];
+  const currentUserId = req.currentUser?.id as number | undefined;
+  let lessons: ExtendedLesson[]; // can be undefined ...
   if (currentUserId && req.authStatus === "Authorized") {
     lessons = await lessonService.getUserLessons({ userId: currentUserId });
   } else {
-    lessons = (await prisma.lesson.findMany()).map((lesson, index) =>
-      index === 0
-        ? { ...lesson, status: "current" }
-        : { ...lesson, status: "locked" },
-    );
+    lessons = await lessonService.getGuestLessons();
   }
   res.json({
     lessons: lessons,

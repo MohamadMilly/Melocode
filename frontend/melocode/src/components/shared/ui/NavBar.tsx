@@ -163,9 +163,11 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
           <RouteLink tipContent="لوحة المتصدرين" route="/app/leaderboard">
             <Trophy size={18} />
           </RouteLink>
-          <RouteLink route="/app/achievements" tipContent="الإنجازات">
-            <Star size={18} />
-          </RouteLink>
+          {user && (
+            <RouteLink route="/app/achievements" tipContent="الإنجازات">
+              <Star size={18} />
+            </RouteLink>
+          )}
         </Flex>
       </Flex>
     </nav>

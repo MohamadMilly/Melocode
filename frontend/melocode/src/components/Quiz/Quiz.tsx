@@ -130,6 +130,7 @@ export function Quiz({
         direction={"column"}
         align={"stretch"}
         gap={"3"}
+        mb={"3"}
         className={`order-2 ${expanded ? "col-start-2 col-end-3" : ""}`}
       >
         {submission && !expanded && (
@@ -176,7 +177,7 @@ export function Quiz({
             تم الاستسلام عن هذا التمرين
           </Text>
         )}
-        {user && (
+        {user ? (
           <QuizButtons
             expanded={expanded}
             isSolutionVisible={isSolutionVisible}
@@ -194,6 +195,8 @@ export function Quiz({
             onSubmit={handleSubmit}
             onGiveUp={handleGiveUp}
           />
+        ) : (
+          <Text dir="auto">سجل الدخول أو أنشئ حساب لتتمكن من الإجابة.</Text>
         )}
         <QuizSolution
           answer={answer}

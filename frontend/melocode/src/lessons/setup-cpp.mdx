@@ -19,6 +19,7 @@ import extensionInstallImage from "../assests/images/lessons/setup-cpp/installin
 import createFileImage from "../assests/images/lessons/setup-cpp/reating-cpp-file.png";
 import runFileImage from "../assests/images/lessons/setup-cpp/running-cpp-file.png";
 import resultImage from "../assests/images/lessons/setup-cpp/program-result-end.png";
+import buildFailureError from "../assests/images/lessons/setup-cpp/build-failure-error.png";
 import { LessonImage } from "../components/Lesson/LessonImage";
 
 export const toc = [
@@ -39,6 +40,10 @@ export const toc = [
   { text: "تنزيل C/++C Extension", slug: "#تنزيل-cc-extension" },
   { text: "إنشاء أول ملف ++C", slug: "#إنشاء-أول-ملف-c" },
   { text: "تنفيذ ملف ++C ورؤية النتيجة", slug: "#تنفيذ-ملف-c-ورؤية-النتيجة" },
+  {
+    text: "Troubleshooting (اكتشاف الأخطاء وإصلاحها)",
+    slug: "#troubleshooting-اكتشاف-الأخطاء-وإصلاحها",
+  },
 ];
 
 # تهيئة عمل ++C في VS code
@@ -165,7 +170,7 @@ C:\msys64\ucrt64\bin
 
 ## اختبار أدوات ++C في CMD
 
-والآن لنتأكد أن كل شيء تم تنزيله بالشكل الصحيح، افتح نافذة جديدة من `Command Prompt` أو `موجه الأوامر` أو `Terminal`، ثم اكتب الأوامر التالية:
+والآن لنتأكد أن كل شيء تم تنزيله بالشكل الصحيح. اضغط زر `Windows` في شريط المهام، ثم اكتب `Command Prompt` أو `cmd` في شريط البحث، وافتح التطبيق. يمكنك أيضًا فتح `Terminal` إذا أردت، ثم اكتب الأوامر التالية:
 
 ```cmd
 gcc --version
@@ -302,3 +307,49 @@ Hello, World!
 />
 
 مبروك، لقد جهزت بيئة ++C كاملة على Windows وشغلت أول برنامج لك في VS Code 🎉
+
+## Troubleshooting (اكتشاف الأخطاء وإصلاحها)
+
+في هذا القسم سنعمل على إصلاح الأخطاء التي قد تحدث عند بعض الأشخاص أثناء عملية التنزيل.
+لذلك إذا نجح تنفيذ الملف وطبع النتيجة في ال Terminal، يمكنك تخطي هذا القسم.
+
+### g++ is not recognized
+
+إذا كانت المشكلة هي عدم تعرف نظام Windows على أوامر mingw، يمكنك الذهاب إلى قسم [إضافة مسار MinGW-w64 إلى مسار Windows](#إضافة-مسار-mingw-w64-إلى-مسار-windows) مرة أخرى والتأكد تمامًا أن المتغير يتم إضافته إلى Path بالضبط هكذا: (يمكنك نسخه مباشرة من هنا)
+
+```text
+C:\msys64\ucrt64\bin
+```
+
+بعد ذلك اضغط زر Windows ثم ابحث عن Command Prompt وتحقق مرة أخرى عبر الأوامر:
+
+```cmd
+gcc --version
+g++ --version
+gdb --version
+```
+
+### The preLaunchTask 'C/C++:g++.exe build active file terminated with exit code -1'
+
+إذا ظهر لك هذا الخطأ بعد الضغط على Run C/C++ file في قسم [تنفيذ ملف ++C ورؤية النتيجة](#تنفيذ-ملف-c-ورؤية-النتيجة)
+هكذا:
+
+<LessonImage
+  src={buildFailureError}
+  alt="The preLaunchTask 'C/C++:g++.exe build active file terminated with exit code -1"
+/>
+
+هذا من أكثر الأخطاء شيوعًا عند تهيئة C++ في VS Code.
+يوجد أكثر من سبب لهذه المشكلة، لكنني سأكتب دليلًا يغطي الحلول جميعها.
+
+لنبدأ بالذهاب إلى قائمة متغيرات البيئة الخاصة بحسابك (`Edit environment variables for your account`)، ثم اذهب إلى المتغير الذي أضفته للتو الخاص بـ `mingw`، ثم اضغط على `Move Up` أو `تحريك للأعلى` حتى يصبح أول عنصر في القائمة.
+
+هذا يسمح لـ Windows بتنفيذ الأوامر مباشرة من المتغير الأول عندما تقوم بتنفيذ الكود في VS Code، وتخطي المتغيرات الأخرى التي قد تحتوي على تعارضات.
+
+بعد ذلك، أغلق VS Code و`CMD` أو `Terminal` ثم افتحهما من جديد قبل المحاولة مرة أخرى؛ فالأغلفة المفتوحة قد لا تقرأ التعديل الجديد في `Path`.
+
+إذا لم ينجح هذا بعد، اضغط زر Windows ثم ابحث عن `Windows Security` أو `أمن Windows`. افتح التطبيق، ثم انتقل إلى قسم `Virus & threat protection` أو `الحماية من الفيروسات`، وبعد ذلك اضغط على `Manage settings` أو `إدارة الإعدادات`. في قسم `Exclusions` أو `الإستثناءات`، اضف مجلد `C:\msys64\ucrt64\bin` كاستثناء، ثم حاول تشغيل الملف مرة أخرى. هذه طريقة آمنة وتجنب مشاكل الحماية التي قد تعترض تنفيذ ملفات `g++` و`gcc`.
+
+#### خلاصة القول
+
+لا يوجد خلاصة هنا هذه المرة 😁, اذهب واستمتع بالعمل على VS code مع C++ !
