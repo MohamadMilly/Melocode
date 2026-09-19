@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  Flex,
-  HoverCard,
-  Skeleton,
-  Text,
-  Tooltip,
-} from "@radix-ui/themes";
+import { Avatar, Flex, HoverCard, Skeleton, Text } from "@radix-ui/themes";
 import { RouteLink } from "./RouteLink";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useMe } from "../../../hooks/api/me/useMe";
@@ -27,7 +20,7 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
   );
 
   const streak = currentUser?.streak ?? 0;
-
+  
   return (
     <nav className="flex justify-between items-center sticky top-0 z-100 backdrop-blur-md bg-[var(--gray-1)]/90 md:px-6 px-3 py-2 border-b border-[var(--gray-6)]/15">
       <Link

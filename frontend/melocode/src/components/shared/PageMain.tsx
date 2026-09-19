@@ -14,7 +14,7 @@ export function PageMain({
   return (
     <main
       dir="rtl"
-      className={`mx-auto w-full max-w-5xl overflow-hidden px-4 sm:px-6 md:px-8 relative min-h-screen border-x border-[var(--gray-4)] bg-[var(--gray-1)] ${className}`}
+      className={`${className} mx-auto w-full max-w-5xl px-4 sm:px-6 md:px-8 relative min-h-screen border-x border-[var(--gray-4)] bg-[var(--gray-1)]`}
       {...props}
     >
       {showGrid && (

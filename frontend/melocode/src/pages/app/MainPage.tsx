@@ -14,7 +14,7 @@ export function MainPage() {
   const currentLesson = nodes.find((node) => node.status === "current");
 
   return (
-    <PageMain className="grid w-full grid-cols-1 grid-rows-1 gap-y-4 px-2 selection:bg-(--accent-a3) sm:px-3 md:grid-cols-[auto_1fr]">
+    <PageMain className="grid! max-w-full! pt-0! mt-0!  w-full! grid-cols-1! grid-rows-1! gap-y-! px-2! selection:bg-(--accent-a3)! sm:px-3! md:grid-cols-[auto_1fr]!">
       <Section
         size="2"
         p={{
@@ -28,7 +28,7 @@ export function MainPage() {
         <Flex
           direction="column"
           gap="6"
-          className="w-full shrink-0 border-b border-dashed border-(--gray-5) pb-6 md:w-80 md:border-b-0 md:border-l md:pl-8"
+          className="w-full basis-100 shrink-0 border-b border-dashed border-(--gray-5) pb-6 md:w-80 md:border-b-0 md:border-l md:pl-8"
         >
           <Flex direction="column" gap="3" className="max-w-2xl md:max-w-none">
             <Flex align="center" gap="2" className="text-(--accent-11)">
