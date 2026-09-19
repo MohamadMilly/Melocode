@@ -10,10 +10,8 @@ import { RouteLink } from "./RouteLink";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useMe } from "../../../hooks/api/me/useMe";
 import { getAvatarFullBack } from "../../../shared/utils/getAvatarFullback";
-import { Flame, Menu, Moon, Star, Sun, Trophy } from "lucide-react";
+import { Flame, Menu, Settings, Star, Trophy } from "lucide-react";
 import { Link } from "react-router";
-import { useTheme } from "next-themes";
-import { useCallback } from "react";
 import { Ping } from "./Ping";
 import { Drawer } from "./Drawer";
 
@@ -24,18 +22,11 @@ type NavBarProps = {
 export function NavBar({ connectedUsersCount }: NavBarProps) {
   const { user } = useAuth();
   const { user: currentUser, isLoading } = useMe();
-  const { theme, setTheme } = useTheme();
   const avatarFullback = getAvatarFullBack(
     currentUser?.fullname ?? user?.fullname ?? "?",
   );
 
   const streak = currentUser?.streak ?? 0;
-
-  const handleToggleTheme = useCallback(() => {
-    setTheme(theme === "light" ? "dark" : "light");
-  }, [setTheme, theme]);
-
-  const isDarkMode = theme === "dark";
 
   return (
     <nav className="flex justify-between items-center sticky top-0 z-100 backdrop-blur-md bg-[var(--gray-1)]/90 md:px-6 px-3 py-2 border-b border-[var(--gray-6)]/15">
@@ -137,29 +128,14 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
                 <Star size={18} />
               </RouteLink>
             )}
-            <button
-              type="button"
-              onClick={handleToggleTheme}
-              className="flex items-center justify-between gap-2 rounded-md border border-[var(--gray-6)]/20 bg-[var(--gray-2)] px-3 py-2 text-sm font-medium text-[var(--accent-11)]"
-            >
-              <span>{isDarkMode ? "الوضع الفاتح" : "الوضع الداكن"}</span>
-              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
+            <RouteLink route="/app/settings" tipContent="الإعدادات">
+              <span>الإعدادات</span>
+              <Settings size={18} />
+            </RouteLink>
           </Drawer>
         </div>
 
         <Flex align={"center"} gap={"2"} className="hidden! md:flex!">
-          <Tooltip
-            content={`تبديل الوضع (${theme === "light" ? "مشرق" : "مظلم"})`}
-          >
-            <button
-              onClick={handleToggleTheme}
-              className="text-[var(--accent-11)] mx-1"
-            >
-              {theme === "light" ? <Sun size={24} /> : <Moon size={24} />}
-            </button>
-          </Tooltip>
-
           <RouteLink tipContent="لوحة المتصدرين" route="/app/leaderboard">
             <Trophy size={18} />
           </RouteLink>
@@ -168,6 +144,9 @@ export function NavBar({ connectedUsersCount }: NavBarProps) {
               <Star size={18} />
             </RouteLink>
           )}
+          <RouteLink tipContent="الإعدادات" route="/app/settings">
+            <Settings size={18} />
+          </RouteLink>
         </Flex>
       </Flex>
     </nav>

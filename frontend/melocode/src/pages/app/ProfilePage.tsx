@@ -16,6 +16,7 @@ import { StreakBarChart } from "../../components/Profile/StreakBarChart";
 import { ProgressCircleChart } from "../../components/Profile/ProgressCircleChart";
 import { ErrorElement } from "../../components/shared/ui/ErrorElement";
 import { ProfileSkeleton } from "../../components/Profile/skeleton/ProfileSkeleton";
+import { PageMain } from "../../components/shared/PageMain";
 
 export function ProfilePage() {
   const { user: userInStorage } = useAuth();
@@ -33,16 +34,16 @@ export function ProfilePage() {
 
   if (error) {
     return (
-      <main className="max-w-5xl mx-auto px-4 py-12">
+      <PageMain className="mx-auto max-w-5xl px-4 py-12">
         <ErrorElement axiosError={error} />
-      </main>
+      </PageMain>
     );
   }
   if (!user) {
     return (
-      <main className="max-w-5xl mx-auto px-4 py-12">
+      <PageMain className="mx-auto max-w-5xl px-4 py-12">
         <Text>لم يتم إيجاد الملف الشخصي .</Text>
-      </main>
+      </PageMain>
     );
   }
   const avatarFallback = getAvatarFullBack(user.fullname as string);
@@ -52,12 +53,7 @@ export function ProfilePage() {
   });
 
   return (
-    <main
-      dir="rtl"
-      className="relative max-w-5xl w-full mx-auto px-4 sm:px-6 md:px-8 border-x border-[var(--gray-4)] min-h-screen bg-[var(--gray-1)] overflow-hidden"
-    >
-      <div className="absolute inset-0 bg-[linear-gradient(to_left,var(--gray-3)_1px,transparent_1px),linear-gradient(to_bottom,var(--gray-3)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
-
+    <PageMain>
       <Section size="2" className="relative z-10">
         <Flex direction="column" gap="6">
           <Flex direction="column" gap="2">
@@ -138,6 +134,6 @@ export function ProfilePage() {
           </Flex>
         </Flex>
       </Section>
-    </main>
+    </PageMain>
   );
 }

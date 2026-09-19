@@ -1,18 +1,14 @@
 import { Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { Trophy } from "lucide-react";
 import { AchievementsList } from "../../components/Achievement/AchievementsList";
+import { PageMain } from "../../components/shared/PageMain";
 import { useMyAchievements } from "../../hooks/api/me/useMyAchievements";
 
 export function AchievementsPage() {
   const { achievements, isLoading, error } = useMyAchievements();
 
   return (
-    <main
-      dir="rtl"
-      className="relative mx-auto min-h-screen w-full max-w-5xl overflow-hidden border-x border-[var(--gray-4)] bg-[var(--gray-1)] px-4 sm:px-6 md:px-8"
-    > 
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_left,var(--gray-3)_1px,transparent_1px),linear-gradient(to_bottom,var(--gray-3)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30" />
-
+    <PageMain>
       <Section size="2" className="relative z-10">
         <Flex direction="column" gap="6">
           <Flex direction="column" gap="2">
@@ -30,7 +26,7 @@ export function AchievementsPage() {
               تعلمك بشكل منتظم.
             </Text>
           </Flex>
-          
+
           <AchievementsList
             achievements={achievements}
             isLoading={isLoading}
@@ -38,6 +34,6 @@ export function AchievementsPage() {
           />
         </Flex>
       </Section>
-    </main>
+    </PageMain>
   );
 }

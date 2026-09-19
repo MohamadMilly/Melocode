@@ -7,6 +7,7 @@ import { ProfilePage } from "./pages/app/ProfilePage";
 import { ErrorPage } from "./components/shared/ui/NotFoundPage";
 import { UsersLeaderBoardPage } from "./pages/app/UsersLeaderBoardPage";
 import { AchievementsPage } from "./pages/app/AchievementsPage";
+import { SettingsPage } from "./pages/app/SettingsPage";
 import { LandingPage } from "./pages/LandingPage";
 import { Suspense } from "react";
 import { LessonSkeleton } from "./components/Lesson/skeleton/LessonSkeleton";
@@ -46,6 +47,10 @@ export const routes = [
       {
         path: "achievements",
         element: <AchievementsPage />,
+      },
+      {
+        path: "settings",
+        element: <SettingsPage />,
       },
     ],
   },
