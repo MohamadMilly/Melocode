@@ -28,7 +28,7 @@ export function MainPage() {
         <Flex
           direction="column"
           gap="6"
-          className="w-full basis-100 shrink-0 border-b border-dashed border-(--gray-5) pb-6 md:w-80 md:border-b-0 md:border-l md:pl-8"
+          className="w-full basis-auto md:basis-100 shrink-0 border-b border-dashed border-(--gray-5) pb-6 md:w-80 md:border-b-0 md:border-l md:pl-8"
         >
           <Flex direction="column" gap="3" className="max-w-2xl md:max-w-none">
             <Flex align="center" gap="2" className="text-(--accent-11)">
