@@ -93,7 +93,7 @@ export function LessonPage() {
   }
   return (
     <PageMain
-      className="grid h-full grid-cols-1 gap-4 px-1 sm:px-3 md:grid-cols-[auto_1fr] md:px-2"
+      className="grid w-full! max-w-full! h-full grid-cols-1 gap-4 px-1! sm:px-3! md:grid-cols-[auto_1fr] md:px-2!"
       showGrid={false}
     >
       <LessonContents toc={toc} />
