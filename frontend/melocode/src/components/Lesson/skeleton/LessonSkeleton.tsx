@@ -4,7 +4,7 @@ import { PageMain } from "../../shared/PageMain";
 export function LessonSkeleton() {
   return (
     <PageMain
-      className="grid h-full grid-cols-1 gap-4 px-1 sm:px-3 md:grid-cols-[auto_1fr] md:px-2"
+      className="grid max-w-full! w-full! h-full grid-cols-1 gap-4! px-1! sm:px-3! md:grid-cols-[auto_1fr] md:px-2!"
       showGrid={false}
       aria-label="جاري تحميل الدرس"
     >
