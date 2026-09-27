@@ -42,6 +42,7 @@ model Profile {
   userId    Int     @unique
 }
 
+
 model Lesson {
   id               Int                  @id @default(autoincrement())
   title            String
@@ -49,6 +50,7 @@ model Lesson {
   createdAt        DateTime             @default(now())
   lessonProgresses UserLessonProgress[]
   quizzesAnswers   QuizAnswer[]
+  
 }
 
 model UserLessonProgress {

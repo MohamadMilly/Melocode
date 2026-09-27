@@ -1,7 +1,7 @@
 import { Button, Card, Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { LogOut, Moon, Settings, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { PageMain } from "../../components/shared/PageMain";
+import { PageMain } from "../../components/shared/layout/PageMain";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router";
 

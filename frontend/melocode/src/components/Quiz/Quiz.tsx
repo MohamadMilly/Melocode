@@ -163,7 +163,7 @@ export function Quiz({
         align={"stretch"}
       >
         {submission && expanded && (
-          <SubmissionStatusBanner hasCorrectSubmission={isQuizCompleted} />
+          <SubmissionStatusBanner hasCorrectSubmission={hasCorrectSubmission} />
         )}
         <SubmissionFeedback
           runCodeError={runCodeError}

@@ -3,7 +3,7 @@ import { ProgressMap } from "../../components/ProgressMap/ProgressMap";
 import { useLessons } from "../../hooks/api/lesson/useLessons";
 import { useAuth } from "../../contexts/AuthContext";
 import { RouteLink } from "../../components/shared/ui/RouteLink";
-import { PageMain } from "../../components/shared/PageMain";
+import { PageMain } from "../../components/shared/layout/PageMain";
 import { MainSideNav } from "../../components/Main/MainSideNav";
 import { CheckCircle2, Flag, Sparkles } from "lucide-react";
 

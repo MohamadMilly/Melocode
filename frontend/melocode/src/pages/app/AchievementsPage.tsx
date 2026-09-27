@@ -1,7 +1,7 @@
 import { Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { Trophy } from "lucide-react";
 import { AchievementsList } from "../../components/Achievement/AchievementsList";
-import { PageMain } from "../../components/shared/PageMain";
+import { PageMain } from "../../components/shared/layout/PageMain";
 import { useMyAchievements } from "../../hooks/api/me/useMyAchievements";
 
 export function AchievementsPage() {

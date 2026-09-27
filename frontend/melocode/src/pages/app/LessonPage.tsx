@@ -12,7 +12,7 @@ import { EmptyLessonState } from "../../components/Lesson/EmptyLessonState";
 import { useLesson } from "../../hooks/api/lesson/useLesson";
 import { LessonPagination } from "../../components/Lesson/LessonPagination";
 import { Brain } from "lucide-react";
-import { PageMain } from "../../components/shared/PageMain";
+import { PageMain } from "../../components/shared/layout/PageMain";
 import { use, useMemo } from "react";
 
 export function LessonPage() {

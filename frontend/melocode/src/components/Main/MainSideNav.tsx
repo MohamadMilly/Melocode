@@ -2,10 +2,10 @@ import { Text } from "@radix-ui/themes";
 import { CheckCircle2, Circle, LockKeyhole } from "lucide-react";
 import { Link } from "react-router";
 import type { Node } from "../ProgressMap/MapNode";
-import { SidePanelContainer } from "../shared/ui/SidePanel/SidePanelContainer";
-import { SidePanelHeader } from "../shared/ui/SidePanel/SidePanelHeader";
-import { SidePanelList } from "../shared/ui/SidePanel/SidePanelList";
-import { SidePanelListItem } from "../shared/ui/SidePanel/SidePanelListItem";
+import { SidePanelContainer } from "../shared/layout/SidePanel/SidePanelContainer";
+import { SidePanelHeader } from "../shared/layout/SidePanel/SidePanelHeader";
+import { SidePanelList } from "../shared/layout/SidePanel/SidePanelList";
+import { SidePanelListItem } from "../shared/layout/SidePanel/SidePanelListItem";
 
 type MainSideNavProps = {
   nodes: Node[];

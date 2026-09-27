@@ -1,8 +1,8 @@
 import { Link, Text } from "@radix-ui/themes";
-import { SidePanelContainer } from "../shared/ui/SidePanel/SidePanelContainer";
-import { SidePanelHeader } from "../shared/ui/SidePanel/SidePanelHeader";
-import { SidePanelList } from "../shared/ui/SidePanel/SidePanelList";
-import { SidePanelListItem } from "../shared/ui/SidePanel/SidePanelListItem";
+import { SidePanelContainer } from "../shared/layout/SidePanel/SidePanelContainer";
+import { SidePanelHeader } from "../shared/layout/SidePanel/SidePanelHeader";
+import { SidePanelList } from "../shared/layout/SidePanel/SidePanelList";
+import { SidePanelListItem } from "../shared/layout/SidePanel/SidePanelListItem";
 import { Link as LinkIcon } from "lucide-react";
 
 export function LessonContents({

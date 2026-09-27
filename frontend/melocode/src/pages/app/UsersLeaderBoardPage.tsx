@@ -5,7 +5,7 @@ import { Trophy } from "lucide-react";
 import { useUsers } from "../../hooks/api/user/useUsers";
 import { LeaderBoardControls } from "../../components/LeaderBoard/LeaderBoardControls";
 import { UserList } from "../../components/LeaderBoard/UserList";
-import { PageMain } from "../../components/shared/PageMain";
+import { PageMain } from "../../components/shared/layout/PageMain";
 import type { LeaderBoardUser } from "@app/types";
 import type {
   LeaderboardSortOrder,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavBar } from "./components/shared/ui/NavBar";
+import { NavBar } from "./components/shared/layout/NavBar";
 import { Outlet } from "react-router";
 import { useAuth } from "./contexts/AuthContext";
 import { socket } from "./socket";

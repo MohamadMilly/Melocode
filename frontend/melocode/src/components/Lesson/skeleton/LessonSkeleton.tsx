@@ -1,5 +1,5 @@
 import { Flex, Heading, Skeleton } from "@radix-ui/themes";
-import { PageMain } from "../../shared/PageMain";
+import { PageMain } from "../../shared/layout/PageMain";
 
 export function LessonSkeleton() {
   return (

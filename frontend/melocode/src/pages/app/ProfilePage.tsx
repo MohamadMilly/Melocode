@@ -16,7 +16,7 @@ import { StreakBarChart } from "../../components/Profile/StreakBarChart";
 import { ProgressCircleChart } from "../../components/Profile/ProgressCircleChart";
 import { ErrorElement } from "../../components/shared/ui/ErrorElement";
 import { ProfileSkeleton } from "../../components/Profile/skeleton/ProfileSkeleton";
-import { PageMain } from "../../components/shared/PageMain";
+import { PageMain } from "../../components/shared/layout/PageMain";
 
 export function ProfilePage() {
   const { user: userInStorage } = useAuth();
@@ -27,7 +27,7 @@ export function ProfilePage() {
     isLoading: isLoadingProgresses,
     error: progressesFetchError,
   } = useUserProgresses(userInStorage?.id as number);
-
+  
   if (isLoading) {
     return <ProfileSkeleton />;
   }
