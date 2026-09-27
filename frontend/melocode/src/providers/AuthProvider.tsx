@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import type { UserJwtPayload } from "@app/types";
 import { useQueryClient } from "@tanstack/react-query";
+import { socket } from "../socket";
 
 const rawUser = localStorage.getItem("user");
 const storedUser = rawUser ? JSON.parse(rawUser) : null;
@@ -32,6 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     queryClient.clear();
+    socket.disconnect();
   }, [queryClient]);
 
   const contextValue = useMemo(
