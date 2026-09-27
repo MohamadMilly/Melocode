@@ -8,7 +8,7 @@ import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
-
+import { useMDXComponents } from "@mdx-js/react";
 type DynamicMarkdownProps = {
   rawText: string;
 };
@@ -23,6 +23,7 @@ export function DynamicMarkdown({ rawText }: DynamicMarkdownProps) {
       try {
         const { default: Component } = await evaluate(rawText, {
           ...runtime,
+          useMDXComponents: useMDXComponents,
           remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm],
           rehypePlugins: [
             rehypeSlug,
@@ -36,7 +37,7 @@ export function DynamicMarkdown({ rawText }: DynamicMarkdownProps) {
             ],
           ],
         });
-        
+
         setMDXComponent(() => Component);
       } catch (error) {
         console.error("Failed to compile text string:", error);

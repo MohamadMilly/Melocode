@@ -11,6 +11,7 @@ import { ExternalLink } from "../shared/ui/ExternalLink";
 import { LessonNote } from "./LessonNote";
 import { LessonSubSectionHeading } from "./LessonSubSectionHeading";
 import { OrderedList } from "../shared/ui/OrderedList";
+import { HorizontalRule } from "../shared/ui/HorizontalRule";
 
 export const markDownComponents = {
   h1: LessonTitle,
@@ -18,6 +19,7 @@ export const markDownComponents = {
   h3: LessonSubSectionHeading,
   h4: LessonConclusionHeading,
   p: LessonText,
+  hr: HorizontalRule,
   a: ExternalLink,
   section: Section,
   code: HighLight,
