@@ -42,6 +42,23 @@ model Profile {
   userId    Int     @unique
 }
 
+model Path {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  modules Module[]
+}
+
+model Module {
+   id        Int      @id @default(autoincrement())
+   title     String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  lessons Lesson[]
+  path Path @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  pathId Int
+}
 
 model Lesson {
   id               Int                  @id @default(autoincrement())
@@ -50,7 +67,8 @@ model Lesson {
   createdAt        DateTime             @default(now())
   lessonProgresses UserLessonProgress[]
   quizzesAnswers   QuizAnswer[]
-  
+  module          Module?               @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  moduleId Int?
 }
 
 model UserLessonProgress {

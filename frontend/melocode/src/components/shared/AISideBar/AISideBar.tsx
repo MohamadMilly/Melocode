@@ -1,5 +1,5 @@
 import { Text } from "@radix-ui/themes";
-import { Bot, BrainCircuit, LoaderCircle } from "lucide-react";
+import {  BrainCircuit, LoaderCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useOpus } from "../../../hooks/api/ai/useOpus";
 import { getAIText } from "../../../shared/utils/getAIText";

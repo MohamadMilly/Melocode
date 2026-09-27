@@ -41,7 +41,7 @@ export function SideBar({
         aria-modal="true"
         aria-label={title}
         inert={!isOpen}
-        className={`absolute inset-y-0 right-0 flex w-full max-w-[440px] flex-col border-l border-[var(--gray-6)] bg-[var(--color-panel-solid)] shadow-2xl transition-transform duration-300 ease-out ${
+        className={`absolute inset-y-0 right-0 flex w-full max-w-2xl flex-col border-l border-[var(--gray-6)] bg-[var(--color-panel-solid)] shadow-2xl transition-transform duration-300 ease-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

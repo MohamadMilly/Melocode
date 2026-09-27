@@ -1,5 +1,6 @@
 import { Text } from "@radix-ui/themes";
 import type { ChatMessageData } from "../../../shared/types/AISideBar.types";
+import { DynamicMarkdown } from "../ui/DynamicMdx";
 
 export function ChatMessage({ message }: { message: ChatMessageData }) {
   const isUser = message.role === "user";
@@ -19,7 +20,7 @@ export function ChatMessage({ message }: { message: ChatMessageData }) {
           className="whitespace-pre-wrap break-words"
           dir="auto"
         >
-          {message.content}
+          <DynamicMarkdown rawText={message.content} />
         </Text>
       </div>
     </div>
