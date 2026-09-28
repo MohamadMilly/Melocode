@@ -76,7 +76,7 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
         />
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto  px-4 py-4">
+      <div className="flex-1 space-y-3 overflow-y-auto md:px-4 px-2 py-4">
         {visibleMessages.length === 0 && (
           <Text as="p" size="2" color="gray" className="py-8 text-center">
             {messages.length === 0

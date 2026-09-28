@@ -12,6 +12,7 @@ import { LessonNote } from "./LessonNote";
 import { LessonSubSectionHeading } from "./LessonSubSectionHeading";
 import { OrderedList } from "../shared/ui/OrderedList";
 import { HorizontalRule } from "../shared/ui/HorizontalRule";
+import type { ReactNode } from "react";
 
 export const markDownComponents = {
   h1: LessonTitle,
@@ -28,4 +29,9 @@ export const markDownComponents = {
   Mark: Mark,
   img: LessonImage,
   LessonNote: LessonNote,
+  table: ({ children }: { children: ReactNode }) => (
+    <div className="w-full overflow-x-auto">
+      <table>{children}</table>
+    </div>
+  ),
 };
