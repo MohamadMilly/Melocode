@@ -1,7 +1,7 @@
 import { Text } from "@radix-ui/themes";
 import { BrainCircuit, LoaderCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useOpus } from "../../../hooks/api/ai/useOpus";
+import { useGPT } from "../../../hooks/api/ai/useGPT";
 import { getAIText } from "../../../shared/utils/getAIText";
 import type { ChatMessageData } from "../../../shared/types/AISideBar.types";
 import { Input } from "../ui/Input";
@@ -18,7 +18,7 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
   const [messages, setMessages] = useState<ChatMessageData[]>([]);
   const [search, setSearch] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { mutateAsync, isPending } = useOpus();
+  const { mutateAsync, isPending } = useGPT();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -40,7 +40,12 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
       const response = await mutateAsync(content);
       setMessages((current) => [
         ...current,
-        { role: "assistant", content: getAIText(response) },
+        {
+          role: "assistant",
+          content: response.ok
+            ? getAIText(response)
+            : "لم أتمكن من الحصول على رد من المساعد.",
+        },
       ]);
     } catch {
       setMessages((current) => [
