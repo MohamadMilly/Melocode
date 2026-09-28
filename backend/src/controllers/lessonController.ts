@@ -1,24 +1,7 @@
 import { AuthenticatedRequest } from "../types/index.js";
 import { type Response } from "express";
 import * as lessonService from "../services/lessonService.js";
-import { ExtendedLesson, GetLessonResponse } from "@app/types";
-
-export const getAllLessons = async (
-  req: AuthenticatedRequest,
-  res: Response,
-) => {
-  const currentUserId = req.currentUser?.id as number | undefined;
-  let lessons: ExtendedLesson[]; // can be undefined ...
-  if (currentUserId && req.authStatus === "Authorized") {
-    lessons = await lessonService.getUserLessons({ userId: currentUserId });
-  } else {
-    lessons = await lessonService.getGuestLessons();
-  }
-  res.json({
-    lessons: lessons,
-    authStatus: req.authStatus,
-  });
-};
+import { GetLessonResponse } from "@app/types";
 
 export const getLesson = async (
   req: AuthenticatedRequest<{ lessonId: string }>,

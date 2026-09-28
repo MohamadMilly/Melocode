@@ -35,7 +35,7 @@ export function MapNode({ node, index }: MapNodeProps) {
     <Tooltip content={node.title}>
       <Link
         className={`relative nth-of-type-[2n-1]:-translate-x-12 nth-of-type-[2n]:translate-x-12 z-10 w-20 h-20 overflow-hidden rounded-full transition-all duration-300 flex justify-center box-content border border-b-8 items-center shadow-[inset_2px_3px_5px_color-mix(in_srgb,white_45%,transparent),inset_-3px_-5px_6px_color-mix(in_srgb,var(--gray-12)_20%,transparent),0_5px_14px_color-mix(in_srgb,var(--gray-12)_12%,transparent)] ${statusClasses[node.status]}`}
-        to={node.status === "locked" ? "#" : `lessons/${node.slug}`}
+        to={node.status === "locked" ? "#" : `/app/lessons/${node.slug}`}
       >
         <span
           aria-hidden="true"

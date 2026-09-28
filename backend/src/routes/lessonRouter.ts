@@ -8,8 +8,6 @@ export const lessonRouter: Router = express.Router();
 
 lessonRouter.use(extractToken);
 
-lessonRouter.get("/", optionalVerifyToken, lessonController.getAllLessons);
-
 lessonRouter.get(
   "/:lessonId",
   validateLessonId,

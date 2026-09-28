@@ -32,12 +32,30 @@ export type User = {
   [key: string]: any;
 };
 
+export type Path = {
+  id: number;
+  createdAt: Date;
+  title: string;
+  slug: string;
+  description?: string;
+};
+
+export type Module = {
+  id: number;
+  title: string;
+  slug: string;
+  pathId: number;
+  createdAt: Date;
+  lessons?: ExtendedLesson[];
+};
+
 export type Lesson = {
   id: number;
   title: string;
   slug: string;
   createdAt: Date;
   lessonProgresses?: UserLessonProgress[];
+  moduleId?: number;
 };
 
 export type UserJwtPayload = {

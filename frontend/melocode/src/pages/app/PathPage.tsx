@@ -1,16 +1,27 @@
 import { Box, Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { ProgressMap } from "../../components/ProgressMap/ProgressMap";
-import { useLessons } from "../../hooks/api/lesson/useLessons";
+
 import { useAuth } from "../../contexts/AuthContext";
 import { RouteLink } from "../../components/shared/ui/RouteLink";
 import { PageMain } from "../../components/shared/layout/PageMain";
-import { MainSideNav } from "../../components/Main/MainSideNav";
+import { PathSideNav } from "../../components/Path/PathSideNav";
 import { CheckCircle2, Flag, Sparkles } from "lucide-react";
+import { useParams } from "react-router";
+import { usePathModules } from "../../hooks/api/path/usePathModules";
+import { usePaths } from "../../hooks/api/path/usePaths";
 
-export function MainPage() {
-  const { lessons: nodes, isLoading, error } = useLessons();
+export function PathPage() {
+  const { slug } = useParams();
+  const {
+    modules,
+    lessons: nodes,
+    isLoading,
+    error,
+  } = usePathModules(slug ?? "");
+  const { paths } = usePaths();
   const { user } = useAuth();
 
+  const path = paths.find((item) => item.slug === slug);
   const currentLesson = nodes.find((node) => node.status === "current");
 
   return (
@@ -42,12 +53,11 @@ export function MainPage() {
               weight="bold"
               className="text-(--accent-11) tracking-tight font-black"
             >
-              مسار تطوير الويب
+              {path?.title ?? "مسار التعلم"}
             </Heading>
 
             <Text as="p" size="3" color="gray" className="leading-relaxed">
-              رحلة تعليمية تفاعلية مصممة بعناية لمساعدتك في الانتقال من الصفر
-              وحتى بناء وإطلاق مشاريع حقيقية متكاملة.
+              {path?.description}
             </Text>
 
             <Flex
@@ -70,7 +80,7 @@ export function MainPage() {
                   <Text size="2" weight="bold" highContrast>
                     {currentLesson
                       ? `الدرس الحالي: ${currentLesson.title}`
-                      : "ابدأ أول خطوة في رحلتك"}
+                      : "يبدو أنك أكملت كامل دروس المسار , أحسنت !"}
                   </Text>
                 </Flex>
               </Flex>
@@ -114,7 +124,7 @@ export function MainPage() {
           <ProgressMap nodes={nodes} isLoading={isLoading} error={error} />
         </Box>
       </Section>
-      <MainSideNav nodes={nodes} />
+      <PathSideNav modules={modules} />
     </PageMain>
   );
 }

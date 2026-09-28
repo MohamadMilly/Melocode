@@ -46,6 +46,7 @@ model Path {
   id        Int      @id @default(autoincrement())
   title     String
   slug      String   @unique
+  description String?
   createdAt DateTime @default(now())
   modules Module[]
 }
@@ -78,7 +79,7 @@ model UserLessonProgress {
   completedAt DateTime @default(now())
   lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  
   @@unique([lessonId, userId])
   @@index([lessonId])
 }

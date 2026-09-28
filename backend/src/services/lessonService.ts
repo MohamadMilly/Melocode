@@ -6,34 +6,6 @@ import { deriveLessonsStatuses } from "../shared/utils/deriveLessonsStatuses.js"
 import { extractLessonWithNeighbors } from "../shared/utils/extractLessonWithNeighbors.js";
 import { ExtendedLesson, UserLessonProgress } from "@app/types";
 
-export const getUserLessons = async ({
-  userId,
-}: {
-  userId: number | undefined;
-}) => {
-  const lessons = await prisma.lesson.findMany({
-    include: {
-      ...(userId
-        ? {
-            lessonProgresses: {
-              where: {
-                userId: userId,
-              },
-              orderBy: {
-                completedAt: "asc",
-              },
-            },
-          }
-        : {}),
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
-  const lessonsWithStatus = deriveLessonsStatuses(lessons);
-  return lessonsWithStatus;
-};
-
 export const completeLesson = async ({
   userId,
   lessonId,
@@ -87,9 +59,25 @@ export const completeLesson = async ({
     }
   }
 };
-
+  
 export const getUserLesson = async (userId: number, lessonId: number) => {
+  const lesson = await prisma.lesson.findUnique({
+    where: {
+      id: lessonId,
+    },
+    include: {
+      module: true,
+    },
+  });
+  if (!lesson) {
+    throw new HttpError(404, "Lesson is not found.");
+  }
   const allLessons = await prisma.lesson.findMany({
+    where: {
+      module: {
+        pathId: lesson.module.pathId,
+      },
+    },
     include: {
       lessonProgresses: {
         where: {

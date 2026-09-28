@@ -10,7 +10,7 @@ type ChatInputProps = {
 
 export function ChatInput({ disabled, onSend }: ChatInputProps) {
   const [message, setMessage] = useState("");
-
+  
   function submitMessage(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const trimmedMessage = message.trim();

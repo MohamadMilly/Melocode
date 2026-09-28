@@ -4,15 +4,15 @@ import "dotenv/config";
 import cors from "cors";
 import { HttpError } from "./shared/errors/HttpError.js";
 import { createServer } from "node:http";
-
 import "./events/listeners.js";
-// routers imports
 
+// routers imports
 import { authRouter } from "./routes/authRouter.js";
 import { lessonRouter } from "./routes/lessonRouter.js";
 import { meRouter } from "./routes/meRouter.js";
 import { quizRouter } from "./routes/quizRouter.js";
 import { userRouter } from "./routes/userRouter.js";
+import { pathRouter } from "./routes/pathRouter.js";
 import { Server } from "socket.io";
 import { socketService } from "./realtime/socketService.js";
 
@@ -41,6 +41,7 @@ app.use("/auth", authRouter);
 app.use("/lessons", lessonRouter);
 app.use("/quizzes", quizRouter);
 app.use("/users", userRouter);
+app.use("/paths", pathRouter);
 
 // health route
 app.get("/health", (req: Request, res: Response<{ health: "ok" }>) => {
