@@ -46,7 +46,11 @@ export type Module = {
   slug: string;
   pathId: number;
   createdAt: Date;
-  lessons?: ExtendedLesson[];
+  lessons?: Lesson[];
+};
+
+export type ModuleWithLessonsStatuses = Omit<Module, "lessons"> & {
+  lessons: ExtendedLesson[];
 };
 
 export type Lesson = {
@@ -214,3 +218,5 @@ export type Achievement = {
   userId: number;
   scope: AchievementScope;
 };
+
+export type AuthStatus = "Authorized" | "UnAuthorized";

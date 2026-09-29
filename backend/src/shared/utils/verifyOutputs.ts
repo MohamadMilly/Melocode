@@ -11,7 +11,7 @@ export function verifyOutputs(
     if (!userOutput || !userOutput.output) {
       return false;
     }
-
+    
     return userOutput.output.trim() === testCase.output.trim();
   });
 }

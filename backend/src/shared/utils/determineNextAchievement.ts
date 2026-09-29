@@ -11,7 +11,7 @@ export function determineNextAchievement(
   const numberFrequency = lastAchievement
     ? frequencyToNumber[lastAchievement.frequency]
     : 1;
-
+  
   const isToCreate =
     !lastAchievement || correctSubmissionsCount / numberFrequency >= 10;
   if (!isToCreate) {

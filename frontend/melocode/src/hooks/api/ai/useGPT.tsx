@@ -6,7 +6,7 @@ async function fetchAI(prompt: string): Promise<AIResponse> {
   const response = await axios.post<AIResponse>(
     import.meta.env.VITE_GPT_AI_API_URL,
     {
-      model: "gpt-6-astra",
+      model: "gpt-5",
       "system-prompt": "You should Answer Programming Questions Only.",
       prompt,
     },
@@ -17,7 +17,7 @@ async function fetchAI(prompt: string): Promise<AIResponse> {
 
 export function useGPT() {
   return useMutation({
-    mutationKey: ["opus-4.6"],
+    mutationKey: ["gpt-5"],
     mutationFn: fetchAI,
   });
 }

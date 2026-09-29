@@ -94,3 +94,5 @@ export const prisma = basePrisma.$extends({
     },
   },
 });
+
+export type ExtendedPrismaClient = typeof prisma;

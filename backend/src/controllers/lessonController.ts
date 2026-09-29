@@ -1,13 +1,13 @@
 import { AuthenticatedRequest } from "../types/index.js";
 import { type Response } from "express";
 import * as lessonService from "../services/lessonService.js";
-import { GetLessonResponse } from "@app/types";
+import { AuthStatus, GetLessonResponse } from "@app/types";
 
 export const getLesson = async (
   req: AuthenticatedRequest<{ lessonId: string }>,
   res: Response<
     GetLessonResponse & {
-      authStatus: "Authorized" | "UnAuthorized" | undefined;
+      authStatus: AuthStatus;
     }
   >,
 ) => {

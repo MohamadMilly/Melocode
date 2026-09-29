@@ -2,9 +2,12 @@ import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
 import { eventEmitter } from "../lib/eventEmitter.js";
 import { hasCompletedAllQuizzes } from "../shared/utils/hasCompletedAllQuizzes.js";
-import { deriveLessonsStatuses } from "../shared/utils/deriveLessonsStatuses.js";
 import { extractLessonWithNeighbors } from "../shared/utils/extractLessonWithNeighbors.js";
-import { ExtendedLesson, UserLessonProgress } from "@app/types";
+import { UserLessonProgress } from "@app/types";
+import {
+  deriveGuestLessonsStatuses,
+  deriveUserLessonsStatuses,
+} from "../domains/lesson.domain.js";
 
 export const completeLesson = async ({
   userId,
@@ -59,14 +62,18 @@ export const completeLesson = async ({
     }
   }
 };
-  
+
 export const getUserLesson = async (userId: number, lessonId: number) => {
   const lesson = await prisma.lesson.findUnique({
     where: {
       id: lessonId,
     },
-    include: {
-      module: true,
+    select: {
+      module: {
+        select: {
+          pathId: true,
+        },
+      },
     },
   });
   if (!lesson) {
@@ -90,7 +97,7 @@ export const getUserLesson = async (userId: number, lessonId: number) => {
     },
   });
 
-  const allLessonsWithStatuses = deriveLessonsStatuses(allLessons);
+  const allLessonsWithStatuses = deriveUserLessonsStatuses(allLessons);
   const lessonWithNeighbors = extractLessonWithNeighbors(
     allLessonsWithStatuses,
     lessonId,
@@ -112,23 +119,38 @@ export const getUserLesson = async (userId: number, lessonId: number) => {
   };
 };
 
-export const getGuestLessons = async (): Promise<ExtendedLesson[]> => {
-  return (
-    await prisma.lesson.findMany({
-      orderBy: {
-        createdAt: "asc",
-      },
-    })
-  ).map((lesson, index) =>
-    index <= 10
-      ? { ...lesson, status: "current" }
-      : { ...lesson, status: "locked" },
-  );
-};
-
 export const getGuestLesson = async (lessonId: number) => {
-  const lessons = await getGuestLessons();
-  const lessonWithNeighbors = extractLessonWithNeighbors(lessons, lessonId);
+  const lesson = await prisma.lesson.findUnique({
+    where: {
+      id: lessonId,
+    },
+    select: {
+      module: {
+        select: {
+          pathId: true,
+        },
+      },
+    },
+  });
+  if (!lesson) {
+    throw new HttpError(404, "Lesson is not found.");
+  }
+
+  const allLessons = await prisma.lesson.findMany({
+    where: {
+      module: {
+        pathId: lesson.module.pathId,
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+  const allLessonsWithStatuses = deriveGuestLessonsStatuses(allLessons);
+  const lessonWithNeighbors = extractLessonWithNeighbors(
+    allLessonsWithStatuses,
+    lessonId,
+  );
 
   return { ...lessonWithNeighbors, hasCompletedAllQuizzes: false };
 };

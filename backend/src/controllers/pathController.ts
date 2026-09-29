@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { AuthenticatedRequest } from "../types/index.js";
-import * as pathService from "../services/pathService.js";
-import { Module } from "@app/types";
+import { pathService } from "../services/pathService.js";
+import { AuthStatus, Module } from "@app/types";
 
 export const getAllPaths = async (req: AuthenticatedRequest, res: Response) => {
   const paths = await pathService.getAllPaths();
@@ -15,10 +15,13 @@ export const getModulesForPath = async (
     unknown,
     { include?: string }
   >,
-  res: Response<{ modules: Module[] }>,
+  res: Response<{
+    modules: Module[];
+    authStatus: AuthStatus;
+  }>,
 ) => {
   const { slug } = req.params;
-  
+
   const includeLessons = req.query.include === "lessons";
   const userId =
     req.authStatus === "Authorized" ? req.currentUser?.id : undefined;
@@ -27,5 +30,5 @@ export const getModulesForPath = async (
     includeLessons,
     userId,
   });
-  res.json({ modules });
+  res.json({ modules, authStatus: req.authStatus });
 };

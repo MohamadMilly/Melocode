@@ -4,7 +4,6 @@ const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export const apiClient = axios.create({
   baseURL: VITE_API_URL,
-  
 });
 
 const handleRefreshToken = async (
@@ -12,7 +11,7 @@ const handleRefreshToken = async (
 ) => {
   originalRequest._retry = true;
   const refreshToken = localStorage.getItem("refreshToken");
-  
+
   const response = await axios.post<{ accessToken: string }>(
     `${VITE_API_URL}/auth/refresh`,
     {
@@ -70,6 +69,8 @@ apiClient.interceptors.response.use(
         !originalRequest._retry
       ) {
         await handleRefreshToken(originalRequest);
+
+        return apiClient(originalRequest);
       }
     } catch (refreshError) {
       console.log(refreshError);

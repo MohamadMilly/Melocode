@@ -1,0 +1,14 @@
+I discovered that when a function does something related to business rule , we shouldn't put it in utilities, otherwise in some layer called 
+domain , here where we are to define our business rules , and the services just going to controll the flow to apply the business operation.
+utility functions are just some generic functions that does nothing related to our business.
+and it can be used in any part without knowing who is gonna use it.
+
+
+There is also another lesson i learned in creating the achievements feature , we shouldn't use the submit controller as an example to save our achivements and process them
+neither the services because they don't care about achivements, and notice that the response of the submission is not related to the
+achievements at all , meaning the user will be satisfied without it...
+all i mentioned are problem, the solution has a name , it is Event-Driven architecture !
+when a submission is created , i would fire an event that leaves the flow entirly through an event emitter , the process will run 
+in the background , then i will send the response via web sockets , which solves Single responsibility and when the achivements logic break , submissions
+will work perfectly , also the user shouldn't wait additional time just to get the achievements calculated to get his submission result.
+
