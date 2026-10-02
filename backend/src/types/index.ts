@@ -1,5 +1,15 @@
-import { UserJwtPayload } from "@app/types";
+import type {
+  AuthStatus,
+  SortDirection,
+  SortMetric,
+  UserJwtPayload,
+} from "@app/types";
 import type { Request } from "express";
+
+export type ParsedLeaderboardSortOrder = {
+  direction: SortDirection;
+  metric: SortMetric;
+};
 
 export interface AuthenticatedRequest<
   Params = any,
@@ -9,5 +19,5 @@ export interface AuthenticatedRequest<
 > extends Request<Params, ResBody, ReqBody, ReqQuery> {
   token?: string;
   currentUser?: UserJwtPayload;
-  authStatus?: "Authorized" | "UnAuthorized";
+  authStatus?: AuthStatus;
 }

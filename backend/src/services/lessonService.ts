@@ -1,13 +1,15 @@
-import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
 import { eventEmitter } from "../lib/eventEmitter.js";
-import { hasCompletedAllQuizzes } from "../shared/utils/hasCompletedAllQuizzes.js";
+import { hasCompletedAllQuizzes } from "../domains/quiz.domain.js";
 import { extractLessonWithNeighbors } from "../shared/utils/extractLessonWithNeighbors.js";
 import { UserLessonProgress } from "@app/types";
 import {
   deriveGuestLessonsStatuses,
   deriveUserLessonsStatuses,
 } from "../domains/lesson.domain.js";
+import { quizRepository } from "../repositories/quiz.repository.js";
+import { lessonProgressRepository } from "../repositories/lessonProgress.repository.js";
+import { lessonRepository } from "../repositories/lesson.repository.js";
 
 export const completeLesson = async ({
   userId,
@@ -17,30 +19,11 @@ export const completeLesson = async ({
   lessonId: number;
 }): Promise<UserLessonProgress> => {
   try {
-    const quizzesAnswersWithSubmissionsAndGiveUps =
-      await prisma.quizAnswer.findMany({
-        where: {
-          lessonId: lessonId,
-        },
-        select: {
-          id: true,
-          lessonId: true,
-          submissions: {
-            where: {
-              userId: userId,
-              isCorrect: true,
-            },
-          },
-          giveUps: {
-            where: {
-              userId: userId,
-            },
-          },
-        },
-      });
-    const result = hasCompletedAllQuizzes(
-      quizzesAnswersWithSubmissionsAndGiveUps,
+    const quizAnswers = await quizRepository.findQuizAnswersWithUserCompletion(
+      userId,
+      lessonId,
     );
+    const result = hasCompletedAllQuizzes(quizAnswers);
 
     if (!result) {
       throw new HttpError(
@@ -49,9 +32,10 @@ export const completeLesson = async ({
       );
     }
 
-    const progress = await prisma.userLessonProgress.create({
-      data: { userId, lessonId },
-    });
+    const progress = await lessonProgressRepository.createProgress(
+      userId,
+      lessonId,
+    );
     eventEmitter.emit("lesson-completed", { userId: userId });
     return progress;
   } catch (err: any) {
@@ -64,38 +48,14 @@ export const completeLesson = async ({
 };
 
 export const getUserLesson = async (userId: number, lessonId: number) => {
-  const lesson = await prisma.lesson.findUnique({
-    where: {
-      id: lessonId,
-    },
-    select: {
-      module: {
-        select: {
-          pathId: true,
-        },
-      },
-    },
-  });
-  if (!lesson) {
+  const lesson = await lessonRepository.findLessonPath(lessonId);
+  if (!lesson?.module) {
     throw new HttpError(404, "Lesson is not found.");
   }
-  const allLessons = await prisma.lesson.findMany({
-    where: {
-      module: {
-        pathId: lesson.module.pathId,
-      },
-    },
-    include: {
-      lessonProgresses: {
-        where: {
-          userId: userId,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+  const allLessons = await lessonRepository.findLessonsForPath(
+    lesson.module.pathId,
+    userId,
+  );
 
   const allLessonsWithStatuses = deriveUserLessonsStatuses(allLessons);
   const lessonWithNeighbors = extractLessonWithNeighbors(
@@ -103,13 +63,8 @@ export const getUserLesson = async (userId: number, lessonId: number) => {
     lessonId,
   );
 
-  const quizzesWithUserSubmissions = await prisma.quizAnswer.findMany({
-    where: { lessonId: lessonId },
-    include: {
-      submissions: { where: { userId: userId, isCorrect: true } },
-      giveUps: { where: { userId: userId } },
-    },
-  });
+  const quizzesWithUserSubmissions =
+    await quizRepository.findQuizAnswersWithUserCompletion(userId, lessonId);
 
   const result = hasCompletedAllQuizzes(quizzesWithUserSubmissions);
 
@@ -120,37 +75,19 @@ export const getUserLesson = async (userId: number, lessonId: number) => {
 };
 
 export const getGuestLesson = async (lessonId: number) => {
-  const lesson = await prisma.lesson.findUnique({
-    where: {
-      id: lessonId,
-    },
-    select: {
-      module: {
-        select: {
-          pathId: true,
-        },
-      },
-    },
-  });
-  if (!lesson) {
+  const lesson = await lessonRepository.findLessonPath(lessonId);
+  if (!lesson?.module) {
     throw new HttpError(404, "Lesson is not found.");
   }
 
-  const allLessons = await prisma.lesson.findMany({
-    where: {
-      module: {
-        pathId: lesson.module.pathId,
-      },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+  const allLessons = await lessonRepository.findLessonsForPath(
+    lesson.module.pathId,
+  );
   const allLessonsWithStatuses = deriveGuestLessonsStatuses(allLessons);
   const lessonWithNeighbors = extractLessonWithNeighbors(
     allLessonsWithStatuses,
     lessonId,
   );
-
+  
   return { ...lessonWithNeighbors, hasCompletedAllQuizzes: false };
 };

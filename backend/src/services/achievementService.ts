@@ -1,11 +1,5 @@
-import { prisma } from "../lib/prisma.js";
+import { achievementRepository } from "../repositories/achievement.repository.js";
 
 export async function getUserAchievements(userId: number) {
-  const achievements = await prisma.achievement.findMany({
-    where: {
-      userId: userId,
-    },
-  });
-  
-  return achievements;
+  return achievementRepository.findForUser(userId);
 }

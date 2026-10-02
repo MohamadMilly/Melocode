@@ -10,20 +10,18 @@ export function getStreak(lessonProgresses: UserLessonProgress[]) {
   for (let i = 0; i < lessonProgresses.length; i++) {
     let l1 = lessonProgresses[i];
     let l2 = lessonProgresses[i + 1];
-
+    
     if (!l1 || !l2) break;
 
     const d1 = new Date(l1.completedAt);
-    console.log(d1);
     d1.setHours(0, 0, 0, 0);
 
     const d2 = new Date(l2.completedAt);
-    console.log(d2);
     d2.setHours(0, 0, 0, 0);
-
+    
     const diffTime = Math.abs(d2.getTime() - d1.getTime());
     const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-
+    
     if (diffDays === 0) continue;
 
     if (diffDays === 1) {
@@ -37,7 +35,7 @@ export function getStreak(lessonProgresses: UserLessonProgress[]) {
     lessonProgresses[lessonProgresses.length - 1].completedAt,
   );
   lastLessonDate.setHours(0, 0, 0, 0);
-
+  
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 

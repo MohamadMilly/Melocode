@@ -42,9 +42,7 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
         ...current,
         {
           role: "assistant",
-          content: response.ok
-            ? getAIText(response)
-            : "لم أتمكن من الحصول على رد من المساعد.",
+          content: getAIText(response),
         },
       ]);
     } catch {
@@ -52,15 +50,15 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
         ...current,
         {
           role: "assistant",
-          content: "تعذر إرسال الرسالة. تحقق من الاتصال وحاول مرة أخرى.",
+          content: "تعذر إرسال الرسالة.",
         },
       ]);
     }
-  }
-
+  } 
+  
   const visibleMessages = messages.filter((message) =>
     message.content.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
-  );
+  ); 
 
   return (
     <SideBar

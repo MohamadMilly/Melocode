@@ -7,11 +7,21 @@ async function fetchAI(prompt: string): Promise<AIResponse> {
     import.meta.env.VITE_GPT_AI_API_URL,
     {
       model: "gpt-5",
-      "system-prompt": "You should Answer Programming Questions Only.",
-      prompt,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You must answer programming questions only! , NEVER answer questions out of programming scope!.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      stream: false,
     },
   );
-
+  console.log("AI response:", response.data);
   return response.data;
 }
 

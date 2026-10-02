@@ -1,8 +1,17 @@
 import { UserQuizOutput } from "@app/types";
-import { prisma } from "../lib/prisma.js";
 import { HttpError } from "../shared/errors/HttpError.js";
 import { eventEmitter } from "../lib/eventEmitter.js";
-import { verifyOutputs } from "../shared/utils/verifyOutputs.js";
+import {
+  canRevealQuizAnswer,
+  canSubmitAfterGiveUp,
+  hasTestCases,
+  isMultipleChoiceAlreadySubmitted,
+  isSubmissionCorrect,
+} from "../domains/quiz.domain.js";
+import { quizRepository } from "../repositories/quiz.repository.js";
+import { submissionRepository } from "../repositories/submission.repository.js";
+import { giveUpRepository } from "../repositories/giveup.repository.js";
+import { testCaseRepository } from "../repositories/testCase.repository.js";
 
 export const getQuizAnswer = async ({
   answerId,
@@ -11,33 +20,15 @@ export const getQuizAnswer = async ({
   answerId: number;
   userId: number;
 }) => {
-  const quizAnswer = await prisma.quizAnswer.findUnique({
-    where: {
-      id: answerId,
-    },
-    include: {
-      items: true,
-      giveUps: {
-        where: {
-          userId: userId,
-        },
-      },
-      submissions: {
-        where: {
-          userId: userId,
-          isCorrect: true,
-        },
-      },
-    },
-  });
+  const quizAnswer = await quizRepository.findQuizAnswerWithUserState(
+    answerId,
+    userId,
+  );
   if (!quizAnswer) {
     throw new HttpError(404, "لم يتم العثور على إجابة هذا الاختبار.");
   }
 
-  const hasGivenUpOrAnsweredCorrectly =
-    quizAnswer.giveUps.length >= 1 || quizAnswer.submissions.length >= 1;
-
-  if (!hasGivenUpOrAnsweredCorrectly) {
+  if (!canRevealQuizAnswer(quizAnswer)) {
     throw new HttpError(
       400,
       "يمكنك فقط عرض الإجابة بعد الاستسلام أو الإجابة بشكل صحيح لمزيد من الشرح.",
@@ -63,65 +54,44 @@ export const saveSubmission = async ({
   userId: number;
 }) => {
   // validation
-  const giveUpForThisQuiz = await prisma.quizGiveUp.findUnique({
-    where: {
-      userId_quizAnswerId: {
-        userId,
-        quizAnswerId,
-      },
-    },
-  });
-  if (giveUpForThisQuiz) {
+  const giveUpForThisQuiz = await giveUpRepository.findForUserAndQuiz(
+    userId,
+    quizAnswerId,
+  );
+  if (!canSubmitAfterGiveUp(Boolean(giveUpForThisQuiz))) {
     throw new HttpError(
       400,
       "لقد استسلمت لهذا الاختبار. لا يمكنك إرسال حلول جديدة.",
     );
   }
 
-  const testCases = await prisma.testCase.findMany({
-    where: {
-      quizAnswerId: quizAnswerId,
-    },
-  });
-  if (testCases.length === 0) {
+  const testCases = await testCaseRepository.findForQuiz(quizAnswerId);
+  if (!hasTestCases(testCases)) {
     throw new HttpError(400, "هذا الاختبار لا يحتوي على حالات اختبار. ");
   }
   // verification
-  let isCorrect;
   if (type === "MULTIPLE_CHOICE") {
-    const existingSubmissions = await prisma.quizSubmission.findMany({
-      where: {
-        quizAnswerId: quizAnswerId,
-        userId: userId,
-      },
-    });
-    if (existingSubmissions.length > 0) {
-      throw new HttpError(400, "لقد أجبت عن هذا السؤال من قبل.");
-    }
-    isCorrect = content.trim() === testCases[0].output.trim();
-  } else {
-    isCorrect = verifyOutputs(testCases, userOutputs);
-  }
-  // creation
-  const submission = await prisma.quizSubmission.upsert({
-    where: {
-      userId_quizAnswerId_isCorrect: {
-        userId: userId,
-        quizAnswerId: quizAnswerId,
-        isCorrect: isCorrect,
-      },
-    },
-    update: {
-      content: content,
-      language,
-    },
-    create: {
-      content,
-      language,
+    const existingSubmissions = await submissionRepository.findForUserAndQuiz(
       userId,
       quizAnswerId,
-      isCorrect,
-    },
+    );
+    if (isMultipleChoiceAlreadySubmitted(existingSubmissions)) {
+      throw new HttpError(400, "لقد أجبت عن هذا السؤال من قبل.");
+    }
+  }
+  const isCorrect = isSubmissionCorrect({
+    type,
+    content,
+    testCases,
+    userOutputs,
+  });
+  // creation
+  const submission = await submissionRepository.upsertSubmission({
+    content,
+    language,
+    userId,
+    quizAnswerId,
+    isCorrect,
   });
   // emitation
   if (submission.isCorrect) {
@@ -131,17 +101,7 @@ export const saveSubmission = async ({
 };
 
 export const getQuizTestCasesInputs = async (quizAnswerId: number) => {
-  const testCases = await prisma.testCase.findMany({
-    where: {
-      quizAnswerId: quizAnswerId,
-    },
-    select: {
-      id: true,
-      input: true,
-    },
-  });
-
-  return testCases;
+  return testCaseRepository.findInputsForQuiz(quizAnswerId);
 };
 
 export const getUserLessonSubmissions = async (
@@ -152,33 +112,12 @@ export const getUserLessonSubmissions = async (
   if (!userId || !lessonId) {
     throw new HttpError(400, "معلومات مطلوبة مفقودة (lessonId و userId)");
   }
-  const submissionsData = await prisma.quizAnswer.findMany({
-    where: {
-      lessonId: lessonId,
-    },
-    select: {
-      id: true,
-      submissions: {
-        where: {
-          userId: userId,
-          isCorrect: isCorrect,
-        },
-      },
-    },
-  });
-
-  return submissionsData;
+  return quizRepository.findLessonSubmissions(userId, lessonId, isCorrect);
 };
 
 export const getUserQuizSubmissions = async (
   quizAnswerId: number,
   userId: number,
 ) => {
-  const submissions = await prisma.quizSubmission.findMany({
-    where: {
-      quizAnswerId: quizAnswerId,
-      userId: userId,
-    },
-  });
-  return submissions;
+  return submissionRepository.findForUserAndQuiz(userId, quizAnswerId);
 };

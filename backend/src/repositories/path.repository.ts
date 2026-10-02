@@ -12,7 +12,7 @@ class PathRepository {
   findModulesForPath(
     pathSlug: string,
     includeLessons: boolean,
-    userId: number,
+    userId?: number,
   ): Promise<Module[]> {
     return this.prisma.module.findMany({
       where: {

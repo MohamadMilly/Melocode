@@ -16,6 +16,13 @@ export type GetLessonResponse = {
   lesson: ExtendedLesson;
 };
 
+export type TestCase = {
+  id: number;
+  quizAnswerId: number;
+  input: string;
+  output: string;
+};
+
 export type Profile = {
   id: number;
   avtarUrl?: string;
@@ -151,8 +158,10 @@ export type CreateSubmissionRequestBody = Pick<
   "content" | "language"
 > & {
   userOutputs: UserQuizOutput[];
-  type?: "MULTIPLE_CHOICE" | "CODING";
+  type?: QuizSubmissionType;
 };
+
+export type QuizSubmissionType = "MULTIPLE_CHOICE" | "CODING";
 
 export type CreateQuizSubmissionResponse = {
   submission: QuizSubmission;

@@ -1,10 +1,6 @@
 import { Module } from "@app/types";
-import { prisma } from "../lib/prisma.js";
 import { pathRepository } from "../repositories/path.repository.js";
-import {
-  giveGuestModulesWithStatuses,
-  giveUserModulesWithStatuses,
-} from "../domains/lesson.domain.js";
+import * as lessonDomain from "../domains/lesson.domain.js";
 
 type PathRepositoryType = typeof pathRepository;
 
@@ -25,14 +21,14 @@ function createPathService(pathRepository: PathRepositoryType) {
         includeLessons,
         userId,
       );
-      
+
       if (!includeLessons) {
         return modules;
       }
 
       return userId
-        ? giveUserModulesWithStatuses(modules)
-        : giveGuestModulesWithStatuses(modules);
+        ? lessonDomain.giveUserModulesWithStatuses(modules)
+        : lessonDomain.giveGuestModulesWithStatuses(modules);
     },
   };
 }

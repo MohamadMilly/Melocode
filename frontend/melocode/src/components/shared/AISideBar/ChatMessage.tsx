@@ -2,6 +2,7 @@ import type { ChatMessageData } from "../../../shared/types/AISideBar.types";
 import { DynamicMarkdown } from "../ui/DynamicMdx";
 import { MDXProvider } from "@mdx-js/react";
 import { markDownComponents } from "../../Lesson/MarkDownComponents";
+import { Text } from "@radix-ui/themes";
 
 export function ChatMessage({ message }: { message: ChatMessageData }) {
   const isUser = message.role === "user";
@@ -16,9 +17,13 @@ export function ChatMessage({ message }: { message: ChatMessageData }) {
             : "border border-[var(--gray-6)] bg-[var(--gray-2)] text-[var(--gray-12)]"
         }`}
       >
-        <MDXProvider components={markDownComponents}>
-          <DynamicMarkdown rawText={message.content} />
-        </MDXProvider>
+        {isUser ? (
+          <Text as="p">{message.content}</Text>
+        ) : (
+          <MDXProvider components={markDownComponents}>
+            <DynamicMarkdown rawText={message.content} />
+          </MDXProvider>
+        )}
       </div>
     </div>
   );
