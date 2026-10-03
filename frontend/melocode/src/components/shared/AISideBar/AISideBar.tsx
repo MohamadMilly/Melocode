@@ -37,7 +37,10 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
   async function sendMessage(content: string) {
     setMessages((current) => [...current, { role: "user", content }]);
     try {
-      const response = await mutateAsync(content);
+      const response = await mutateAsync({
+        prompt: content,
+        context: messages,
+      });
       setMessages((current) => [
         ...current,
         {
@@ -54,11 +57,11 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
         },
       ]);
     }
-  } 
-  
+  }
+
   const visibleMessages = messages.filter((message) =>
     message.content.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
-  ); 
+  );
 
   return (
     <SideBar

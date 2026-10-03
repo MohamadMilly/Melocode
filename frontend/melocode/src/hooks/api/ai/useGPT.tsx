@@ -1,8 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import type { AIResponse } from "../../../shared/types/AISideBar.types";
+import type {
+  AIResponse,
+  ChatMessageData,
+} from "../../../shared/types/AISideBar.types";
 
-async function fetchAI(prompt: string): Promise<AIResponse> {
+async function fetchAI({
+  prompt,
+  context,
+}: {
+  prompt: string;
+  context: ChatMessageData[];
+}): Promise<AIResponse> {
   const response = await axios.post<AIResponse>(
     import.meta.env.VITE_GPT_AI_API_URL,
     {
@@ -13,6 +22,7 @@ async function fetchAI(prompt: string): Promise<AIResponse> {
           content:
             "You must answer programming questions only! , NEVER answer questions out of programming scope!.",
         },
+        ...context,
         {
           role: "user",
           content: prompt,
@@ -21,7 +31,7 @@ async function fetchAI(prompt: string): Promise<AIResponse> {
       stream: false,
     },
   );
-  console.log("AI response:", response.data);
+
   return response.data;
 }
 
