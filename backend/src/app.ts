@@ -15,9 +15,14 @@ import { userRouter } from "./routes/userRouter.js";
 import { pathRouter } from "./routes/pathRouter.js";
 import { Server } from "socket.io";
 import { socketService } from "./realtime/socketService.js";
+import helmet from "helmet";
+import { rateLimiterMiddleware } from "./middlewares/shared/rateLimiter.js";
 
 const app: Express = express();
 const server = createServer(app);
+
+app.use(helmet());
+app.use(rateLimiterMiddleware);
 
 const io = new Server(server, {
   cors: {
