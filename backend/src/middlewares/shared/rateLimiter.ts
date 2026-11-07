@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { RateLimiterMemory } from "rate-limiter-flexible";
 
 const opts = {
-  points: 10,
+  points: 15,
   duration: 1,
 };
 
@@ -20,3 +20,4 @@ export function rateLimiterMiddleware(
       res.status(429).json({ message: "Too many Requests" });
     });
 }
+ 

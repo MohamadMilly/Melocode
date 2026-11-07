@@ -30,8 +30,8 @@ export const markDownComponents = {
   img: LessonImage,
   LessonNote: LessonNote,
   table: ({ children }: { children: ReactNode }) => (
-    <div className="w-full overflow-x-auto">
-      <table>{children}</table>
+    <div className="my-6 w-full overflow-x-auto rounded-xl border border-[var(--gray-5)]">
+      <table className="!my-0">{children}</table>
     </div>
   ),
 };

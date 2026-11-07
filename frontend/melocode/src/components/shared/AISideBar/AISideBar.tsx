@@ -72,9 +72,10 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
       description="اسأل عن البرمجة وتعلّمها"
       icon={<BrainCircuit size={22} />}
     >
-      <div className="border-b border-[var(--gray-4)] px-4 py-3">
+      <div className="border-b border-[var(--gray-7)] px-4 py-2 sm:px-5">
         <Input
           aria-label="ابحث في المحادثة"
+          className="border text-[var(--gray-9)]"
           onChange={(event) => setSearch(event.target.value)}
           placeholder="ابحث في المحادثة"
           type="search"
@@ -82,9 +83,13 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
         />
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto md:px-4 px-2 py-4">
+      <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-3 py-5 sm:px-5">
         {visibleMessages.length === 0 && (
-          <Text as="p" size="2" color="gray" className="py-8 text-center">
+          <Text
+            as="p"
+            size="2"
+            className="py-10 text-center leading-relaxed text-[var(--gray-9)]"
+          >
             {messages.length === 0
               ? "ابدأ محادثة جديدة مع المساعد"
               : "لا توجد رسائل مطابقة"}
@@ -95,7 +100,7 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
         ))}
         {isPending && (
           <div
-            className="flex items-center gap-2 text-[var(--gray-10)]"
+            className="flex items-center gap-2 px-1 text-[var(--gray-10)]"
             role="status"
           >
             <LoaderCircle size={16} className="animate-spin" />
@@ -105,7 +110,7 @@ export function AISideBar({ isOpen, onClose }: AISideBarProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="border-t border-[var(--gray-6)] p-4">
+      <div className="mt-auto px-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 sm:px-5">
         <ChatInput disabled={isPending} onSend={sendMessage} />
       </div>
     </SideBar>

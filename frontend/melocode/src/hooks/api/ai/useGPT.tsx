@@ -20,7 +20,12 @@ async function fetchAI({
         {
           role: "system",
           content:
-            "You must answer programming questions only! , NEVER answer questions out of programming scope!.",
+            "You are called Melocode assistant. You must answer programming questions only! , NEVER answer questions out of programming scope!.",
+        },
+        {
+          role: "system",
+          content:
+            "Act as a strict Markdown writer. Use only standard, vanilla Markdown syntax with absolutely zero raw HTML or attributes—except for the <LessonNote>your notes here</LessonNote> tag to enclose your notes. Never use or invent any other custom components or tags (such as <Entity>, <Card>, or <Item>). If you want to talk about an entity, write it as plain text.",
         },
         ...context,
         {

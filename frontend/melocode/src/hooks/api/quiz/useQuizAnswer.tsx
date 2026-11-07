@@ -4,22 +4,22 @@ import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { useAuth } from "../../../contexts/AuthContext";
 
-const getQuizAnswer = async (answerId: number) => {
+const getQuizAnswer = async (quizId: string) => {
   const response = await apiClient.get<{ quizAnswer: QuizAnswer }>(
-    `/quizzes/${answerId}`,
+    `/quizzes/${quizId}`,
   );
   return response.data;
 };
 
-export function useQuizAnswer(answerId: number, completed: boolean) {
+export function useQuizAnswer(quizId: string, completed: boolean) {
   const { user } = useAuth();
   const { data, isLoading, error, refetch } = useQuery<
     { quizAnswer: QuizAnswer },
     AxiosError<ResponseError>
   >({
-    queryKey: ["quizzes", answerId],
-    queryFn: () => getQuizAnswer(answerId),
-    enabled: !!answerId && !!user && completed,
+    queryKey: ["quizzes", quizId],
+    queryFn: () => getQuizAnswer(quizId),
+    enabled: !!quizId && !!user && completed,
     retry: false,
   });
   const answer = data ? data.quizAnswer : null;

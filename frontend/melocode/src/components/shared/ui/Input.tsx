@@ -6,7 +6,7 @@ type InputProps = ComponentPropsWithoutRef<typeof TextField.Root>;
 export function Input({ className = "", ...props }: InputProps) {
   return (
     <TextField.Root
-      className={`w-full ${className}`}
+      className={`w-full border border-[var(--gray-6)] ${className}`}
       size="2"
       variant="surface"
       {...props}

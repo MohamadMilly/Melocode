@@ -7,22 +7,20 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 
 const getMyQuizSubmissions = async (
-  quizAnswerId: number,
+  quizId: string,
 ): Promise<{ submissions: QuizSubmission[] }> => {
-  const response = await apiClient.get(
-    `/me/quizzes/${quizAnswerId}/submissions`,
-  );
+  const response = await apiClient.get(`/me/quizzes/${quizId}/submissions`);
 
   return response.data;
 };
 
-export function useMyQuizSubmissions(quizAnswerId: number) {
+export function useMyQuizSubmissions(quizId: string) {
   const { data, isLoading, error } = useQuery<
     { submissions: QuizSubmission[] },
     AxiosError<ResponseError>
   >({
-    queryKey: ["me", "quizzes", quizAnswerId, "submissions"],
-    queryFn: () => getMyQuizSubmissions(quizAnswerId),
+    queryKey: ["me", "quizzes", quizId, "submissions"],
+    queryFn: () => getMyQuizSubmissions(quizId),
   });
 
   useEffect(() => {

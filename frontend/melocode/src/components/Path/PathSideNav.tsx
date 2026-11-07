@@ -17,6 +17,7 @@ const statusIcons = {
   completed: CheckCircle2,
   current: Circle,
   locked: LockKeyhole,
+  preview: Circle,
 } as const;
 
 const statusClasses: Record<Node["status"], string> = {
@@ -24,6 +25,8 @@ const statusClasses: Record<Node["status"], string> = {
   current:
     "border-[var(--accent-7)] bg-[var(--accent-3)] text-[var(--accent-11)] hover:bg-[var(--accent-4)]",
   locked: "border-[var(--gray-5)] bg-[var(--gray-2)] text-[var(--gray-9)]",
+  preview:
+    " border-[var(--green-7)] bg-[var(--green-3)] text-[var(--green-11)] hover:bg-[var(--green-4)]",
 };
 
 export function PathSideNav({ modules }: MainSideNavProps) {
@@ -117,6 +120,7 @@ export function PathSideNav({ modules }: MainSideNavProps) {
                               }
                             >
                               {lessonOffset + index + 1}. {node.title}
+                              {node.isFree ? "(مفتوح للزوار)" : ""}
                             </Text>
                           </Link>
                         </SidePanelListItem>

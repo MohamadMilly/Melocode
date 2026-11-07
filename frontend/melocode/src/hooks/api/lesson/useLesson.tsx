@@ -10,22 +10,20 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 
-const getLesson = async (lessonId: number): Promise<GetLessonResponse> => {
-  const response = await apiClient.get<GetLessonResponse>(
-    `/lessons/${lessonId}`,
-  );
+const getLesson = async (slug: string): Promise<GetLessonResponse> => {
+  const response = await apiClient.get<GetLessonResponse>(`/lessons/${slug}`);
 
   return response.data;
 };
 
-export function useLesson(lessonId: number | undefined) {
+export function useLesson(slug: string | undefined) {
   const { data, isLoading, error } = useQuery<
     GetLessonResponse,
     AxiosError<ResponseError>
   >({
-    queryKey: ["me", "lessons", lessonId],
-    queryFn: () => getLesson(lessonId as number),
-    enabled: !!lessonId,
+    queryKey: ["me", "lessons", slug],
+    queryFn: () => getLesson(slug as string),
+    enabled: !!slug,
   });
 
   useEffect(() => {
@@ -37,19 +35,15 @@ export function useLesson(lessonId: number | undefined) {
   const progress = (data?.progress ?? null) as UserLessonProgress | null;
   const hasCompletedAllQuizzes = data?.hasCompletedAllQuizzes ?? false;
   const lesson = data?.lesson ?? null;
-  const nextLessonSlug = data?.nextLessonSlug ?? "";
-  const nextLessonStatus = data?.nextLessonStatus ?? null;
-  const previousLessonSlug = data?.previousLessonSlug ?? "";
-  const previousLessonStatus = data?.previousLessonStatus ?? null;
+  const nextLesson = data?.nextLesson ?? null;
+  const previousLesson = data?.previousLesson ?? null;
   return {
     progress,
     lesson,
     hasCompletedAllQuizzes,
     isLoading,
     error,
-    nextLessonSlug,
-    nextLessonStatus,
-    previousLessonSlug,
-    previousLessonStatus,
+    nextLesson,
+    previousLesson,
   };
 }

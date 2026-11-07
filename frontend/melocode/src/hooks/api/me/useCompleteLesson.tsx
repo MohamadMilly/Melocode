@@ -11,9 +11,9 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 
 const completeLesson = async (
-  lessonId: number,
+  slug: string
 ): Promise<{ progress: UserLessonProgress }> => {
-  const response = await apiClient.post(`/me/lessons/${lessonId}/progress`);
+  const response = await apiClient.post(`/me/lessons/${slug}/progress`);
 
   return response.data;
 };
@@ -25,7 +25,7 @@ export function useCompleteLesson() {
   return useMutation<
     { progress: UserLessonProgress },
     AxiosError<ResponseError>,
-    number
+    string
   >({
     mutationKey: ["complete-lesson"],
     mutationFn: completeLesson,

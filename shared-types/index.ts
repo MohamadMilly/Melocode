@@ -9,10 +9,8 @@ export type UserLessonProgress = {
 export type GetLessonResponse = {
   hasCompletedAllQuizzes: boolean;
   progress: UserLessonProgress | null;
-  previousLessonSlug: string;
-  previousLessonStatus: LessonStatus;
-  nextLessonSlug: string;
-  nextLessonStatus: LessonStatus;
+  previousLesson: ExtendedLesson | Lesson | null;
+  nextLesson: ExtendedLesson | Lesson | null;
   lesson: ExtendedLesson;
 };
 
@@ -28,6 +26,8 @@ export type Profile = {
   avtarUrl?: string;
   userId: number;
 };
+
+export type UserType = "GUEST" | "MEMBER";
 
 export type User = {
   id: number;
@@ -53,7 +53,7 @@ export type Module = {
   slug: string;
   pathId: number;
   createdAt: Date;
-  lessons?: Lesson[];
+  lessons?: ExtendedLesson[];
 };
 
 export type ModuleWithLessonsStatuses = Omit<Module, "lessons"> & {
@@ -67,6 +67,8 @@ export type Lesson = {
   createdAt: Date;
   lessonProgresses?: UserLessonProgress[];
   moduleId?: number;
+  order: number;
+  isFree: boolean;
 };
 
 export type UserJwtPayload = {
@@ -108,7 +110,7 @@ export type ExtendedUser = {
   streak: number;
 } & User;
 
-export type LessonStatus = "completed" | "locked" | "current";
+export type LessonStatus = "completed" | "locked" | "current" | "preview";
 
 export type ExtendedLesson = {
   status: LessonStatus;
@@ -136,9 +138,10 @@ export type QuizAnswerItem = {
 };
 
 export type QuizAnswer = {
-  id: number;
+  external_quizId: string | null;
+  quizAnswerId: number;
   lessonId: number;
-  items: QuizAnswerItem;
+  items: QuizAnswerItem[];
 };
 
 export type QuizSubmission = {
@@ -148,9 +151,31 @@ export type QuizSubmission = {
   userId: number;
   isCorrect: boolean;
   quizAnswerId: number;
+
   submittedAt: Date;
   user?: User;
-  quizAnswer?: QuizAnswer;
+};
+
+export type QuizGiveUp = {
+  id: number;
+  userId: number;
+  givenUpAt: Date;
+
+  quizAnswerId: number;
+};
+
+export type GetLessonQuizzesSubmissionsResponse = {
+  submissionsData: {
+    external_quizId: string | null;
+    submissions: QuizSubmission[];
+  }[];
+};
+
+export type GetLessonQuizzesGiveUpsResponse = {
+  giveUpsData: {
+    external_quizId: string | null;
+    giveUps: QuizGiveUp[];
+  }[];
 };
 
 export type CreateSubmissionRequestBody = Pick<
@@ -171,28 +196,7 @@ export type QuizTestCase = {
   id: number;
   input: string;
   output: string;
-  quizAnswerId?: number;
-};
-
-export type GetLessonQuizzesSubmissionsResponse = {
-  submissionsData: {
-    id: number;
-    submissions: QuizSubmission[];
-  }[];
-};
-
-export type QuizGiveUp = {
-  id: number;
-  userId: number;
-  givenUpAt: Date;
   quizAnswerId: number;
-};
-
-export type GetLessonQuizzesGiveUpsResponse = {
-  giveUpsData: {
-    id: number;
-    giveUps: QuizGiveUp[];
-  }[];
 };
 
 export type GetUserProgressResponse = {

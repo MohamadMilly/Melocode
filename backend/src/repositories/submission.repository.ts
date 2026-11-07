@@ -6,7 +6,7 @@ class SubmissionRepository {
   constructor(prisma: ExtendedPrismaClient) {
     this.prisma = prisma;
   }
-
+  
   findCorrectSubmissionsForUser(userId: number, lessonId: number) {
     return this.prisma.quizSubmission.findMany({
       where: {
@@ -21,7 +21,7 @@ class SubmissionRepository {
       },
     });
   }
-
+  
   findCorrectSubmissionForUser(userId: number, quizAnswerId: number) {
     return this.prisma.quizSubmission.findUnique({
       where: {
@@ -33,7 +33,7 @@ class SubmissionRepository {
       },
     });
   }
-
+  
   findForUserAndQuiz(userId: number, quizAnswerId: number) {
     return this.prisma.quizSubmission.findMany({
       where: { userId, quizAnswerId },

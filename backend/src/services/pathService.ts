@@ -1,6 +1,7 @@
-import { Module } from "@app/types";
+import { Module, UserType } from "@app/types";
 import { pathRepository } from "../repositories/path.repository.js";
 import * as lessonDomain from "../domains/lesson.domain.js";
+import { lessonRepository } from "../repositories/lesson.repository.js";
 
 type PathRepositoryType = typeof pathRepository;
 
@@ -25,10 +26,16 @@ function createPathService(pathRepository: PathRepositoryType) {
       if (!includeLessons) {
         return modules;
       }
-
-      return userId
-        ? lessonDomain.giveUserModulesWithStatuses(modules)
-        : lessonDomain.giveGuestModulesWithStatuses(modules);
+      let activeOrder: number | undefined = undefined;
+      if (userId) {
+        activeOrder = await lessonRepository.findActiveOrder(userId, { slug });
+      }
+      const userType: UserType = !!userId ? "MEMBER" : "GUEST";
+      return lessonDomain.giveModulesWithStatuses(
+        modules,
+        userType,
+        activeOrder,
+      );
     },
   };
 }

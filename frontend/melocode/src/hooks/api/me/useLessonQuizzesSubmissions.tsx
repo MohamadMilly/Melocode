@@ -11,11 +11,11 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 
 const getLessonQuizzesSubmissions = async (
-  lessonId: number,
+  slug: string,
   isCorrect?: boolean,
 ): Promise<GetLessonQuizzesSubmissionsResponse> => {
   const { data } = await apiClient.get<GetLessonQuizzesSubmissionsResponse>(
-    `/me/lessons/${lessonId}/submissions`,
+    `/me/lessons/${slug}/submissions`,
     {
       params: { isCorrect },
     },
@@ -24,15 +24,15 @@ const getLessonQuizzesSubmissions = async (
   return data;
 };
 
-export function useMyLessonSubmissions(lessonId: number, isCorrect?: boolean) {
+export function useMyLessonSubmissions(slug: string, isCorrect?: boolean) {
   const { user } = useAuth();
   const { data, isLoading, error } = useQuery<
     GetLessonQuizzesSubmissionsResponse,
     AxiosError<ResponseError>
   >({
-    queryKey: ["me", "lessons", lessonId, "submissions"],
-    queryFn: () => getLessonQuizzesSubmissions(lessonId, isCorrect),
-    enabled: typeof lessonId === "number" && !isNaN(lessonId) && !!user,
+    queryKey: ["me", "lessons", slug, "submissions"],
+    queryFn: () => getLessonQuizzesSubmissions(slug, isCorrect),
+    enabled: !!slug && !!user,
   });
 
   useEffect(() => {

@@ -21,7 +21,7 @@ type QuizProps = {
   name: string;
   quiz: QuizData;
   submission: QuizSubmission | undefined | null;
-  lessonId: number;
+  slug: string;
   giveUpData: QuizGiveUp | undefined;
   expanded?: boolean;
   goNext: () => void;
@@ -31,14 +31,15 @@ export function Quiz({
   name,
   quiz,
   submission,
-  lessonId,
+  slug,
   giveUpData,
   expanded = false,
   goNext,
 }: QuizProps) {
+  console.log(submission, giveUpData);
   const { user } = useAuth();
   const [isSolutionVisible, setIsSolutionVisible] = useState<boolean>(false);
-  const quizAnswerId = quiz.answerId;
+  const quizId = quiz.quizId;
   const questionItems = quiz.question.items;
   const codeItem = questionItems.find((item) => item.type === "code");
   const initialQuestionCode = codeItem ? codeItem.content : "";
@@ -50,7 +51,7 @@ export function Quiz({
     testCasesFetchError,
     submissionError,
     runCodeError,
-  } = useCheckCodeAnswer(quizAnswerId, lessonId);
+  } = useCheckCodeAnswer(quizId, slug);
 
   const {
     mutateAsync: submit,
@@ -87,7 +88,7 @@ export function Quiz({
     answer,
     isLoading: quizAnswerLoading,
     error: quizAnswerError,
-  } = useQuizAnswer(quizAnswerId, isQuizCompleted);
+  } = useQuizAnswer(quizId, isQuizCompleted);
 
   const handleToggleSolution = () => setIsSolutionVisible(!isSolutionVisible);
 
@@ -99,8 +100,8 @@ export function Quiz({
           userOutputs: [],
           type: "MULTIPLE_CHOICE",
           content: selectedOption,
-          lessonId,
-          quizAnswerId,
+          slug,
+          quizId,
         });
         submissionResult = createdSubmission;
       } else {
@@ -118,7 +119,7 @@ export function Quiz({
   };
 
   const handleGiveUp = () => {
-    giveUp({ quizAnswerId, lessonId });
+    giveUp({ quizId, slug });
   };
 
   return (

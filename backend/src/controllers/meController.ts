@@ -7,6 +7,7 @@ import { prisma } from "../lib/prisma.js";
 import * as achievementService from "../services/achievementService.js";
 import {
   GetLessonQuizzesGiveUpsResponse,
+  GetLessonQuizzesSubmissionsResponse,
   UserLessonProgress,
 } from "@app/types";
 
@@ -15,7 +16,7 @@ export const getCurrentUser = async (
   res: Response,
 ) => {
   const currentUserId = req.currentUser?.id as number;
-  
+
   const user = await prisma.user.findUnique({
     where: {
       id: currentUserId,
@@ -28,15 +29,15 @@ export const getCurrentUser = async (
 };
 
 export const createLessonProgress = async (
-  req: AuthenticatedRequest<{ lessonId: string }>,
+  req: AuthenticatedRequest<{ slug: string }>,
   res: Response<{ progress: UserLessonProgress }>,
 ) => {
   const currentUserId = req.currentUser?.id as number;
-  const { lessonId } = req.params;
+  const { slug } = req.params;
 
   const progress = await lessonService.completeLesson({
     userId: currentUserId,
-    lessonId: Number(lessonId),
+    slug: slug,
   });
 
   return res.json({
@@ -46,21 +47,21 @@ export const createLessonProgress = async (
 
 export const getLessonQuizzesSubmissions = async (
   req: AuthenticatedRequest<
-    { lessonId: string },
+    { slug: string },
     unknown,
     {},
     { isCorrect: "true" | "false" }
   >,
-  res: Response,
+  res: Response<GetLessonQuizzesSubmissionsResponse>,
 ) => {
   const currentUserId = req.currentUser?.id as number;
-  const { lessonId } = req.params;
-  const lessonIdNumber = Number(lessonId);
+  const { slug } = req.params;
+
   const { isCorrect } = req.query;
   const parsedIsCorrect = isCorrect ? JSON.parse(isCorrect) : undefined;
   const quizzesUserSubmissions = await quizService.getUserLessonSubmissions(
     currentUserId,
-    lessonIdNumber,
+    slug,
     parsedIsCorrect,
   );
 
@@ -68,28 +69,27 @@ export const getLessonQuizzesSubmissions = async (
 };
 
 export const getQuizSubmissions = async (
-  req: AuthenticatedRequest<{ quizAnswerId: number }>,
+  req: AuthenticatedRequest<{ external_quizId: string }>,
   res: Response,
 ) => {
   const currentUserId = req.currentUser?.id as number;
-  const { quizAnswerId } = req.params;
-  const quizAnswerIdNumber = Number(quizAnswerId);
+  const { external_quizId } = req.params;
   const submissions = await quizService.getUserQuizSubmissions(
-    quizAnswerIdNumber,
+    external_quizId,
     currentUserId,
   );
 
-  res.json({ submissions: submissions });
+  res.json({ submissions });
 };
 
 export const giveUpToQuiz = async (
-  req: AuthenticatedRequest<{ quizAnswerId: string }>,
+  req: AuthenticatedRequest<{ external_quizId: string }>,
   res: Response,
 ) => {
   const currentUserId = req.currentUser?.id as number;
-  const { quizAnswerId } = req.params;
+  const { external_quizId } = req.params;
   const giveUp = await giveUpService.giveUpToQuiz(
-    Number(quizAnswerId),
+    external_quizId,
     currentUserId,
   );
 
@@ -97,28 +97,28 @@ export const giveUpToQuiz = async (
 };
 
 export const getUserQuizGiveUp = async (
-  req: AuthenticatedRequest<{ quizAnswerId: string }>,
+  req: AuthenticatedRequest<{ external_quizId: string }>,
   res: Response,
 ) => {
   const currentUserId = req.currentUser?.id as number;
-  const { quizAnswerId } = req.params;
+  const { external_quizId } = req.params;
   const giveUp = await giveUpService.getUserQuizGiveUp(
     currentUserId,
-    Number(quizAnswerId),
+    external_quizId,
   );
 
   return res.json({ giveUp });
 };
 
 export const getUserQuizzesGiveUpsForLesson = async (
-  req: AuthenticatedRequest<{ lessonId: string }>,
+  req: AuthenticatedRequest<{ slug: string }>,
   res: Response<GetLessonQuizzesGiveUpsResponse>,
 ) => {
   const currentUserId = req.currentUser?.id as number;
-  const { lessonId } = req.params;
+  const { slug } = req.params;
   const giveUps = await giveUpService.getUserQuizzesGiveUpsForLesson(
     currentUserId,
-    Number(lessonId),
+    slug,
   );
 
   return res.json({ giveUpsData: giveUps });

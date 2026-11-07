@@ -4,15 +4,20 @@ import { Button, Flex, Text } from "@radix-ui/themes";
 import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/theme-cloud9_night";
 import "ace-builds/src-noconflict/ext-language_tools";
 import { useQuizAnswerContext } from "../../contexts/QuizAnswerContext";
 
 type QuizEditorProps = {
   disabled: boolean;
+  language?: string;
 };
 
-export function QuizEditor({ disabled }: QuizEditorProps) {
+export function QuizEditor({
+  disabled,
+  language = "javascript",
+}: QuizEditorProps) {
   const { code, setCode } = useQuizAnswerContext();
   const [logs, setLogs] = useState<
     { type: "ERROR" | "LOG"; message: string }[]
@@ -37,6 +42,7 @@ export function QuizEditor({ disabled }: QuizEditorProps) {
   }, []);
 
   useEffect(() => {
+    if (language !== "javascript") return;
     const script = `
   <script>
     const originalLog = console.log;
@@ -75,7 +81,7 @@ export function QuizEditor({ disabled }: QuizEditorProps) {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [code]);
+  }, [code, language]);
 
   useEffect(() => {
     const loggerEl = loggerRef.current;
@@ -99,7 +105,7 @@ export function QuizEditor({ disabled }: QuizEditorProps) {
           backgroundColor: "#1a1b26",
         }}
         width="100%"
-        mode={"javascript"}
+        mode={language}
         fontSize={15}
         lineHeight={19}
         editorProps={{
@@ -122,7 +128,7 @@ export function QuizEditor({ disabled }: QuizEditorProps) {
         sandbox="allow-scripts"
       ></iframe>
 
-      {!disabled && (
+      {!disabled && language === "javascript" && (
         <div
           ref={loggerRef}
           className="relative max-h-[200px] overflow-y-auto bg-[var(--gray-1)] rounded p-2 flex flex-col gap-1"

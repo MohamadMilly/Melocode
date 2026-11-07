@@ -15,14 +15,14 @@ function App() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (!user) return;
+    if (!user && !isConnected) return;
 
     socket.connect();
 
     return () => {
       socket.disconnect();
     };
-  }, [user]);
+  }, [user, isConnected]);
 
   useEffect(() => {
     function onConnect(): void {

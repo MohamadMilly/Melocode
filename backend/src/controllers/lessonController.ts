@@ -2,30 +2,31 @@ import { AuthenticatedRequest } from "../types/index.js";
 import { type Response } from "express";
 import * as lessonService from "../services/lessonService.js";
 import { AuthStatus, GetLessonResponse } from "@app/types";
+import { matchedData } from "express-validator";
 
 export const getLesson = async (
-  req: AuthenticatedRequest<{ lessonId: string }>,
+  req: AuthenticatedRequest<{ slug: string }>,
   res: Response<
     GetLessonResponse & {
       authStatus: AuthStatus;
     }
   >,
 ) => {
-  const currentUserId = req.currentUser?.id as number | undefined;
+  const currentUserId = req.currentUser?.id;
   const authStatus = req.authStatus;
-  const { lessonId } = req.params;
-  const numberLessonId = Number(lessonId);
-  let lessonData: GetLessonResponse;
+  const { slug } = matchedData<Record<string, string>>(req, {
+    locations: ["params"],
+  });
+
+  let lessonData;
   if (currentUserId) {
-    lessonData = await lessonService.getUserLesson(
-      currentUserId,
-      numberLessonId,
-    );
+    lessonData = await lessonService.getUserLesson(currentUserId, slug);
   } else {
-    lessonData = await lessonService.getGuestLesson(numberLessonId);
+    lessonData = await lessonService.getGuestLesson(slug);
   }
   res.json({
     ...lessonData,
     authStatus: authStatus,
+    progress: currentUserId ? lessonData.progress : null,
   });
 };

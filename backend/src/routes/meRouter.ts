@@ -2,8 +2,8 @@ import express, { type Router } from "express";
 import * as meController from "../controllers/meController.js";
 import { extractToken } from "../middlewares/auth/extractToken.js";
 import { mandatoryVerifyToken } from "../middlewares/auth/verifyToken.js";
-import { validateLessonId } from "../middlewares/routes/validation/lesson.param.js";
-import { validateQuizAnswerId } from "../middlewares/routes/validation/quiz.param.js";
+import { validateSlug } from "../middlewares/routes/validation/lesson.param.js";
+import { validateExternalQuizId } from "../middlewares/routes/validation/quiz.param.js";
 
 export const meRouter: Router = express.Router();
 
@@ -12,38 +12,38 @@ meRouter.use(mandatoryVerifyToken);
 
 meRouter.get("/", meController.getCurrentUser);
 meRouter.post(
-  "/lessons/:lessonId/progress",
-  validateLessonId,
+  "/lessons/:slug/progress",
+  validateSlug,
   meController.createLessonProgress,
 );
 
 meRouter.get(
-  "/lessons/:lessonId/submissions",
-  validateLessonId,
+  "/lessons/:slug/submissions",
+  validateSlug,
   meController.getLessonQuizzesSubmissions,
 );
 
 meRouter.get(
-  "/quizzes/:quizAnswerId/submissions",
-  validateQuizAnswerId,
+  "/quizzes/:external_quizId/submissions",
+  validateExternalQuizId,
   meController.getQuizSubmissions,
 );
 
 meRouter.post(
-  "/quizzes/:quizAnswerId/giveups",
-  validateQuizAnswerId,
+  "/quizzes/:external_quizId/giveups",
+  validateExternalQuizId,
   meController.giveUpToQuiz,
 );
 
 meRouter.get(
-  "/quizzes/:quizAnswerId/giveups",
-  validateQuizAnswerId,
+  "/quizzes/:external_quizId/giveups",
+  validateExternalQuizId,
   meController.getUserQuizGiveUp,
 );
 
 meRouter.get(
-  "/lessons/:lessonId/giveups",
-  validateLessonId,
+  "/lessons/:slug/giveups",
+  validateSlug,
   meController.getUserQuizzesGiveUpsForLesson,
 );
 

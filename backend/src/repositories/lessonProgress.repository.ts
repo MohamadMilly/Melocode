@@ -7,11 +7,29 @@ class LessonProgressRepository {
     this.prisma = prisma;
   }
 
-  createProgress(userId: number, lessonId: number) {
+  createProgress(userId: number, slug: string) {
     return this.prisma.userLessonProgress.create({
       data: {
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        lesson: {
+          connect: {
+            slug: slug,
+          },
+        },
+      },
+    });
+  }
+
+  findProgress(userId: number, slug: string) {
+   
+    return this.prisma.userLessonProgress.findFirst({
+      where: {
         userId,
-        lessonId,
+        lesson: { slug },
       },
     });
   }

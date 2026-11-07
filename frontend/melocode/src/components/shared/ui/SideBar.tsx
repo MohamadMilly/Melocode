@@ -41,23 +41,23 @@ export function SideBar({
         aria-modal="true"
         aria-label={title}
         inert={!isOpen}
-        className={`absolute inset-y-0 right-0 flex w-full max-w-2xl flex-col border-l border-[var(--gray-6)] bg-[var(--color-panel-solid)] shadow-2xl transition-transform duration-300 ease-out ${
+        className={`absolute inset-y-0 right-0 flex w-full max-w-2xl flex-col border-l border-[var(--gray-7)] bg-[var(--gray-1)] text-[var(--gray-12)] shadow-2xl transition-transform duration-300 ease-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <header className="flex items-center justify-between border-b border-[var(--gray-6)] px-4 py-3">
+        <header className="flex items-center justify-between border-b border-[var(--gray-7)] px-4 py-4 sm:px-5">
           <div className="flex items-center gap-3">
             {icon && (
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent-3)] text-[var(--accent-11)]">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--accent-6)] bg-[var(--accent-3)] text-[var(--accent-11)]">
                 {icon}
               </span>
             )}
             <div>
-              <Heading size="2" as="h2">
+              <Heading size="3" as="h2" className="text-[var(--gray-12)]">
                 {title}
               </Heading>
               {description && (
-                <Text as="p" size="1" color="gray">
+                <Text as="p" size="1" className="mt-1 text-[var(--gray-10)]">
                   {description}
                 </Text>
               )}
@@ -65,7 +65,7 @@ export function SideBar({
           </div>
           <Button
             aria-label={closeLabel}
-            className="!h-9 !w-9 !p-0"
+            className="!h-10 !w-10 !rounded-xl !border !border-[var(--gray-7)] !bg-[var(--gray-2)] !p-0 !text-[var(--gray-11)] hover:!bg-[var(--gray-5)] hover:!text-[var(--gray-12)]"
             onClick={onClose}
             variant="ghost"
           >

@@ -20,15 +20,13 @@ class PathRepository {
           slug: pathSlug,
         },
       },
-      orderBy: {
-        createdAt: "asc",
-      },
+
       ...(includeLessons
         ? {
             include: {
               lessons: {
                 orderBy: {
-                  createdAt: "asc",
+                  order: "asc",
                 },
                 ...(userId
                   ? {
@@ -45,6 +43,9 @@ class PathRepository {
             },
           }
         : {}),
+      orderBy: {
+        order: "asc",
+      },
     });
   }
 }

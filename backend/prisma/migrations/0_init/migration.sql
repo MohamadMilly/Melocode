@@ -1,12 +1,6 @@
-/*
-  Warnings:
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
 
-  - You are about to drop the column `name` on the `User` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[username]` on the table `User` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `fullname` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `username` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "QuizAnswerItemType" AS ENUM ('CODE', 'TEXT', 'NOTE');
 
@@ -16,16 +10,16 @@ CREATE TYPE "AchievementScope" AS ENUM ('PROGRESS', 'SUBMISSION', 'STREAK');
 -- CreateEnum
 CREATE TYPE "AchievementFrequency" AS ENUM ('1', '10', '100', '1000');
 
--- DropForeignKey
-ALTER TABLE "UserLessonProgress" DROP CONSTRAINT "UserLessonProgress_lessonId_fkey";
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "fullname" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
--- DropForeignKey
-ALTER TABLE "UserLessonProgress" DROP CONSTRAINT "UserLessonProgress_userId_fkey";
-
--- AlterTable
-ALTER TABLE "User" DROP COLUMN "name",
-ADD COLUMN     "fullname" TEXT NOT NULL,
-ADD COLUMN     "username" TEXT NOT NULL;
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Achievement" (
@@ -48,9 +42,55 @@ CREATE TABLE "Profile" (
 );
 
 -- CreateTable
+CREATE TABLE "Path" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "description" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Path_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Module" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "order" INTEGER NOT NULL DEFAULT 0,
+    "pathId" INTEGER NOT NULL,
+
+    CONSTRAINT "Module_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Lesson" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "order" INTEGER NOT NULL DEFAULT 0,
+    "moduleId" INTEGER,
+
+    CONSTRAINT "Lesson_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserLessonProgress" (
+    "id" SERIAL NOT NULL,
+    "lessonId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "completedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "UserLessonProgress_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "QuizAnswer" (
     "id" SERIAL NOT NULL,
     "lessonId" INTEGER NOT NULL,
+    "external_quizId" TEXT,
 
     CONSTRAINT "QuizAnswer_pkey" PRIMARY KEY ("id")
 );
@@ -100,10 +140,34 @@ CREATE TABLE "TestCase" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Achievement_scope_frequency_userId_key" ON "Achievement"("scope", "frequency", "userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Path_slug_key" ON "Path"("slug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Module_slug_key" ON "Module"("slug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Lesson_slug_key" ON "Lesson"("slug");
+
+-- CreateIndex
+CREATE INDEX "UserLessonProgress_lessonId_idx" ON "UserLessonProgress"("lessonId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserLessonProgress_lessonId_userId_key" ON "UserLessonProgress"("lessonId", "userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "QuizAnswer_external_quizId_key" ON "QuizAnswer"("external_quizId");
+
+-- CreateIndex
+CREATE INDEX "QuizAnswer_external_quizId_idx" ON "QuizAnswer"("external_quizId");
 
 -- CreateIndex
 CREATE INDEX "QuizSubmission_userId_idx" ON "QuizSubmission"("userId");
@@ -114,17 +178,17 @@ CREATE UNIQUE INDEX "QuizSubmission_userId_quizAnswerId_isCorrect_key" ON "QuizS
 -- CreateIndex
 CREATE UNIQUE INDEX "QuizGiveUp_userId_quizAnswerId_key" ON "QuizGiveUp"("userId", "quizAnswerId");
 
--- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
-
--- CreateIndex
-CREATE INDEX "UserLessonProgress_lessonId_idx" ON "UserLessonProgress"("lessonId");
-
 -- AddForeignKey
 ALTER TABLE "Achievement" ADD CONSTRAINT "Achievement_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Module" ADD CONSTRAINT "Module_pathId_fkey" FOREIGN KEY ("pathId") REFERENCES "Path"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Lesson" ADD CONSTRAINT "Lesson_moduleId_fkey" FOREIGN KEY ("moduleId") REFERENCES "Module"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserLessonProgress" ADD CONSTRAINT "UserLessonProgress_lessonId_fkey" FOREIGN KEY ("lessonId") REFERENCES "Lesson"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -152,3 +216,4 @@ ALTER TABLE "QuizAnswerItem" ADD CONSTRAINT "QuizAnswerItem_quizAnswerId_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "TestCase" ADD CONSTRAINT "TestCase_quizAnswerId_fkey" FOREIGN KEY ("quizAnswerId") REFERENCES "QuizAnswer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

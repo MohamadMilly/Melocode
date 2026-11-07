@@ -13,6 +13,7 @@ import { LandingPage } from "./pages/LandingPage";
 import { Suspense } from "react";
 import { LessonSkeleton } from "./components/Lesson/skeleton/LessonSkeleton";
 import { Navigate } from "react-router";
+
 export const routes = [
   {
     element: <LandingPage />,

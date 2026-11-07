@@ -11,7 +11,6 @@ const QuizEditor = lazy(() =>
 );
 export function QuizQuestion({
   questionItems,
-
   editorDisabled,
 }: {
   questionItems: QuizQuestionItem[];
@@ -35,9 +34,10 @@ export function QuizQuestion({
                   fallback={
                     <Skeleton width={"100%"} height={"100px"}></Skeleton>
                   }
-                >
+                >  
                   <QuizEditor
                     disabled={editorDisabled || !quiz.isInteractive}
+                    language={quiz.language}
                   />
                 </Suspense>
               );

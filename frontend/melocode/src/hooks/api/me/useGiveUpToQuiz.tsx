@@ -14,13 +14,13 @@ type GiveUpResponse = {
 };
 
 type GiveUpMutationArgs = {
-  lessonId: number;
-  quizAnswerId: number;
+  slug: string;
+  quizId: string;
 };
 
-const giveUpToQuiz = async (quizAnswerId: number): Promise<GiveUpResponse> => {
+const giveUpToQuiz = async (quizId: string): Promise<GiveUpResponse> => {
   const response = await apiClient.post<GiveUpResponse>(
-    `/me/quizzes/${quizAnswerId}/giveups`,
+    `/me/quizzes/${quizId}/giveups`,
   );
 
   return response.data;
@@ -35,18 +35,17 @@ export function useGiveUpToQuiz() {
     GiveUpMutationArgs
   >({
     mutationKey: ["give-up-to-quiz"],
-    mutationFn: ({ quizAnswerId }: GiveUpMutationArgs) =>
-      giveUpToQuiz(quizAnswerId),
-    onSuccess: ({ giveUp }, { lessonId }) => {
+    mutationFn: ({ quizId }: GiveUpMutationArgs) => giveUpToQuiz(quizId),
+    onSuccess: ({ giveUp }, { slug, quizId }) => {
       queryClient.setQueryData<GetLessonQuizzesGiveUpsResponse>(
-        ["me", "lessons", lessonId, "giveUps"],
+        ["me", "lessons", slug, "giveUps"],
         (old) => {
           if (!old?.giveUpsData) return old;
 
           return {
             ...old,
             giveUpsData: old.giveUpsData.map((group) =>
-              group.id === giveUp.quizAnswerId
+              group.external_quizId === quizId
                 ? { ...group, giveUps: [...group.giveUps, giveUp] }
                 : group,
             ),
@@ -55,7 +54,7 @@ export function useGiveUpToQuiz() {
       );
 
       queryClient.invalidateQueries({
-        queryKey: ["me", "lessons", lessonId],
+        queryKey: ["me", "lessons", slug],
         exact: true,
       });
     },

@@ -5,12 +5,12 @@ import { useSubmitQuizAnswer } from "../api/quiz/useSubmitQuizAnswer";
 import type { QuizSubmission, ResponseError } from "@app/types";
 import type { AxiosError } from "axios";
 
-export function useCheckCodeAnswer(quizAnswerId: number, lessonId: number) {
+export function useCheckCodeAnswer(quizId: string, slug: string) {
   const {
     refetch: fetchTestCases,
     isLoading: areTestCasesLoading,
     error: testCasesFetchError,
-  } = useQuizTestCase(quizAnswerId);
+  } = useQuizTestCase(quizId);
 
   const {
     mutateAsync: run,
@@ -24,7 +24,7 @@ export function useCheckCodeAnswer(quizAnswerId: number, lessonId: number) {
     error: submissionError,
   } = useSubmitQuizAnswer();
   const checkAnswer = async ({ code }: { code: string }) => {
-    if (!quizAnswerId) return;
+    if (!quizId) return;
     const response = await fetchTestCases();
     const testCases = response.data?.testCases;
     const regex =
@@ -67,8 +67,8 @@ export function useCheckCodeAnswer(quizAnswerId: number, lessonId: number) {
         language: "javascript",
         content: currentCode,
         userOutputs: userOutputs,
-        quizAnswerId: quizAnswerId,
-        lessonId: lessonId,
+        quizId: quizId,
+        slug: slug,
       });
       return submission;
     } else {

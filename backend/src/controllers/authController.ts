@@ -7,10 +7,9 @@ import {
 } from "@app/types";
 import type { Response, Request } from "express";
 import { matchedData } from "express-validator";
-import { prisma } from "../lib/prisma.js";
-import { HttpError } from "../shared/errors/HttpError.js";
 import { sign, verify } from "../shared/utils/auth/jwt.js";
-import bcrypt from "bcryptjs";
+import { userService } from "../services/userService.js";
+import { authService } from "../services/authService.js";
 
 export const register = async (
   req: Request<{}, unknown, RegisterRequestBody>,
@@ -18,22 +17,15 @@ export const register = async (
 ) => {
   const { password, username, fullname } = matchedData(req);
 
-  const user = await prisma.user.create({
-    data: {
-      password: await bcrypt.hash(password, 10),
-      username,
-      fullname,
-      profile: {
-        create: {},
-      },
-    },
-  });
+  const user = await userService.createUser({ fullname, username, password });
+
   const jwtPayload: UserJwtPayload = {
     id: user.id,
     fullname: user.fullname,
     username: user.username,
     createdAt: user.createdAt,
   };
+
   const accessToken = sign(
     { ...jwtPayload, tokenType: "access" },
     { expiresIn: "15min" },
@@ -45,6 +37,7 @@ export const register = async (
 
   res.json({ user: jwtPayload, accessToken, refreshToken });
 };
+
 
 export const login = async (
   req: Request<{}, unknown, LoginRequestBody>,
@@ -52,27 +45,15 @@ export const login = async (
 ) => {
   const { username, password } = matchedData(req);
 
-  const user = await prisma.user.findUnique({
-    where: { username },
-  });
-
-  if (!user) {
-    throw new HttpError(400, "اسم المستخدم أو كلمة المرور غير صحيحة.");
-  }
-
-  const isValidPassword = await bcrypt.compare(password, user.password);
-
-  if (!isValidPassword) {
-    throw new HttpError(400, "اسم المستخدم أو كلمة المرور غير صحيحة.");
-  }
-
+  const user = await authService.validateCredentials(username, password);
+    
   const jwtPayload: UserJwtPayload = {
     id: user.id,
     fullname: user.fullname,
     username: user.username,
     createdAt: user.createdAt,
   };
-
+  
   const accessToken = sign(
     { ...jwtPayload, tokenType: "access" },
     { expiresIn: "15min" },
@@ -81,23 +62,18 @@ export const login = async (
     { ...jwtPayload, tokenType: "refresh" },
     { expiresIn: "7d" },
   );
-
+  
   res.json({ user: jwtPayload, accessToken, refreshToken });
 };
-
+  
 export const refreshToken = async (
   req: Request<{}, unknown, { refreshToken: string }>,
   res: Response,
 ) => {
   const { refreshToken: token } = req.body;
-
-  if (!refreshToken) {
-    return res.status(401).json({
-      message: "UnAuthorized: refreshToken is required.",
-    });
-  }
+  
   const payload = verify<UserJwtPayload>(token);
-
+  
   if (payload.tokenType !== "refresh") {
     res.status(401).json({
       message: "Use RefreshToken to refresh the access token.",
@@ -105,6 +81,7 @@ export const refreshToken = async (
     return;
   }
   const { exp, iat, tokenType, ...cleanPayLoad } = payload;
+  
   const accessToken = sign(
     { tokenType: "access", ...cleanPayLoad },
     { expiresIn: "15min" },

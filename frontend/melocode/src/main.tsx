@@ -10,6 +10,7 @@ import { ThemeProvider } from "next-themes";
 
 // providers
 import { AuthProvider } from "./providers/AuthProvider";
+import { Direction } from "radix-ui";
 
 const router = createBrowserRouter(routes);
 
@@ -26,7 +27,9 @@ createRoot(document.getElementById("root")!).render(
             radius="large"
             scaling="95%"
           >
-            <RouterProvider router={router} />
+            <Direction.Provider dir="rtl">
+              <RouterProvider router={router} />
+            </Direction.Provider>
           </Theme>
         </ThemeProvider>
       </AuthProvider>

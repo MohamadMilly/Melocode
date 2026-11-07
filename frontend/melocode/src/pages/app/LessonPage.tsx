@@ -2,7 +2,7 @@ import { Navigate, useNavigate, useParams } from "react-router";
 import { Button, Flex, Heading, Text } from "@radix-ui/themes";
 import { MDXProvider } from "@mdx-js/react";
 import { markDownComponents } from "../../components/Lesson/MarkDownComponents";
-import { lessons } from "../../lessons/lessons";
+import { getLesson } from "../../lessons/index";
 import { QuizzesTabs } from "../../components/Quiz/QuizzesTabs";
 import toast from "react-hot-toast";
 import { LessonContents } from "../../components/Lesson/LessonContents";
@@ -13,7 +13,7 @@ import { useLesson } from "../../hooks/api/lesson/useLesson";
 import { LessonPagination } from "../../components/Lesson/LessonPagination";
 import { Brain } from "lucide-react";
 import { PageMain } from "../../components/shared/layout/PageMain";
-import { use, useMemo } from "react";
+import { use } from "react";
 
 export function LessonPage() {
   const { slug } = useParams();
@@ -23,29 +23,23 @@ export function LessonPage() {
     useCompleteLesson();
   const { user } = useAuth();
 
-  const lessonPromise = useMemo(() => {
-    const fetchLesson = lessons[slug as string];
-    return fetchLesson ? fetchLesson() : null;
-  }, [slug]);
-
-  const lesson = lessonPromise ? use(lessonPromise) : null;
+  const lesson = slug ? use(getLesson(slug)) : null;
 
   const {
     lesson: lessonMetaData,
     progress,
     hasCompletedAllQuizzes,
-    previousLessonStatus,
-    previousLessonSlug,
-    nextLessonSlug,
-    nextLessonStatus,
+    previousLesson,
+    nextLesson,
     isLoading: isProgressLoading,
-  } = useLesson(lesson ? lesson.frontmatter.lessonId : undefined);
+  } = useLesson(lesson ? lesson.frontmatter.slug : undefined);
 
-  if (!lesson) {
+  if (!lesson || !slug) {
     return <EmptyLessonState />;
   }
 
-  const { Article, toc, exercises, frontmatter } = lesson;
+  const { default: Article, toc, frontmatter } = lesson;
+  const exercises = frontmatter.exercises;
 
   // Derived values
   const lessonId = frontmatter.lessonId;
@@ -56,15 +50,16 @@ export function LessonPage() {
     isCompleting ||
     !hasCompletedAllQuizzes ||
     isLessonCompleted;
-
+  
   const canNavigateToPreviousLesson =
-    previousLessonStatus === "current" || previousLessonStatus === "completed";
+    previousLesson?.status === "current" ||
+    previousLesson?.status === "completed";
   const canNavigateToNextLesson =
-    nextLessonStatus === "current" || nextLessonStatus === "completed";
+    nextLesson?.status === "current" || nextLesson?.status === "completed";
   // handlers
   const handlePreviousLesson = () => {
-    if (canNavigateToPreviousLesson && previousLessonSlug) {
-      navigate(`/app/lessons/${previousLessonSlug}`);
+    if (canNavigateToPreviousLesson && previousLesson) {
+      navigate(`/app/lessons/${previousLesson.slug}`);
       window.scrollTo({
         top: 0,
         behavior: "smooth",
@@ -74,11 +69,11 @@ export function LessonPage() {
 
   const handleCompleteLesson = () => {
     if (!user) return;
-    completeLesson(lessonId);
+    completeLesson(slug);
   };
   const handleNextLesson = () => {
-    if (canNavigateToNextLesson && nextLessonSlug) {
-      navigate(`/app/lessons/${nextLessonSlug}`);
+    if (canNavigateToNextLesson && nextLesson) {
+      navigate(`/app/lessons/${nextLesson.slug}`);
       window.scrollTo({
         top: 0,
         behavior: "smooth",
@@ -118,7 +113,7 @@ export function LessonPage() {
             <QuizzesTabs
               key={`$quizzes-${lessonId}`}
               quizzes={exercises}
-              lessonId={lessonId}
+              slug={slug}
             />
           </>
         )}
@@ -156,6 +151,8 @@ export function LessonPage() {
           </Flex>
         )}
         <LessonPagination
+          previousLesson={previousLesson}
+          nextLesson={nextLesson}
           canNavigateToNextLesson={canNavigateToNextLesson}
           canNavigateToPreviousLesson={canNavigateToPreviousLesson}
           handleNextLesson={handleNextLesson}

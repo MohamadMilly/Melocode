@@ -8,17 +8,19 @@ export function ChatMessage({ message }: { message: ChatMessageData }) {
   const isUser = message.role === "user";
 
   return (
-    <div className={`flex  ${isUser ? "justify-start" : "justify-end"}`}>
+    <div className={`flex ${isUser ? "justify-start" : "justify-end"}`}>
       <div
         dir="auto"
-        className={`max-w-19/20 rounded-lg px-3 py-2 ${
+        className={`max-w-19/20 rounded-3xl px-4 py-3 leading-relaxed ${
           isUser
-            ? "bg-[var(--accent-11)] text-[var(--gray-1)]"
-            : "border border-[var(--gray-6)] bg-[var(--gray-2)] text-[var(--gray-12)]"
+            ? "rounded-br-lg border border-[var(--accent-8)] bg-[var(--accent-9)] text-[var(--gray-1)]"
+            : "rounded-bl-lg border border-[var(--gray-7)] bg-[var(--gray-2)] text-[var(--gray-12)]"
         }`}
       >
         {isUser ? (
-          <Text as="p">{message.content}</Text>
+          <Text as="p" className="leading-relaxed">
+            {message.content}
+          </Text>
         ) : (
           <MDXProvider components={markDownComponents}>
             <DynamicMarkdown rawText={message.content} />

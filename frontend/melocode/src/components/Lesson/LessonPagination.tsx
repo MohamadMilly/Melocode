@@ -1,7 +1,12 @@
-import { Button, Flex } from "@radix-ui/themes";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Flex } from "@radix-ui/themes";
+import type { GetLessonResponse } from "@app/types";
+import { NavigationCard } from "./NavigationCard";
+
+type NavigationLesson = NonNullable<GetLessonResponse["nextLesson"]>;
 
 type LessonPaginationProps = {
+  nextLesson: NavigationLesson | null;
+  previousLesson: NavigationLesson | null;
   canNavigateToNextLesson: boolean;
   canNavigateToPreviousLesson: boolean;
   handleNextLesson: () => void;
@@ -9,35 +14,31 @@ type LessonPaginationProps = {
 };
 
 export function LessonPagination({
+  nextLesson,
+  previousLesson,
   canNavigateToNextLesson,
   canNavigateToPreviousLesson,
   handleNextLesson,
   handlePreviousLesson,
 }: LessonPaginationProps) {
   return (
-    <Flex justify="between" align="center" mt="6" gap="3">
-      {canNavigateToNextLesson && (
-        <Button
-          variant="soft"
-          size="3"
+    <Flex justify="between" mt="6" gap="3" className="flex-col sm:flex-row">
+      {nextLesson && (
+        <NavigationCard
+          lesson={nextLesson}
+          direction="next"
+          disabled={!canNavigateToNextLesson}
           onClick={handleNextLesson}
-          aria-label="الدرس التالي"
-        >
-          <ArrowRight size={18} />
-          التالي
-        </Button>
+        />
       )}
 
-      {canNavigateToPreviousLesson && (
-        <Button
-          variant="soft"
-          size="3"
+      {previousLesson && (
+        <NavigationCard
+          lesson={previousLesson}
+          direction="previous"
+          disabled={!canNavigateToPreviousLesson}
           onClick={handlePreviousLesson}
-          aria-label="الدرس السابق"
-        >
-          السابق
-          <ArrowLeft size={18} />
-        </Button>
+        />
       )}
     </Flex>
   );

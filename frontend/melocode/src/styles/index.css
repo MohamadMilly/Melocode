@@ -8,6 +8,104 @@
   --color-tremor-brand-hover: var(--color-blue-600);
 }
 
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  h2[id] {
+    scroll-margin-top: 100px;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  html::-webkit-scrollbar-track,
+  body::-webkit-scrollbar-track,
+  *::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  html::-webkit-scrollbar-thumb,
+  body::-webkit-scrollbar-thumb,
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--gray-8);
+    border-radius: 9999px;
+  }
+
+  pre {
+    direction: ltr;
+    padding: 5px;
+    border-radius: 5px;
+    counter-reset: line;
+    margin: 12px;
+    overflow-x: auto;
+  }
+  pre * {
+    background: none !important;
+  }
+
+  pre [data-line] {
+    padding: 0 1rem;
+  }
+
+  pre [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+
+    display: inline-block;
+    width: 1rem;
+    margin-right: 1.5rem;
+    text-align: right;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  table {
+    margin: 2rem 0;
+    width: 100%;
+
+    font-size: 0.95rem;
+
+    color: var(--gray-11);
+  }
+
+  th,
+  td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    text-wrap: wrap;
+    min-width: 200px;
+  }
+
+  table tr {
+    border-bottom: 1px solid var(--gray-3);
+    transition: background-color 0.2s ease;
+  }
+
+  th {
+    background-color: var(--gray-2);
+    font-weight: 600;
+
+    color: var(--gray-12);
+    text-transform: uppercase;
+
+    letter-spacing: 0.05em;
+
+    border-bottom: 1px solid var(--gray-5);
+  }
+
+  textarea {
+    max-height: 300px !important;
+    height: auto !important;
+    resize: none !important;
+    field-sizing: content !important;
+  }
+}
+
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -63,61 +161,6 @@
   color: var(--gray-12) !important;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-h2[id] {
-  scroll-margin-top: 100px;
-}
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar,
-*::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-html::-webkit-scrollbar-track,
-body::-webkit-scrollbar-track,
-*::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-
-html::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb,
-*::-webkit-scrollbar-thumb {
-  background-color: var(--gray-8);
-  border-radius: 9999px;
-}
-
-pre {
-  direction: ltr;
-  padding: 5px;
-  border-radius: 5px;
-  counter-reset: line;
-  margin: 12px;
-  overflow-x: auto;
-}
-pre * {
-  background: none !important;
-}
-
-pre [data-line] {
-  padding: 0 1rem;
-}
-
-pre [data-line]::before {
-  counter-increment: line;
-  content: counter(line);
-
-  display: inline-block;
-  width: 1rem;
-  margin-right: 1.5rem;
-  text-align: right;
-  color: rgba(255, 255, 255, 0.3);
-}
-
 /* Change the line number panel background to #1a1b26 */
 .code-editor .ace_gutter {
   background-color: #1a1b26 !important;
@@ -133,36 +176,4 @@ pre [data-line]::before {
 
 .code-editor .ace_gutter-cell {
   color: rgba(255, 255, 255, 0.3) !important;
-}
-
-table {
-  margin: 2rem 0;
-  width: 100%;
-
-  font-size: 0.95rem;
-
-  color: var(--gray-11);
-}
-
-th,
-td {
-  padding: 1rem 1.25rem;
-  text-align: left;
-}
-
-table tr {
-  border-bottom: 1px solid var(--gray-3);
-  transition: background-color 0.2s ease;
-}
-
-th {
-  background-color: var(--gray-2);
-  font-weight: 600;
-
-  color: var(--gray-12);
-  text-transform: uppercase;
-
-  letter-spacing: 0.05em;
-
-  border-bottom: 1px solid var(--gray-5);
 }

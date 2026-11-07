@@ -5,7 +5,7 @@ import {
 } from "@app/types";
 import { prisma } from "../lib/prisma.js";
 import type { Request, Response } from "express";
-import * as userService from "../services/userService.js";
+import { userService } from "../services/userService.js";
 
 export const getUserLessonProgresses = async (
   req: Request<{ userId: string }>,

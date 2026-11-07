@@ -6,10 +6,12 @@ class QuizRepository {
     this.prisma = prisma;
   }
 
-  findQuizAnswersWithUserCompletion(userId: number, lessonId: number) {
+  findQuizAnswersWithUserCompletion(userId: number, slug: string) {
     return this.prisma.quizAnswer.findMany({
       where: {
-        lessonId,
+        lesson: {
+          slug,
+        },
       },
       include: {
         submissions: {
@@ -27,9 +29,9 @@ class QuizRepository {
     });
   }
 
-  findQuizAnswerWithUserState(answerId: number, userId: number) {
+  findQuizAnswerWithUserState(external_quizId: string, userId: number) {
     return this.prisma.quizAnswer.findUnique({
-      where: { id: answerId },
+      where: { external_quizId },
       include: {
         items: true,
         giveUps: { where: { userId } },
@@ -38,21 +40,36 @@ class QuizRepository {
     });
   }
 
-  findLessonSubmissions(userId: number, lessonId: number, isCorrect?: boolean) {
+  findQuizAnswerByExternalId(external_quizId: string) {
+    return this.prisma.quizAnswer.findUnique({
+      where: { external_quizId },
+      select: { id: true, external_quizId: true },
+    });
+  }
+
+  findLessonSubmissions(userId: number, slug: string, isCorrect?: boolean) {
     return this.prisma.quizAnswer.findMany({
-      where: { lessonId },
+      where: {
+        lesson: {
+          slug,
+        },
+      },
       select: {
-        id: true,
+        external_quizId: true,
         submissions: { where: { userId, isCorrect } },
       },
     });
   }
 
-  findLessonGiveUps(userId: number, lessonId: number) {
+  findLessonGiveUps(userId: number, slug: string) {
     return this.prisma.quizAnswer.findMany({
-      where: { lessonId },
+      where: {
+        lesson: {
+          slug,
+        },
+      },
       select: {
-        id: true,
+        external_quizId: true,
         giveUps: { where: { userId } },
       },
     });

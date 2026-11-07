@@ -9,16 +9,16 @@ import type { QuizData } from "../../shared/types/Quiz.types";
 
 export function QuizzesTabs({
   quizzes,
-  lessonId,
+  slug,
 }: {
   quizzes: QuizData[];
-  lessonId: number;
+  slug: string;
 }) {
   const [expanded, setExpanded] = useState<boolean>(false);
   const { submissionsData, isLoading: isLoadingSubmissions } =
-    useMyLessonSubmissions(lessonId);
+    useMyLessonSubmissions(slug);
   const [currentQuiz, setCurrentQuiz] = useState<string>("التمرين-1");
-  const { giveUpsData } = useLessonQuizzesGiveUps(lessonId);
+  const { giveUpsData } = useLessonQuizzesGiveUps(slug);
 
   const quizzesCount = quizzes.length;
   const quizzesNames: string[] = [];
@@ -88,12 +88,14 @@ export function QuizzesTabs({
             let submission = null;
 
             const thisQuizSubmissionsData = submissionsData.find(
-              (submissionData) => submissionData.id === quiz.answerId,
+              (submissionData) =>
+                submissionData.external_quizId === quiz.quizId,
             );
             const thisQuizGiveUpData = giveUpsData.find(
-              (gData) => gData.id === quiz.answerId,
+              (gData) => gData.external_quizId === quiz.quizId,
             );
             const giveUp = thisQuizGiveUpData?.giveUps[0];
+            console.log(giveUp);
             if (thisQuizSubmissionsData) {
               const correctSubmission =
                 thisQuizSubmissionsData?.submissions.find((s) => s.isCorrect);
@@ -101,6 +103,8 @@ export function QuizzesTabs({
                 (s) => !s.isCorrect,
               );
               submission = correctSubmission ?? wrongSubmission;
+              
+              console.log(submission);
             }
             return (
               <Quiz
@@ -109,7 +113,7 @@ export function QuizzesTabs({
                 quiz={quiz}
                 submission={submission}
                 giveUpData={giveUp}
-                lessonId={lessonId}
+                slug={slug}
                 goNext={goNext}
               />
             );

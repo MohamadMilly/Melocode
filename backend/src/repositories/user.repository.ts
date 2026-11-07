@@ -13,7 +13,7 @@ class UserRepository {
       include: { profile: true },
     });
   }
-
+  
   findUsersByProgress(direction: SortDirection) {
     return this.prisma.user.findMany({
       include: {
@@ -37,6 +37,19 @@ class UserRepository {
         },
       },
     });
+  }
+
+  createUser({ fullname, username, hashedPassword }) {
+    return this.prisma.user.create({
+      data: {
+        fullname,
+        username,
+        password: hashedPassword,
+      },
+    });
+  }
+  getUserByUsername(username: string) {
+    return this.prisma.user.findUnique({ where: { username } });
   }
 }
 

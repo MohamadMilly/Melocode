@@ -9,6 +9,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  
 }
 
 model User {
@@ -56,6 +57,7 @@ model Module {
    title     String
   slug      String   @unique
   createdAt DateTime @default(now())
+  order     Int @default(0)
   lessons Lesson[]
   path Path @relation(fields: [pathId], references: [id], onDelete: Cascade)
   pathId Int
@@ -66,6 +68,8 @@ model Lesson {
   title            String
   slug             String               @unique
   createdAt        DateTime             @default(now())
+  order            Int @default(0)
+  isFree          Boolean              @default(false)
   lessonProgresses UserLessonProgress[]
   quizzesAnswers   QuizAnswer[]
   module          Module?               @relation(fields: [moduleId], references: [id], onDelete: Cascade)
@@ -86,13 +90,15 @@ model UserLessonProgress {
 
 model QuizAnswer {
   id          Int              @id @default(autoincrement())
-  lessonId    Int
+  lessonId    Int               
   lesson      Lesson           @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  
+  external_quizId      String?          @unique
   items       QuizAnswerItem[]
   submissions QuizSubmission[]
   testCases   TestCase[]
   giveUps     QuizGiveUp[]
+  
+  @@index([external_quizId])
 }
 
 model QuizSubmission {

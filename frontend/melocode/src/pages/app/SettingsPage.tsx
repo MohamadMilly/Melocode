@@ -9,7 +9,9 @@ export function SettingsPage() {
   const { logout, user } = useAuth();
   const { resolvedTheme, setTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
+  
   const navigate = useNavigate();
+
   const handleToggleTheme = () => {
     setTheme(isDarkMode ? "light" : "dark");
   };

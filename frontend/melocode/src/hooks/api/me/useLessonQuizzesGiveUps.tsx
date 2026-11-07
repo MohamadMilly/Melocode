@@ -11,22 +11,22 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 
 const getCurrentUserLessonQuizzesGivUps = async (
-  lessonId: number,
+  slug: string,
 ): Promise<GetLessonQuizzesGiveUpsResponse> => {
-  const response = await apiClient.get(`/me/lessons/${lessonId}/giveups`);
+  const response = await apiClient.get(`/me/lessons/${slug}/giveups`);
 
   return response.data;
 };
 
-export function useLessonQuizzesGiveUps(lessonId: number) {
+export function useLessonQuizzesGiveUps(slug: string) {
   const { user } = useAuth();
   const { data, isLoading, error } = useQuery<
     GetLessonQuizzesGiveUpsResponse,
     AxiosError<ResponseError>
   >({
-    queryKey: ["me", "lessons", lessonId, "giveUps"],
-    queryFn: () => getCurrentUserLessonQuizzesGivUps(lessonId),
-    enabled: !!lessonId && !!user,
+    queryKey: ["me", "lessons", slug, "giveUps"],
+    queryFn: () => getCurrentUserLessonQuizzesGivUps(slug),
+    enabled: !!slug && !!user,
   });
 
   useEffect(() => {

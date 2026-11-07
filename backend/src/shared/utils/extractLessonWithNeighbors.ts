@@ -18,16 +18,26 @@ export const extractLessonWithNeighbors = (
 
   const previousLesson = allLessonsWithStatuses[currentLessonIndex - 1] ?? null;
   const nextLesson = allLessonsWithStatuses[currentLessonIndex + 1] ?? null;
-  
+
   return {
     lesson: {
       ...lesson,
       status: status,
     },
-    previousLessonSlug: previousLesson?.slug ?? "",
-    previousLessonStatus: previousLesson?.status ?? null,
-    nextLessonSlug: nextLesson?.slug ?? "",
-    nextLessonStatus: nextLesson?.status ?? null,
+    previousLesson: previousLesson
+      ? {
+          slug: previousLesson.slug,
+          title: previousLesson.title,
+          status: previousLesson.status,
+        }
+      : null,
+    nextLesson: nextLesson
+      ? {
+          slug: nextLesson.slug,
+          title: nextLesson.title,
+          status: nextLesson.status,
+        }
+      : null,
     progress: lessonProgresses?.[0] ?? null,
   };
 };

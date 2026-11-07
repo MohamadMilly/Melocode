@@ -11,7 +11,7 @@ export const parseLeaderboardSortOrder = (
 ): ParsedLeaderboardSortOrder | null => {
   const direction = value[0];
   const metric = value.slice(1).trim().toLowerCase();
-   
+  
   if (
     (direction !== "+" && direction !== "-") ||
     (metric !== "progress" && metric !== "streak" && metric !== "submissions")

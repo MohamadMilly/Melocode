@@ -24,7 +24,7 @@ export type QuizType = "CODING" | "MULTIPLE_CHOICE";
 export type QuizData = {
   badge: QuizBadgeType;
   type: QuizType;
-  answerId: number;
+  quizId: string;
   question: QuizQuestion;
   level: QuizLevelType;
 };

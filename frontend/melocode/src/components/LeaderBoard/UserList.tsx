@@ -1,6 +1,6 @@
 import { Flex, Spinner, Text } from "@radix-ui/themes";
-import type { SortMetric } from "@app/types";
-import { UserItem, type LeaderBoardUser } from "./UserItem";
+import type { LeaderBoardUser, SortMetric } from "@app/types";
+import { UserItem } from "./UserItem";
 
 export function UserList({
   users,

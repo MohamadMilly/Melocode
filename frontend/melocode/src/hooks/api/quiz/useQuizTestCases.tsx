@@ -4,19 +4,19 @@ import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
 const getQuizTestCases = async (
-  quizAsnwerId: number,
+  quizId: string,
 ): Promise<{ testCases: Omit<QuizTestCase, "output">[] }> => {
-  const response = await apiClient.get(`/quizzes/${quizAsnwerId}/test-cases`);
+  const response = await apiClient.get(`/quizzes/${quizId}/test-cases`);
   return response.data;
 };
 
-export function useQuizTestCase(quizAnswerId: number) {
+export function useQuizTestCase(quizId: string) {
   const { data, isLoading, error, refetch } = useQuery<
     { testCases: Omit<QuizTestCase, "output">[] },
     AxiosError<ResponseError>
   >({
-    queryKey: ["quizzes", quizAnswerId, "test-cases"],
-    queryFn: () => getQuizTestCases(quizAnswerId),
+    queryKey: ["quizzes", quizId, "test-cases"],
+    queryFn: () => getQuizTestCases(quizId),
     enabled: false,
   });
 

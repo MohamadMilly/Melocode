@@ -11,19 +11,19 @@ import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 import { toast } from "react-hot-toast";
 
 interface SubmitArgs extends CreateSubmissionRequestBody {
-  quizAnswerId: number;
+  quizId: string;
 }
 
 interface MutationArgs extends SubmitArgs {
-  lessonId: number;
+  slug: string;
 }
 
 const saveSubmission = async ({
-  quizAnswerId,
+  quizId,
   ...body
 }: SubmitArgs): Promise<CreateQuizSubmissionResponse> => {
   const { data } = await apiClient.post<CreateQuizSubmissionResponse>(
-    `/quizzes/${quizAnswerId}/submissions`,
+    `/quizzes/${quizId}/submissions`,
     body,
   );
   return data;
@@ -38,11 +38,11 @@ export function useSubmitQuizAnswer() {
     MutationArgs
   >({
     mutationKey: ["submit-quiz-answer"],
+    
+    mutationFn: ({ slug, ...args }: MutationArgs) => saveSubmission(args),
 
-    mutationFn: ({ lessonId, ...args }: MutationArgs) => saveSubmission(args),
-
-    onSuccess: (data, { lessonId, quizAnswerId }) => {
-      const progressKey = ["me", "lessons", lessonId, "submissions"];
+    onSuccess: (data, { slug, quizId }) => {
+      const progressKey = ["me", "lessons", slug, "submissions"];
       const newSubmission = data.submission;
 
       queryClient.setQueryData<GetLessonQuizzesSubmissionsResponse>(
@@ -51,7 +51,7 @@ export function useSubmitQuizAnswer() {
           if (!old?.submissionsData) return old;
 
           const updatedSubmissionsData = old.submissionsData.map((group) => {
-            if (group.id !== newSubmission.quizAnswerId) return group;
+            if (group.external_quizId !== quizId) return group;
 
             const hasCorrectSubmission = group.submissions.some(
               (s) => s.isCorrect,
@@ -83,11 +83,11 @@ export function useSubmitQuizAnswer() {
       );
 
       queryClient.invalidateQueries({
-        queryKey: ["quizzes", quizAnswerId],
+        queryKey: ["quizzes", quizId],
         exact: true,
       });
       queryClient.invalidateQueries({
-        queryKey: ["me", "lessons", lessonId],
+        queryKey: ["me", "lessons", slug],
         exact: true,
       });
       queryClient.invalidateQueries({

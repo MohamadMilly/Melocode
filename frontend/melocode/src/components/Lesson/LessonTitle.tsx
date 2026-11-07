@@ -5,9 +5,10 @@ export function LessonTitle({ children }: { children: ReactNode }) {
   return (
     <Heading
       size={"8"}
-      mb={"8"}
+      my={"6"}
+       
       weight={"medium"}
-      className="tracking-tight text-[var(--accent-11)]"
+      className="tracking-tight text-[var(--accent-11)] text-balance"
     >
       {children}
     </Heading>

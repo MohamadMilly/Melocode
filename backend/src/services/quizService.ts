@@ -1,4 +1,8 @@
-import { UserQuizOutput } from "@app/types";
+import type {
+  QuizSubmission,
+  QuizSubmissionType,
+  UserQuizOutput,
+} from "@app/types";
 import { HttpError } from "../shared/errors/HttpError.js";
 import { eventEmitter } from "../lib/eventEmitter.js";
 import {
@@ -13,17 +17,27 @@ import { submissionRepository } from "../repositories/submission.repository.js";
 import { giveUpRepository } from "../repositories/giveup.repository.js";
 import { testCaseRepository } from "../repositories/testCase.repository.js";
 
+const findQuizByExternalId = async (external_quizId: string) => {
+  const quiz = await quizRepository.findQuizAnswerByExternalId(external_quizId);
+  console.log(quiz);
+  if (!quiz) {
+    throw new HttpError(404, "لم يتم العثور على إجابة هذا الاختبار.");
+  }
+  return quiz;
+};
+
 export const getQuizAnswer = async ({
-  answerId,
+  external_quizId,
   userId,
 }: {
-  answerId: number;
+  external_quizId: string;
   userId: number;
 }) => {
   const quizAnswer = await quizRepository.findQuizAnswerWithUserState(
-    answerId,
+    external_quizId,
     userId,
   );
+
   if (!quizAnswer) {
     throw new HttpError(404, "لم يتم العثور على إجابة هذا الاختبار.");
   }
@@ -41,19 +55,20 @@ export const getQuizAnswer = async ({
 export const saveSubmission = async ({
   content,
   language,
-  quizAnswerId,
+  external_quizId,
   userOutputs,
   userId,
   type,
 }: {
   content: string;
   language: string | undefined | null;
-  quizAnswerId: number;
-  type: "MULTIPLE_CHOICE" | "CODING";
+  external_quizId: string;
+  type: QuizSubmissionType;
   userOutputs: UserQuizOutput[];
   userId: number;
 }) => {
-  // validation
+  const quiz = await findQuizByExternalId(external_quizId);
+  const quizAnswerId = quiz.id;
   const giveUpForThisQuiz = await giveUpRepository.findForUserAndQuiz(
     userId,
     quizAnswerId,
@@ -69,7 +84,7 @@ export const saveSubmission = async ({
   if (!hasTestCases(testCases)) {
     throw new HttpError(400, "هذا الاختبار لا يحتوي على حالات اختبار. ");
   }
-  // verification
+
   if (type === "MULTIPLE_CHOICE") {
     const existingSubmissions = await submissionRepository.findForUserAndQuiz(
       userId,
@@ -79,13 +94,13 @@ export const saveSubmission = async ({
       throw new HttpError(400, "لقد أجبت عن هذا السؤال من قبل.");
     }
   }
+
   const isCorrect = isSubmissionCorrect({
     type,
     content,
     testCases,
     userOutputs,
   });
-  // creation
   const submission = await submissionRepository.upsertSubmission({
     content,
     language,
@@ -93,31 +108,44 @@ export const saveSubmission = async ({
     quizAnswerId,
     isCorrect,
   });
-  // emitation
+
   if (submission.isCorrect) {
-    eventEmitter.emit("submission-created", { userId: userId });
+    eventEmitter.emit("submission-created", { userId });
   }
   return submission;
 };
 
-export const getQuizTestCasesInputs = async (quizAnswerId: number) => {
-  return testCaseRepository.findInputsForQuiz(quizAnswerId);
+export const getQuizTestCasesInputs = async (external_quizId: string) => {
+  const quiz = await findQuizByExternalId(external_quizId);
+  return testCaseRepository.findInputsForQuiz(quiz.id);
 };
 
 export const getUserLessonSubmissions = async (
   userId: number,
-  lessonId: number,
+  slug: string,
   isCorrect?: boolean,
 ) => {
-  if (!userId || !lessonId) {
-    throw new HttpError(400, "معلومات مطلوبة مفقودة (lessonId و userId)");
+  if (!userId || !slug) {
+    throw new HttpError(400, "معلومات مطلوبة مفقودة (slug و userId)");
   }
-  return quizRepository.findLessonSubmissions(userId, lessonId, isCorrect);
+
+  const lessonQuizzesSubmissions = await quizRepository.findLessonSubmissions(
+    userId,
+    slug,
+    isCorrect,
+  );
+
+  return lessonQuizzesSubmissions;
 };
 
 export const getUserQuizSubmissions = async (
-  quizAnswerId: number,
+  external_quizId: string,
   userId: number,
 ) => {
-  return submissionRepository.findForUserAndQuiz(userId, quizAnswerId);
+  const quiz = await findQuizByExternalId(external_quizId);
+  const submissions = await submissionRepository.findForUserAndQuiz(
+    userId,
+    quiz.id,
+  );
+  return submissions;
 };

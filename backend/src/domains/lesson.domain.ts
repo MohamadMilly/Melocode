@@ -1,75 +1,68 @@
-import { Lesson, LessonStatus, Module } from "@app/types";
-import { LESSONS_GUEST_LIMIT } from "../shared/constants/guestPlanConstants.js";
+import { Lesson, LessonStatus, Module, UserType } from "@app/types";
 
+/*
+we need two functions literally, determineStatus to help us determine the status of a lesson by getting its order and the active order , 
+notice here we care about logic rules of the app , so we need to keep all functions pure
+*/
+
+// simple , pure , awesome!
+export function determineStatus(
+  order: number,
+  activeOrder: number,
+): LessonStatus {
+  if (order < activeOrder) {
+    return "completed";
+  }
+  if (order === activeOrder) {
+    return "current";
+  }
+  if (order > activeOrder) {
+    return "locked";
+  }
+}
+
+export function giveGuestLesson(lesson: Lesson) {
+  return {
+    ...lesson,
+    status: lesson.isFree ? "preview" : "locked",
+  };
+}
+
+// short , pure , simple , awesome !
 export const deriveUserLessonsStatuses = <T extends Lesson>(
   lessons: T[],
+  activeOrder: number,
 ): (T & { status: LessonStatus })[] => {
-  const lessonsWithStatus = [];
-
-  for (let i = 0; i < lessons.length; i++) {
-    const currentLesson = lessons[i];
-    const previousLesson = lessons[i - 1];
-    let status: LessonStatus;
-
-    if (
-      currentLesson.lessonProgresses &&
-      currentLesson.lessonProgresses.length === 1
-    ) {
-      status = "completed";
-    } else if (
-      !previousLesson ||
-      (previousLesson.lessonProgresses &&
-        previousLesson.lessonProgresses.length === 1)
-    ) {
-      status = "current";
-    } else {
-      status = "locked";
-    }
-
-    lessonsWithStatus.push({
-      ...currentLesson,
-      status: status,
-    });
-  }
-
-  return lessonsWithStatus;
+  return lessons.map((lesson) => {
+    const status = determineStatus(lesson.order, activeOrder);
+    return { ...lesson, status };
+  });
 };
 
-export const deriveGuestLessonsStatuses = <T extends Lesson>(
-  lessons: T[],
-): (T & { status: LessonStatus })[] =>
-  lessons.map((lesson, index) => ({
-    ...lesson,
-    status: index < LESSONS_GUEST_LIMIT ? "current" : "locked",
-  }));
-
-function attachLessonStatuses<T extends Module>(
-  modules: T[],
-  lessonsWithStatuses: (Lesson & { status: LessonStatus })[],
+export function giveLessonWithStatus<T extends Lesson>(
+  lesson: T,
+  activeOrder: number,
 ) {
-  const statusesByLessonId = new Map(
-    lessonsWithStatuses.map(({ id, status }) => [id, status]),
-  );
-
-  return modules.map((module) => ({
-    ...module,
-    lessons: (module.lessons ?? []).map((lesson) => ({
-      ...lesson,
-      status: statusesByLessonId.get(lesson.id)!,
-    })),
-  }));
+  const status = determineStatus(lesson.order, activeOrder);
+  return { ...lesson, status };
 }
 
-export function giveUserModulesWithStatuses<T extends Module>(modules: T[]) {
-  const lessonsWithStatuses = deriveUserLessonsStatuses(
-    modules.flatMap((module) => module.lessons ?? []),
-  );
-  return attachLessonStatuses(modules, lessonsWithStatuses);
-}
-
-export function giveGuestModulesWithStatuses<T extends Module>(modules: T[]) {
-  const lessonsWithStatuses = deriveGuestLessonsStatuses(
-    modules.flatMap((module) => module.lessons ?? []),
-  );
-  return attachLessonStatuses(modules, lessonsWithStatuses);
+export function giveModulesWithStatuses<T extends Module>(
+  modules: T[],
+  userType: UserType,
+  activeOrder?: number,
+) {
+  return modules.map((module) => {
+    return {
+      ...module,
+      lessons: module.lessons.map((lesson) => {
+        if (userType === "MEMBER") {
+          const lessonWithStatus = giveLessonWithStatus(lesson, activeOrder!);
+          return lessonWithStatus;
+        } else if (userType === "GUEST") {
+          return giveGuestLesson(lesson);
+        }
+      }),
+    };
+  });
 }

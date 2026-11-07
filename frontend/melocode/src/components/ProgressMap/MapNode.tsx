@@ -1,3 +1,4 @@
+import type { LessonStatus } from "@app/types";
 import { Text, Tooltip } from "@radix-ui/themes";
 import { Check, Lock } from "lucide-react";
 import type { ReactNode } from "react";
@@ -5,7 +6,7 @@ import { Link } from "react-router";
 
 export type Node = {
   id: number;
-  status: "completed" | "locked" | "current";
+  status: LessonStatus;
   title: string;
   slug: string;
 };
@@ -15,10 +16,11 @@ type MapNodeProps = {
   index: number;
 };
 
-const nodeIcons: Record<"completed" | "locked" | "current", ReactNode> = {
+const nodeIcons: Record<Node["status"], ReactNode> = {
   completed: <Check size={32} />,
   locked: <Lock size={32} />,
   current: null,
+  preview: null,
 };
 
 export function MapNode({ node, index }: MapNodeProps) {
@@ -29,10 +31,14 @@ export function MapNode({ node, index }: MapNodeProps) {
       "bg-gradient-to-br from-(--accent-3) via-(--accent-5) to-(--accent-7) shadow-sm shadow-(--accent-6) border-(--accent-8) text-(--accent-11) hover:border-b-4 hover:mb-1 active:border-b-1 active:mb-[1px] animate-pulse",
     completed:
       "bg-gradient-to-br from-(--accent-8) via-(--accent-9) to-(--accent-10) text-(--accent-12) border-(--accent-8) hover:border-b-4 hover:mb-1 active:border-b-1 active:mb-[1px]",
+    preview:
+      "bg-gradient-to-br from-(--green-3) via-(--green-5) to-(--green-7) text-(--green-11) border-(--green-8) shadow-sm shadow-(--green-6) hover:border-b-4 hover:mb-1 active:border-b-1 active:mb-[1px]",
   };
   const icon = nodeIcons[node.status];
   return (
-    <Tooltip content={node.title}>
+    <Tooltip
+      content={`${node.title} ${node.status === "preview" ? "(مفتوح للزوار)" : ""}`}
+    >
       <Link
         className={`relative nth-of-type-[2n-1]:-translate-x-12 nth-of-type-[2n]:translate-x-12 z-10 w-20 h-20 overflow-hidden rounded-full transition-all duration-300 flex justify-center box-content border border-b-8 items-center shadow-[inset_2px_3px_5px_color-mix(in_srgb,white_45%,transparent),inset_-3px_-5px_6px_color-mix(in_srgb,var(--gray-12)_20%,transparent),0_5px_14px_color-mix(in_srgb,var(--gray-12)_12%,transparent)] ${statusClasses[node.status]}`}
         to={node.status === "locked" ? "#" : `/app/lessons/${node.slug}`}

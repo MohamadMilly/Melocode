@@ -1,5 +1,5 @@
 import { param } from "express-validator";
 
-export const validateQuizAnswerId = param("quizAnswerId")
-  .isNumeric()
-  .withMessage("quizAnswerId must be a number");
+export const validateExternalQuizId = param("external_quizId")
+  .isUUID()
+  .withMessage("external_quizId must be a UUID");

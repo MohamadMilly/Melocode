@@ -1,16 +1,16 @@
 declare module "*.md" {
   import React from "react";
-  
+
   const Component: React.ComponentType<unknown>;
   export default Component;
-   
+
   export const frontmatter: {
     title: string;
     slug: string;
-    lessonId: number;
-    exercises: import("./components/Quiz/Quiz").QuizData[];
+
+    exercises: import("./shared/types/Quiz.types").QuizData[];
   };
-  
+
   export const toc: Array<{
     depth?: number;
     text: string;
@@ -27,7 +27,7 @@ declare module "*.mdx" {
     title: string;
     slug: string;
     lessonId: number;
-    exercises: import("./components/Quiz/Quiz").QuizData[];
+    exercises: import("./shared/types/Quiz.types").QuizData[];
   };
   export const toc: Array<{ text: string; slug: string }>;
 }
