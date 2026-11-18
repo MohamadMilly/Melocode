@@ -53,7 +53,8 @@ export function useCheckCodeAnswer(
       functionToBeTestedName,
     });
     const runCodeOutput = await run({ code: codeToRun, language: language });
-    if (runCodeOutput.status === "success") { // there is no compile/execustion errors
+    if (runCodeOutput.status === "success") {
+      // there is no compile/execustion errors
       const userOutputs = JSON.parse(runCodeOutput.output);
       const { submission } = await submitAnswer({
         language: language,
@@ -63,7 +64,7 @@ export function useCheckCodeAnswer(
         slug: slug,
       });
       return submission;
-    } 
+    }
   };
 
   const {
@@ -88,7 +89,7 @@ export function useCheckCodeAnswer(
     testCasesFetchError,
     isRunningPending,
     runCodeError,
-    userOuputs:, // we are here
+
     isAnswerBeingSubmitted,
   };
 }
