@@ -6,6 +6,19 @@
 @theme {
   --color-tremor-brand: var(--color-blue-500);
   --color-tremor-brand-hover: var(--color-blue-600);
+
+  --animate-slideRight: slideRight 0.3s 1 forwards;
+
+  @keyframes slideRight {
+    from {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 }
 
 @layer base {
@@ -119,6 +132,22 @@
     animation: slideUp 1 0.5s;
     animation-fill-mode: both;
   }
+
+  .animate-slideRight {
+    animation: slideRight 0.3s 1 forwards;
+  }
+
+  @keyframes slideRight {
+    from {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
   @keyframes slideUp {
     from {
       opacity: 0;

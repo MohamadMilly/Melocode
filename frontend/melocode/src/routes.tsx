@@ -5,7 +5,7 @@ import { LessonPage } from "./pages/app/LessonPage";
 import { PathPage } from "./pages/app/PathPage";
 import { PathsListPage } from "./pages/app/PathsListPage";
 import { ProfilePage } from "./pages/app/ProfilePage";
-import { ErrorPage } from "./components/shared/ui/NotFoundPage";
+import { ErrorPage } from "./components/ui/NotFoundPage";
 import { UsersLeaderBoardPage } from "./pages/app/UsersLeaderBoardPage";
 import { AchievementsPage } from "./pages/app/AchievementsPage";
 import { SettingsPage } from "./pages/app/SettingsPage";

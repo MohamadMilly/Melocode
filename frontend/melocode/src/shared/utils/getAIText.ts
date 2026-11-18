@@ -1,6 +1,5 @@
 export function getAIText(data: unknown): string {
   if (typeof data === "string") return data;
-  console.log(data);
   if (
     typeof data === "object" &&
     data !== null &&

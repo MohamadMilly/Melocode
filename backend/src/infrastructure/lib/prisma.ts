@@ -1,0 +1,101 @@
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../../generated/prisma/client.js";
+import { getStreak } from "../../shared/utils/getStreak.js";
+import {
+  Args,
+  Result,
+} from "../../generated/prisma/internal/prismaNamespace.js";
+
+const connectionString =
+  process.env.NODE_ENV === "production"
+    ? process.env.PROD_DATABASE_URL
+    : process.env.DEV_DATABASE_URL;
+
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+
+export const basePrisma = new PrismaClient({ adapter });
+
+export const prisma = basePrisma.$extends({
+  result: {
+    user: {
+      streak: {
+        needs: {},
+        compute(user: any) {
+          return (user.streak ?? 0) as number;
+        },
+      },
+      submissionsCount: {
+        needs: {},
+        compute(user: any) {
+          return (user.submissionsCount ?? 0) as number;
+        },
+      },
+    },
+  },
+  query: {
+    user: {
+      async $allOperations({ operation, args, query }) {
+        try {
+          if (!["findMany", "findUnique", "findFirst"].includes(operation)) {
+            return query(args);
+          }
+
+          const userArgs = (args || {}) as Args<
+            typeof basePrisma.user,
+            "findMany"
+          >;
+
+          userArgs.include = {
+            ...userArgs.include,
+            lessonProgresses: true,
+          };
+
+          let result = await query(userArgs);
+
+          const mapUserWithStreak = (record: any) => {
+            if (!record) return record;
+            const { lessonProgresses, _count, ...user } = record;
+            return {
+              ...user,
+              lessonProgresses: lessonProgresses,
+              streak: getStreak(lessonProgresses || []),
+              ...(_count
+                ? {
+                    [`${Object.keys(_count)}Count`]: Object.values(_count)[0],
+                  }
+                : {}),
+            };
+          };
+
+          if (Array.isArray(result)) {
+            return result.map(mapUserWithStreak) as Result<
+              typeof basePrisma.user,
+              typeof userArgs,
+              "findMany"
+            >;
+          }
+
+          return mapUserWithStreak(result) as Result<
+            typeof basePrisma.user,
+            typeof userArgs,
+            "findFirst"
+          >;
+        } catch (error: any) {
+          console.error("Prisma error:", {
+            code: error?.code,
+            stack: error?.stack,
+          });
+          throw error;
+        }
+      },
+      async findMany({ model, operation, args, query }) {
+        args = { ...args, take: 100 };
+        return query(args);
+      },
+    },
+  },
+});
+
+export type ExtendedPrismaClient = typeof prisma;

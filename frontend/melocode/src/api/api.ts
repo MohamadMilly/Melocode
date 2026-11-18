@@ -1,4 +1,5 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import { socket } from "../socket";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
@@ -78,7 +79,8 @@ apiClient.interceptors.response.use(
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
-      window.location.href = "/login";
+      window.location.href = "/login?message=session_expired";
+      socket.disconnect();
       return Promise.reject(refreshError);
     }
 

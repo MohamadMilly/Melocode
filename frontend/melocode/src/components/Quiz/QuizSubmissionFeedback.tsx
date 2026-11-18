@@ -1,6 +1,7 @@
-import { Text } from "@radix-ui/themes";
+import { Box, Text } from "@radix-ui/themes";
 import type { AxiosError } from "axios";
 import type { ResponseError } from "@app/types";
+import { ErrorElement } from "../ui/ErrorElement";
 
 type SubmissionFeedbackProps = {
   runCodeError: AxiosError<ResponseError> | null;
@@ -17,9 +18,10 @@ export function SubmissionFeedback({
 }: SubmissionFeedbackProps) {
   if (runCodeError) {
     return (
-      <Text as="p" className="text-red-500">
-        حدث خطأ اثناء تنفيذ الكود
-      </Text>
+      <Box>
+        <Text as="p" mb={"3"}>الكود فيه مشاكل</Text>
+        <ErrorElement axiosError={runCodeError} />
+      </Box>
     );
   }
   if (testCasesFetchError) {
@@ -29,7 +31,7 @@ export function SubmissionFeedback({
       </Text>
     );
   }
-  
+
   if (submissionError) {
     return (
       <Text as="p" className="text-red-500">

@@ -6,6 +6,7 @@ import { useLessonQuizzesGiveUps } from "../../hooks/api/me/useLessonQuizzesGive
 import { useCallback, useState } from "react";
 import { Expand, Shrink } from "lucide-react";
 import type { QuizData } from "../../shared/types/Quiz.types";
+import type { QuizSubmission } from "@app/types";
 
 export function QuizzesTabs({
   quizzes,
@@ -77,15 +78,15 @@ export function QuizzesTabs({
       <Box
         className={
           expanded
-            ? "min-h-0 flex-1 overflow-y-auto px-3 pb-3 pt-4"
-            : "px-1 md:px-3 pb-3 pt-4"
+            ? "min-h-0 flex-1 overflow-y-auto px-3 pb-3 pt-4 overflow-hidden"
+            : "px-1 md:px-3 pb-3 pt-4 overflow-hidden"
         }
       >
         {isLoadingSubmissions ? (
           <QuizSkeleton name="التمرين-1" />
         ) : (
           quizzes.map((quiz, index) => {
-            let submission = null;
+            let submission: QuizSubmission | null = null;
 
             const thisQuizSubmissionsData = submissionsData.find(
               (submissionData) =>
@@ -95,16 +96,13 @@ export function QuizzesTabs({
               (gData) => gData.external_quizId === quiz.quizId,
             );
             const giveUp = thisQuizGiveUpData?.giveUps[0];
-            console.log(giveUp);
             if (thisQuizSubmissionsData) {
               const correctSubmission =
                 thisQuizSubmissionsData?.submissions.find((s) => s.isCorrect);
               const wrongSubmission = thisQuizSubmissionsData?.submissions.find(
                 (s) => !s.isCorrect,
               );
-              submission = correctSubmission ?? wrongSubmission;
-              
-              console.log(submission);
+              submission = correctSubmission ?? wrongSubmission ?? null;
             }
             return (
               <Quiz

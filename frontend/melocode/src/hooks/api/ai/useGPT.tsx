@@ -3,7 +3,8 @@ import axios from "axios";
 import type {
   AIResponse,
   ChatMessageData,
-} from "../../../shared/types/AISideBar.types";
+} from "../../../shared/types/ai.types";
+import { SYSTEM_PROMPT } from "../../../shared/constants/chatbot.instructions";
 
 async function fetchAI({
   prompt,
@@ -24,8 +25,12 @@ async function fetchAI({
         },
         {
           role: "system",
+          content: SYSTEM_PROMPT,
+        },
+        {
+          role: "system",
           content:
-            "Act as a strict Markdown writer. Use only standard, vanilla Markdown syntax with absolutely zero raw HTML or attributes—except for the <LessonNote>your notes here</LessonNote> tag to enclose your notes. Never use or invent any other custom components or tags (such as <Entity>, <Card>, or <Item>). If you want to talk about an entity, write it as plain text.",
+            "Assist your response with images from the internet (not generated) for better explanation.",
         },
         ...context,
         {

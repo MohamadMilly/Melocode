@@ -14,6 +14,23 @@ export type GetLessonResponse = {
   lesson: ExtendedLesson;
 };
 
+export type LessonResponseDto = GetLessonResponse & {
+  authStatus: AuthStatus;
+};
+
+export type CreateProgressResponseDto = {
+  progress: UserLessonProgress;
+};
+
+export type GetPathsResponseDto = {
+  paths: Path[];
+};
+
+export type GetPathModulesResponseDto = {
+  modules: Module[];
+  authStatus: AuthStatus;
+};
+
 export type TestCase = {
   id: number;
   quizAnswerId: number;
@@ -71,36 +88,44 @@ export type Lesson = {
   isFree: boolean;
 };
 
-export type UserJwtPayload = {
+export interface UserJwtPayload {
   id: number;
   fullname: string;
   username: string;
   createdAt: Date;
-};
+}
 
-export type RegisterRequestBody = {
+export interface RegisterRequestBody {
   password: string;
   fullname: string;
   username: string;
   confirmPassword: string;
-};
+}
 
-export type LoginRequestBody = {
+export interface LoginRequestBody {
   username: string;
   password: string;
-};
+}
 
-export type RegisterResponseBody = {
+export interface RegisterResponseBody {
   user: UserJwtPayload;
   accessToken: string;
   refreshToken: string;
-};
+}
 
-export type LoginResponseBody = {
+export interface LoginResponseBody {
   user: UserJwtPayload;
   accessToken: string;
   refreshToken: string;
-};
+}
+
+export interface RefreshTokenRequestBody {
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponseBody {
+  accessToken: string;
+}
 
 export type GetLessonsResponse = {
   lessons: ExtendedLesson[];
@@ -121,9 +146,9 @@ export type UserQuizOutput = {
   output: string;
 };
 
-export type ResponseError = {
+export interface ResponseError {
   message: string;
-};
+}
 
 export type serverFormError = {
   field: string;
@@ -134,14 +159,20 @@ export type QuizAnswerItem = {
   id: number;
   type: "TEXT" | "NOTE" | "CODE";
   content: string;
-  language?: string;
+  language: string | undefined;
 };
 
 export type QuizAnswer = {
+  id: number;
   external_quizId: string | null;
-  quizAnswerId: number;
   lessonId: number;
   items: QuizAnswerItem[];
+  giveUps: QuizGiveUp[];
+  submissions: QuizSubmission[];
+};
+
+export type GetQuizAnswerResponseDto = {
+  quizAnswer: QuizAnswer;
 };
 
 export type QuizSubmission = {
@@ -199,19 +230,37 @@ export type QuizTestCase = {
   quizAnswerId: number;
 };
 
-export type GetUserProgressResponse = {
+export type QuizTestCaseInput = Pick<QuizTestCase, "id" | "input">;
+
+export type GetQuizTestCasesResponseDto = {
+  testCases: QuizTestCaseInput[];
+};
+
+export type GetQuizSubmissionsResponseDto = {
+  submissions: QuizSubmission[];
+};
+
+export type GetQuizGiveUpResponseDto = {
+  giveUp: QuizGiveUp | null;
+};
+
+export type CreateQuizGiveUpResponseDto = {
+  giveUp: QuizGiveUp;
+};
+
+export interface GetUserProgressResponse {
   progresses: UserLessonProgress[];
   progressFraction: number;
-};
+}
 
 export type SortDirection = "+" | "-";
 export type SortMetric = "submissions" | "progress" | "streak";
 
 export type LeaderboardSortOrder = `${SortDirection}${SortMetric}`;
 
-export type GetUsersReponse = {
+export interface GetUsersReponse {
   users: LeaderBoardUser[];
-};
+}
 
 export type LeaderBoardUser = ExtendedUser & {
   lessonProgressesCount?: number | null;

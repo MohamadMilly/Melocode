@@ -2,8 +2,8 @@ import { Box, Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { ProgressMap } from "../../components/ProgressMap/ProgressMap";
 
 import { useAuth } from "../../contexts/AuthContext";
-import { RouteLink } from "../../components/shared/ui/RouteLink";
-import { PageMain } from "../../components/shared/layout/PageMain";
+import { RouteLink } from "../../components/ui/RouteLink";
+import { PageMain } from "../../components/layout/PageMain";
 import { PathSideNav } from "../../components/Path/PathSideNav";
 import { CheckCircle2, Flag, Sparkles } from "lucide-react";
 import { useParams } from "react-router";
@@ -20,10 +20,10 @@ export function PathPage() {
   } = usePathModules(slug ?? "");
   const { paths } = usePaths();
   const { user } = useAuth();
-  
+
   const path = paths.find((item) => item.slug === slug);
   const currentLesson = nodes.find((node) => node.status === "current");
-  
+
   return (
     <PageMain className="grid! max-w-full! pt-0! mt-0!  w-full! grid-cols-1! grid-rows-1! gap-y-! px-2! selection:bg-(--accent-a3)! sm:px-3! md:grid-cols-[auto_1fr]!">
       <Section

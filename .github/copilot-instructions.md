@@ -1,5 +1,5 @@
 ---
-applyTo: '**'
+applyTo: "**"
 ---
 
 # Melocode repository guidance
@@ -24,12 +24,13 @@ This is an npm-workspaces monorepo:
 - The Vite client reads `VITE_API_URL`. The backend selects `DEV_DATABASE_URL` or `PROD_DATABASE_URL` based on `NODE_ENV`; keep environment-specific configuration out of source.
 
 ## Build, lint, and test
+
 Run package commands from the relevant package directory:
 
-| Package | Build / check | Lint | Test |
-| --- | --- | --- | --- |
-| Frontend (`frontend/melocode`) | `npm run build` | `npm run lint` | No test script or test runner is configured. |
-| Backend (`backend`) | `npx tsc --noEmit` for a reliable type check; `npm run build` is also defined | No backend lint script is configured. | No test script or test runner is configured. |
+| Package                        | Build / check                                                                 | Lint                                  | Test                                         |
+| ------------------------------ | ----------------------------------------------------------------------------- | ------------------------------------- | -------------------------------------------- |
+| Frontend (`frontend/melocode`) | `npm run build`                                                               | `npm run lint`                        | No test script or test runner is configured. |
+| Backend (`backend`)            | `npx tsc --noEmit` for a reliable type check; `npm run build` is also defined | No backend lint script is configured. | No test script or test runner is configured. |
 
 To lint one frontend file, run `npx eslint src/path/to/file.tsx` from `frontend/melocode`. There is currently no single-test command because no test framework or test files are configured.
 

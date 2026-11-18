@@ -1,19 +1,19 @@
 import type { AchievementFrequency, AchievementScope } from "@app/types";
 
-import SubmissionOneImage from "../../assests/images/achievements/submission/submission_1_achievement.png";
-import SubmissionTenImage from "../../assests/images/achievements/submission/submission_10_achievement.png";
-import SubmissionHundredImage from "../../assests/images/achievements/submission/submission_100_achievement.png";
-import SubmissionThousandImage from "../../assests/images/achievements/submission/submission_1000_achievement.png";
+import SubmissionOneImage from "../../assets/images/achievements/submission/submission_1_achievement.png";
+import SubmissionTenImage from "../../assets/images/achievements/submission/submission_10_achievement.png";
+import SubmissionHundredImage from "../../assets/images/achievements/submission/submission_100_achievement.png";
+import SubmissionThousandImage from "../../assets/images/achievements/submission/submission_1000_achievement.png";
 
-import ProgressOneImage from "../../assests/images/achievements/progress/progress_1_achievement.png";
-import ProgressTenImage from "../../assests/images/achievements/progress/progress_10_achievement.png";
-import ProgressHundredImage from "../../assests/images/achievements/progress/progress_100_achievement.png";
-import ProgressThousandImage from "../../assests/images/achievements/progress/progress_1000_achievement.png";
+import ProgressOneImage from "../../assets/images/achievements/progress/progress_1_achievement.png";
+import ProgressTenImage from "../../assets/images/achievements/progress/progress_10_achievement.png";
+import ProgressHundredImage from "../../assets/images/achievements/progress/progress_100_achievement.png";
+import ProgressThousandImage from "../../assets/images/achievements/progress/progress_1000_achievement.png";
 
-import StreakOneImage from "../../assests/images/achievements/streak/streak_1_achievement.png";
-import StreakTenImage from "../../assests/images/achievements/streak/streak_10_achievement.png";
-import StreakHundredImage from "../../assests/images/achievements/streak/streak_100_achievement.png";
-import StreakThousandImage from "../../assests/images/achievements/streak/streak_1000_achievement.png";
+import StreakOneImage from "../../assets/images/achievements/streak/streak_1_achievement.png";
+import StreakTenImage from "../../assets/images/achievements/streak/streak_10_achievement.png";
+import StreakHundredImage from "../../assets/images/achievements/streak/streak_100_achievement.png";
+import StreakThousandImage from "../../assets/images/achievements/streak/streak_1000_achievement.png";
 
 export const achievementImages = {
   SUBMISSION: {

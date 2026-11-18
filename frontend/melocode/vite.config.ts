@@ -33,7 +33,6 @@ export default defineConfig({
       "/compiler-api": {
         target: "https://api.onlinecompiler.io",
         changeOrigin: true,
-
         rewrite: (path) => path.replace(/^\/compiler-api/, ""),
       },
     },

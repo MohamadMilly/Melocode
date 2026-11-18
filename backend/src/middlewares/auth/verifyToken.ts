@@ -4,7 +4,7 @@ import { HttpError } from "../../shared/errors/HttpError.js";
 import { verify } from "../../shared/utils/auth/jwt.js";
 
 import type { NextFunction, Response } from "express";
-import { AuthenticatedRequest } from "../../types/index.js";
+import { AuthenticatedRequest } from "../../shared/types/auth.types.js";
 
 export function getVerifyTokenMiddleware({
   isOptional,
@@ -23,7 +23,7 @@ export function getVerifyTokenMiddleware({
       }
       if (token) {
         const authData = verify<UserJwtPayload>(token);
-        
+
         if (authData.tokenType !== "access") {
           res.status(401).json({
             message:

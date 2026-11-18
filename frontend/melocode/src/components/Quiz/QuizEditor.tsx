@@ -7,23 +7,26 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/theme-cloud9_night";
 import "ace-builds/src-noconflict/ext-language_tools";
-import { useQuizAnswerContext } from "../../contexts/QuizAnswerContext";
+import { modes } from "../../shared/constants/axeEditor.config";
+import type { Language } from "../../shared/types/languages.types";
+import { useQuizContext } from "../../contexts/QuizContext";
 
 type QuizEditorProps = {
   disabled: boolean;
-  language?: string;
+  language?: Language;
 };
 
 export function QuizEditor({
   disabled,
   language = "javascript",
 }: QuizEditorProps) {
-  const { code, setCode } = useQuizAnswerContext();
+  const { userAnswer, handleAnswerChange } = useQuizContext();
   const [logs, setLogs] = useState<
     { type: "ERROR" | "LOG"; message: string }[]
   >([]);
   const inlineFramePlaygroundRef = useRef<HTMLIFrameElement>(null);
   const loggerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     function onMessage(e: MessageEvent) {
       if (e.origin !== "http://localhost:5173" && e.origin !== "null") {
@@ -72,7 +75,7 @@ export function QuizEditor({
     
   </script>
   <script>
-  ${code}
+  ${userAnswer}
   </script>
 `;
     const timer = setTimeout(() => {
@@ -81,7 +84,7 @@ export function QuizEditor({
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [code, language]);
+  }, [userAnswer, language]);
 
   useEffect(() => {
     const loggerEl = loggerRef.current;
@@ -92,6 +95,7 @@ export function QuizEditor({
       });
     }
   }, [logs]);
+  const mode = modes[language];
   return (
     <div className="w-full my-2">
       <AceEditor
@@ -105,7 +109,7 @@ export function QuizEditor({
           backgroundColor: "#1a1b26",
         }}
         width="100%"
-        mode={language}
+        mode={mode}
         fontSize={15}
         lineHeight={19}
         editorProps={{
@@ -118,8 +122,8 @@ export function QuizEditor({
           showLineNumbers: true,
           tabSize: 2,
         }}
-        value={code}
-        onChange={(newValue) => setCode(newValue)}
+        value={userAnswer}
+        onChange={handleAnswerChange}
       />
 
       <iframe

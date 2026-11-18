@@ -1,5 +1,5 @@
 import type { Response, NextFunction } from "express";
-import { AuthenticatedRequest } from "../../types/index.js";
+import { AuthenticatedRequest } from "../../shared/types/auth.types.js";
 
 export function extractToken(
   req: AuthenticatedRequest,

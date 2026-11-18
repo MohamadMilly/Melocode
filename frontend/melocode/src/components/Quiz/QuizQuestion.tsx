@@ -9,14 +9,19 @@ import { OptionsList } from "./multiple_choice/OptionsList";
 const QuizEditor = lazy(() =>
   import("./QuizEditor").then((module) => ({ default: module.QuizEditor })),
 );
+
+type QuizQuestionProps = {
+  questionItems: QuizQuestionItem[];
+  editorDisabled: boolean;
+ 
+};
+
 export function QuizQuestion({
   questionItems,
   editorDisabled,
-}: {
-  questionItems: QuizQuestionItem[];
 
-  editorDisabled: boolean;
-}) {
+}: QuizQuestionProps) {
+  
   return (
     <>
       {Array.isArray(questionItems) &&
@@ -34,10 +39,11 @@ export function QuizQuestion({
                   fallback={
                     <Skeleton width={"100%"} height={"100px"}></Skeleton>
                   }
-                >  
+                >
                   <QuizEditor
                     disabled={editorDisabled || !quiz.isInteractive}
                     language={quiz.language}
+                   
                   />
                 </Suspense>
               );

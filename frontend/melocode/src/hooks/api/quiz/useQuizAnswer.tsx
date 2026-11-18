@@ -11,7 +11,7 @@ const getQuizAnswer = async (quizId: string) => {
   return response.data;
 };
 
-export function useQuizAnswer(quizId: string, completed: boolean) {
+export function useQuizAnswer(quizId: string) {
   const { user } = useAuth();
   const { data, isLoading, error, refetch } = useQuery<
     { quizAnswer: QuizAnswer },
@@ -19,7 +19,7 @@ export function useQuizAnswer(quizId: string, completed: boolean) {
   >({
     queryKey: ["quizzes", quizId],
     queryFn: () => getQuizAnswer(quizId),
-    enabled: !!quizId && !!user && completed,
+    enabled: !!quizId && !!user,
     retry: false,
   });
   const answer = data ? data.quizAnswer : null;

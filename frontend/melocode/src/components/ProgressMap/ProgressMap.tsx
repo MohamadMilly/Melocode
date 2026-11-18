@@ -3,7 +3,7 @@ import { MapNode, type Node } from "./MapNode";
 import { SvgPath } from "./SvgPath";
 import { Spinner } from "@radix-ui/themes";
 import type { AxiosError } from "axios";
-import { ErrorElement } from "../shared/ui/ErrorElement";
+import { ErrorElement } from "../ui/ErrorElement";
 
 type ProgressMapProps = {
   nodes: Node[];

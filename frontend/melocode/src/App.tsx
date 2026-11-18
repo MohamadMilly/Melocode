@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { NavBar } from "./components/shared/layout/NavBar";
+import { NavBar } from "./components/layout/NavBar";
 import { Outlet } from "react-router";
 import { useAuth } from "./contexts/AuthContext";
 import { socket } from "./socket";
 import type { Achievement } from "@app/types";
-import { AchievementDialog } from "./components/shared/ui/AchievementDialog";
+import { AchievementDialog } from "./components/ui/AchievementDialog";
 import toast, { Toaster } from "react-hot-toast";
 
 function App() {
@@ -15,14 +15,14 @@ function App() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (!user && !isConnected) return;
+    if (!user) return;
 
     socket.connect();
 
     return () => {
       socket.disconnect();
     };
-  }, [user, isConnected]);
+  }, [user]);
 
   useEffect(() => {
     function onConnect(): void {

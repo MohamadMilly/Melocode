@@ -2,16 +2,16 @@ import { LessonSectionHeading } from "./LessonSectionHeading";
 import { LessonTitle } from "./LessonTitle";
 import { LessonText } from "./LessonText";
 import { Section } from "@radix-ui/themes";
-import { HighLight } from "../shared/ui/HighLight";
-import { UnOrderedList } from "../shared/ui/UnOrderedList";
+import { HighLight } from "../ui/HighLight";
+import { UnOrderedList } from "../ui/UnOrderedList";
 import { LessonConclusionHeading } from "./LessonConclusionTitle";
-import { Mark } from "../shared/ui/Mark";
+import { Mark } from "../ui/Mark";
 import { LessonImage } from "./LessonImage";
-import { ExternalLink } from "../shared/ui/ExternalLink";
+import { ExternalLink } from "../ui/ExternalLink";
 import { LessonNote } from "./LessonNote";
 import { LessonSubSectionHeading } from "./LessonSubSectionHeading";
-import { OrderedList } from "../shared/ui/OrderedList";
-import { HorizontalRule } from "../shared/ui/HorizontalRule";
+import { OrderedList } from "../ui/OrderedList";
+import { HorizontalRule } from "../ui/HorizontalRule";
 import type { ReactNode } from "react";
 
 export const markDownComponents = {
@@ -34,4 +34,5 @@ export const markDownComponents = {
       <table className="!my-0">{children}</table>
     </div>
   ),
+  
 };

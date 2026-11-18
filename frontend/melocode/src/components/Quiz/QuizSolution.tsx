@@ -1,36 +1,24 @@
-import { Flex, Spinner, Text } from "@radix-ui/themes";
-import type { QuizAnswerItem, QuizAnswer, ResponseError } from "@app/types";
+import { Flex, Skeleton,  Text } from "@radix-ui/themes";
+import type { QuizAnswerItem } from "@app/types";
 import { LessonNote } from "../Lesson/LessonNote";
 import { Code } from "./QuizEmbeddedCode";
-import type { AxiosError } from "axios";
+import { useQuizAnswer } from "../../hooks/api/quiz/useQuizAnswer";
+import { ErrorElement } from "../ui/ErrorElement";
 
 type QuizSolutionProps = {
-  solutionVisible: boolean;
-  answer: QuizAnswer | null;
-  isLoading: boolean;
-  error: AxiosError<ResponseError> | null;
+  quizId: string;
 };
 
-export function QuizSolution({
-  answer,
-  isLoading,
-  error,
-  solutionVisible,
-}: QuizSolutionProps) {
-  const answerItems = answer?.items;
-  if (!solutionVisible) return null;
-  if (isLoading) return <Spinner size={"2"} />;
-  if (error)
-    return (
-      <Text as="p">
-        Error: {error.response?.data.message || error.message || error.status}
-      </Text>
-    );
+export function QuizSolution({ quizId }: QuizSolutionProps) {
+  const { answer, isLoading, error } = useQuizAnswer(quizId);
+
+  if (isLoading) return <Skeleton width={"100%"} height={"100px"} />;
+  if (error) return <ErrorElement axiosError={error} />;
   if (!answer) return <Text as={"p"}>لم يتم ايجاد الحل...</Text>;
+  const answerItems = answer.items;
   return (
     <Flex direction={"column"} mb={"4"} p={"2"} className="w-full">
-      {solutionVisible &&
-        answer &&
+      {answer &&
         Array.isArray(answerItems) &&
         answerItems.map((item: QuizAnswerItem) => {
           switch (item.type) {

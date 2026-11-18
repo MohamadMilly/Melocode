@@ -13,7 +13,7 @@ import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 const completeLesson = async (
   slug: string
 ): Promise<{ progress: UserLessonProgress }> => {
-  const response = await apiClient.post(`/me/lessons/${slug}/progress`);
+  const response = await apiClient.post(`/lessons/${slug}/progresses`);
 
   return response.data;
 };

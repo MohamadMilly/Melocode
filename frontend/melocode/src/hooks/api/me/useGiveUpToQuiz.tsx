@@ -20,7 +20,7 @@ type GiveUpMutationArgs = {
 
 const giveUpToQuiz = async (quizId: string): Promise<GiveUpResponse> => {
   const response = await apiClient.post<GiveUpResponse>(
-    `/me/quizzes/${quizId}/giveups`,
+    `/quizzes/${quizId}/giveups`,
   );
 
   return response.data;

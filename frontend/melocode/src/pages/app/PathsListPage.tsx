@@ -1,8 +1,8 @@
 import { Flex, Heading, Section, Spinner, Text } from "@radix-ui/themes";
 import { Map } from "lucide-react";
 import { usePaths } from "../../hooks/api/path/usePaths";
-import { PageMain } from "../../components/shared/layout/PageMain";
-import { ErrorElement } from "../../components/shared/ui/ErrorElement";
+import { PageMain } from "../../components/layout/PageMain";
+import { ErrorElement } from "../../components/ui/ErrorElement";
 import { PathList } from "../../components/Path/PathList";
 
 export function PathsListPage() {

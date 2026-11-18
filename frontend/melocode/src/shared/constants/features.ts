@@ -1,9 +1,9 @@
 import { BarChart3, BookOpen, Code2, Map, Trophy } from "lucide-react";
-import AchievementsImage from "../../assests/images/preview/achievements.png";
-import AnalyticsImage from "../../assests/images/preview/analytics.png";
-import CodeEditorImage from "../../assests/images/preview/code_editor.png";
-import LessonImage from "../../assests/images/preview/lesson.png";
-import ProgressMapImage from "../../assests/images/preview/progress_map.png";
+import AchievementsImage from "../../assets/images/preview/achievements.png";
+import AnalyticsImage from "../../assets/images/preview/analytics.png";
+import CodeEditorImage from "../../assets/images/preview/code_editor.png";
+import LessonImage from "../../assets/images/preview/lesson.png";
+import ProgressMapImage from "../../assets/images/preview/progress_map.png";
 import type { Feature } from "../types/landing.types";
 
 export const features: Feature[] = [

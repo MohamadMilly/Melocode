@@ -1,7 +1,9 @@
+import type { Language } from "./languages.types";
+
 export type QuizQuestionItem = {
   type: "text" | "note" | "code" | "hint" | "options";
   content: string;
-  language?: string;
+  language?: Language;
   isInteractive?: boolean;
   options?: string[];
 };

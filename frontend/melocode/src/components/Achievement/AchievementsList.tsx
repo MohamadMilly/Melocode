@@ -3,7 +3,7 @@ import { Award } from "lucide-react";
 import type { Achievement, ResponseError } from "@app/types";
 import { AchievementCard } from "./AchievementCard";
 import { AchievementSkeleton } from "./skeleton/AchievementSkeleton";
-import { ErrorElement } from "../shared/ui/ErrorElement";
+import { ErrorElement } from "../ui/ErrorElement";
 import type { AxiosError } from "axios";
 
 type AchievementsListProps = {

@@ -1,7 +1,7 @@
 import { Flex, Text } from "@radix-ui/themes";
-import { SuccessConfetti } from "../shared/ui/SuccessConfetti";
-import { SuccessCheckMark } from "../shared/ui/SuccessCheckMark";
-import { WrongCheckMark } from "../shared/ui/WrongCheckMark";
+import { SuccessConfetti } from "../ui/SuccessConfetti";
+import { SuccessCheckMark } from "../ui/SuccessCheckMark";
+import { WrongCheckMark } from "../ui/WrongCheckMark";
 
 export function SubmissionStatusBanner({
   hasCorrectSubmission,
