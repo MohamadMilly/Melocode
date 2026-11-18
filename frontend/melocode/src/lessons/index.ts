@@ -68,8 +68,6 @@ const paths: Record<string, { path: string; file: string }> = {
   },
 };
 
-const cache = new Map();
-
 type LessonModule = {
   default: ComponentType<unknown>;
   toc: { slug: string; text: string }[];
@@ -81,7 +79,13 @@ type LessonModule = {
   };
 };
 
-export function getLesson(slug: string): Promise<LessonModule | undefined> {
+const mdxModules = import.meta.glob<LessonModule>("./**/*.mdx");
+
+const cache = new Map<string, Promise<LessonModule>>();
+
+export function getLesson(
+  slug: string,
+): Promise<LessonModule | undefined> | undefined {
   if (cache.has(slug)) {
     return cache.get(slug);
   }
@@ -89,10 +93,16 @@ export function getLesson(slug: string): Promise<LessonModule | undefined> {
   if (!pathData) {
     return Promise.resolve(undefined);
   }
-  const { path, file } = pathData;
-  const filePath = `${path}/${file}`;
-  const modulePromise: Promise<LessonModule> = import(filePath);
 
+  const filePath = `${pathData.path}/${pathData.file}`;
+  const loader = mdxModules[filePath];
+
+  if (!loader) {
+    console.error(`MDX module not found for path: ${filePath}`);
+    return Promise.resolve(undefined);
+  }
+
+  const modulePromise = loader();
   cache.set(slug, modulePromise);
 
   return modulePromise;
