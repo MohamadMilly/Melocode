@@ -95,7 +95,7 @@ export function useQuizControls({
       submission: codeCheck.submissionError ?? mcSubmit.error,
       giveUp: giveUpMutation.error,
     },
-    userOutputs:codeCheck.,
+
     handleSubmit,
     handleGiveUp,
   };
