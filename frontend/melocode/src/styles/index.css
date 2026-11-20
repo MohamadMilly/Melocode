@@ -127,6 +127,7 @@
   mjx-container {
     direction: ltr;
     unicode-bidi: isolate;
+    overflow-x: auto;
   }
 }
 
