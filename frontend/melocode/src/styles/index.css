@@ -88,8 +88,13 @@
 
   th,
   td {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 0px;
+
+    text-align: center;
     padding: 1rem 1.25rem;
-    text-align: left;
     text-wrap: wrap;
     min-width: 200px;
   }
@@ -97,6 +102,7 @@
   table tr {
     border-bottom: 1px solid var(--gray-3);
     transition: background-color 0.2s ease;
+    display: flex;
   }
 
   th {
@@ -116,6 +122,11 @@
     height: auto !important;
     resize: none !important;
     field-sizing: content !important;
+  }
+
+  mjx-container {
+    direction: ltr;
+    unicode-bidi: isolate;
   }
 }
 

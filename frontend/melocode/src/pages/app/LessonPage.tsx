@@ -14,7 +14,8 @@ import { LessonPagination } from "../../components/Lesson/LessonPagination";
 import { Brain } from "lucide-react";
 import { PageMain } from "../../components/layout/PageMain";
 import { use } from "react";
-
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+import { mathJaxConfig } from "../../shared/constants/mathjax.constants";
 export function LessonPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ export function LessonPage() {
     isCompleting ||
     !hasCompletedAllQuizzes ||
     isLessonCompleted;
-  
+
   const canNavigateToPreviousLesson =
     previousLesson?.status === "current" ||
     previousLesson?.status === "completed";
@@ -87,78 +88,84 @@ export function LessonPage() {
     return <Navigate to={"/app"} replace />;
   }
   return (
-    <PageMain
-      className="grid w-full! max-w-full! h-full grid-cols-1 gap-4 px-1! sm:px-3! md:grid-cols-[auto_1fr] md:px-2!"
-      showGrid={false}
-    >
-      <LessonContents toc={toc} />
-      <main className="h-full max-w-4xl mx-auto   w-full order-1 md:order-2 min-h-0 overflow-y-auto py-12 p-2 md:py-16 md:p-4">
-        <MDXProvider components={markDownComponents}>
-          <Article />
-        </MDXProvider>
+    <MathJaxContext config={mathJaxConfig}>
+      <PageMain
+        className="grid w-full! max-w-full! h-full grid-cols-1 gap-4 px-1! sm:px-3! md:grid-cols-[auto_1fr] md:px-2!"
+        showGrid={false}
+      >
+        <LessonContents toc={toc} />
+        <main className="h-full max-w-4xl mx-auto   w-full order-1 md:order-2 min-h-0 overflow-y-auto py-12 p-2 md:py-16 md:p-4">
+          <MDXProvider components={markDownComponents}>
+            <MathJax>
+              <Article />
+            </MathJax>
+          </MDXProvider>
 
-        {exercises && exercises.length > 0 && (
-          <>
-            <Heading
-              as="h4"
-              mt={"6"}
-              mb={"4"}
-              size={"5"}
-              className="text-[var(--accent-11)] flex items-center gap-1"
+          {exercises && exercises.length > 0 && (
+            <>
+              <Heading
+                as="h4"
+                mt={"6"}
+                mb={"4"}
+                size={"5"}
+                className="text-[var(--accent-11)] flex items-center gap-1"
+              >
+                <Brain size={35} />
+                <Text as="p">تدريبات</Text>
+              </Heading>
+              {/* to reset the state of quizzes tabs when navigation */}
+             
+                <QuizzesTabs
+                  key={`$quizzes-${lessonId}`}
+                  quizzes={exercises}
+                  slug={slug}
+                />
+              
+            </>
+          )}
+
+          {user && (
+            <Flex
+              direction="column"
+              align="center"
+              justify={"end"}
+              gap="2"
+              mt="8"
             >
-              <Brain size={35} />
-              <Text as="p">تدريبات</Text>
-            </Heading>
-            {/* to reset the state of quizzes tabs when navigation */}
-            <QuizzesTabs
-              key={`$quizzes-${lessonId}`}
-              quizzes={exercises}
-              slug={slug}
-            />
-          </>
-        )}
+              <Button
+                size={"4"}
+                onClick={handleCompleteLesson}
+                disabled={isCompleteButtonDisabled}
+              >
+                {isLessonCompleted
+                  ? "تم إكمال هذا الدرس"
+                  : hasCompletedAllQuizzes
+                    ? "إكمال الدرس"
+                    : "أكمل جميع التمارين أولاً"}
+              </Button>
 
-        {user && (
-          <Flex
-            direction="column"
-            align="center"
-            justify={"end"}
-            gap="2"
-            mt="8"
-          >
-            <Button
-              size={"4"}
-              onClick={handleCompleteLesson}
-              disabled={isCompleteButtonDisabled}
-            >
-              {isLessonCompleted
-                ? "تم إكمال هذا الدرس"
-                : hasCompletedAllQuizzes
-                  ? "إكمال الدرس"
-                  : "أكمل جميع التمارين أولاً"}
-            </Button>
-
-            {isLessonCompleted && progress?.completedAt && (
-              <Text size="2" color="gray">
-                تم الإكمال في{" "}
-                {new Date(progress.completedAt).toLocaleDateString("ar-EG", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </Text>
-            )}
-          </Flex>
-        )}
-        <LessonPagination
-          previousLesson={previousLesson}
-          nextLesson={nextLesson}
-          canNavigateToNextLesson={canNavigateToNextLesson}
-          canNavigateToPreviousLesson={canNavigateToPreviousLesson}
-          handleNextLesson={handleNextLesson}
-          handlePreviousLesson={handlePreviousLesson}
-        />
-      </main>
-    </PageMain>
+              {isLessonCompleted && progress?.completedAt && (
+                <Text size="2" color="gray">
+                  تم الإكمال في{" "}
+                  {new Date(progress.completedAt).toLocaleDateString("ar-EG", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </Text>
+              )}
+            </Flex>
+          )}
+          <LessonPagination
+            previousLesson={previousLesson}
+            nextLesson={nextLesson}
+            canNavigateToNextLesson={canNavigateToNextLesson}
+            canNavigateToPreviousLesson={canNavigateToPreviousLesson}
+            handleNextLesson={handleNextLesson}
+            handlePreviousLesson={handlePreviousLesson}
+          />
+        </main>
+      </PageMain>
+    </MathJaxContext>
   );
 }

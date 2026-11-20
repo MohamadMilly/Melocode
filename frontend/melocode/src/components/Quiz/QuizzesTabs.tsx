@@ -7,6 +7,7 @@ import { useCallback, useState } from "react";
 import { Expand, Shrink } from "lucide-react";
 import type { QuizData } from "../../shared/types/Quiz.types";
 import type { QuizSubmission } from "@app/types";
+import { useMathJax } from "../../hooks/utils/useMathJax";
 
 export function QuizzesTabs({
   quizzes,
@@ -19,6 +20,7 @@ export function QuizzesTabs({
   const { submissionsData, isLoading: isLoadingSubmissions } =
     useMyLessonSubmissions(slug);
   const [currentQuiz, setCurrentQuiz] = useState<string>("التمرين-1");
+ 
   const { giveUpsData } = useLessonQuizzesGiveUps(slug);
 
   const quizzesCount = quizzes.length;
@@ -106,6 +108,7 @@ export function QuizzesTabs({
             }
             return (
               <Quiz
+                key={quizzesNames[index]}
                 expanded={expanded}
                 name={quizzesNames[index]}
                 quiz={quiz}
