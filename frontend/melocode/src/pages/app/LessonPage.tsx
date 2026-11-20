@@ -96,7 +96,7 @@ export function LessonPage() {
         <LessonContents toc={toc} />
         <main className="h-full max-w-4xl mx-auto   w-full order-1 md:order-2 min-h-0 overflow-y-auto py-12 p-2 md:py-16 md:p-4">
           <MDXProvider components={markDownComponents}>
-            <MathJax>
+            <MathJax dynamic>
               <Article />
             </MathJax>
           </MDXProvider>
@@ -114,13 +114,12 @@ export function LessonPage() {
                 <Text as="p">تدريبات</Text>
               </Heading>
               {/* to reset the state of quizzes tabs when navigation */}
-             
-                <QuizzesTabs
-                  key={`$quizzes-${lessonId}`}
-                  quizzes={exercises}
-                  slug={slug}
-                />
-              
+
+              <QuizzesTabs
+                key={`$quizzes-${lessonId}`}
+                quizzes={exercises}
+                slug={slug}
+              />
             </>
           )}
 
