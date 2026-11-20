@@ -123,13 +123,13 @@
     resize: none !important;
     field-sizing: content !important;
   }
-  
-  mjx-container:not(table mjx-container) {
-  direction: ltr;
-  unicode-bidi: isolate;
-  overflow-x: auto;
-}
 
+  mjx-container:not(table mjx-container) {
+    direction: ltr;
+    unicode-bidi: isolate;
+    overflow-x: auto;
+  }
+}
 
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
