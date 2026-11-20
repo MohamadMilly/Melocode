@@ -61,7 +61,7 @@ export function Quiz({
   }, []);
 
   return (
-    <MathJax>
+    <MathJax dynamic>
       <QuizProvider
         handleAnswerChange={handleAnswerChange}
         userAnswer={userAnswer}
